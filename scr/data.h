@@ -1,9 +1,12 @@
 #ifndef DATA_H
 #define DATA_H
 
+#include <string>
+#include <vector>
+
 namespace data {
 
-    void readData(char* dirname, int numMax);
+    std::vector<std::vector<std::string>> readData(std::string dirname, int numMax);
 
 }
 
