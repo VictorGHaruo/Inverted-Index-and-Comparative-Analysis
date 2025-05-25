@@ -24,7 +24,7 @@ struct BinaryTree {
 struct InsertResult {
     int numComparisons;
     double executionTime;
-    // Other possible variables
+    // others possible variables
 };
 
 struct SearchResult {
@@ -45,7 +45,13 @@ int computeHeight(Node* node);
 
 void printIndex(BinaryTree* tree);
 
+// Auxiliary function
+void printIndexAux(Node* root, int &counter);
+
 void printTree(BinaryTree* tree);
+
+// Auxiliary function
+void printTreeAux(Node* root, int counter, bool isLast);
 
 // Auxiliary function
 void printVector(const std::vector<int> vec);

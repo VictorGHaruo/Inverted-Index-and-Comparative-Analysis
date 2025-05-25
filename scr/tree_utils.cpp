@@ -39,17 +39,26 @@ void printVector(const std::vector<int> vec){
     }    
 }
 
-// To be fixed: the position of each word is missing
+void printIndexAux(Node* root, int &counter){
+
+    if (root != nullptr) {
+        cout << counter <<". " << root->word << ": "; 
+        printVector(root->documentIds);
+        cout << endl;
+        counter++;
+
+        printIndexAux(root->left, counter);
+        printIndexAux(root->right, counter);
+    }
+}
+
+// It was necessary to create an auxiliary function
 void printIndex(BinaryTree* tree){
     Node* n = tree->root;
+    int counter = 1;
 
     if (n != nullptr) {
-        cout << ". " << n->word << ": "; 
-        printVector(n->documentIds);
-        cout << endl;
-        // better if create a new tree for each side? ...
-        printIndex(createTree(n->left));
-        printIndex(createTree(n->right));
+        printIndexAux(n, counter);
     }
 };
 
@@ -73,25 +82,45 @@ int computeHeight(Node* node){
     return 1 + max(x,y);
 }
 
-// To be corrected...
+
+void printTreeAux(Node* root, int counter, bool isLast){
+
+    if (root != nullptr) {
+            
+        if (counter > 0) {
+            for (int i=1; i < counter; i++)
+            cout << "│   ";
+ 
+            if (isLast){
+                cout << "└──";
+            } else {
+                cout << "├──";
+            }
+        }
+
+        cout << root->word << endl;
+
+        // If there is no child on the right, the child 
+        // on the left will be the last
+        if(root->right == nullptr)
+            printTreeAux(root->left, counter + 1, true);
+        else {
+            printTreeAux(root->left, counter + 1, false);
+            printTreeAux(root->right, counter + 1, true);
+        }
+        
+    }
+
+};
+
 void printTree(BinaryTree* tree){
+
     Node* n = tree->root;
-
-    // // │   ├── │   └──"
-    // if (n != nullptr) {
-    //     cout << n->word << endl;
-
-    //     if (n->left != nullptr){
-    //         cout << "├── ";
-    //         printTree(createTree(n->left));
-    //     }
-
-    //     if (n->right != nullptr){
-    //         cout << "└── ";
-    //         printTree(createTree(n->right));
-    //     }
+    int counter = 0;
     
-    // }
+    if (n != nullptr) {
+        printTreeAux(n, counter, false);
+    }
 }
 
 
