@@ -1,5 +1,6 @@
-OBJS_DATA = test_data.o data.o
+OBJS_DATA = test.o data.o
 DATA = data
+FLAGS = -Wall -Wextra
 
 all: Data
 
@@ -7,10 +8,10 @@ Data: $(DATA)
 	./$(DATA)
 
 $(DATA): $(OBJS_DATA)
-	g++ $(OBJS_DATA) -o $(DATA)
+	g++ $(FLAGS) $(OBJS_DATA) -o $(DATA)
 
 %.o: %.cpp
-	g++ -c $<
+	g++ $(FLAGS) -c $<
 
 clean:
-	rm -rf *.o $(DATA)
+	rm -rf *.o $(DATA) *.out
