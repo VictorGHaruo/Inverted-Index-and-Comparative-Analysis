@@ -33,6 +33,10 @@ struct SearchResult {
     double executionTime;
     int numComparisons;
     // others possible variables
+    
+    //created for BST
+    Node* resultedNode;
+    Node* parent;
 };
 
 Node* createNode(std::string word, std::vector<int> documentsId, Node* parent);
