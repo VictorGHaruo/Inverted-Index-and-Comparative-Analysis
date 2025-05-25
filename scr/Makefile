@@ -1,16 +1,16 @@
-all: run
+OBJS_DATA = test_data.o data.o
+DATA = data
 
-run: main
-	./main
+all: Data
 
-main: data.o main.o
-	g++ main.o data.o -o main
+Data: $(DATA)
+	./$(DATA)
 
-main.o: main.cpp
-	g++ -c main.cpp
+$(DATA): $(OBJS_DATA)
+	g++ $(OBJS_DATA) -o $(DATA)
 
-data.o: data.cpp data.h
-	g++ -c data.cpp
+%.o: %.cpp
+	g++ -c $<
 
 clean:
-	rm -rf *.o main
+	rm -rf *.o $(DATA)
