@@ -18,16 +18,6 @@ Node* createNode(std::string word, std::vector<int> documentsId, Node* parent){
     return node;
 }
 
-
-// Maybe will be changed file
-BinaryTree* createTree(Node* root){
-    BinaryTree* tree = new BinaryTree();
-    tree->root = root;
-    tree->NIL = nullptr;
-
-    return tree;
-}
-
 // Auxiliary function
 void printVector(const std::vector<int> vec){
     int n = vec.size();
