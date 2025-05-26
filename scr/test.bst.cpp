@@ -5,8 +5,7 @@ using namespace std;
 
 
 int main(){
-    BinaryTree *tree = new BinaryTree;
-    vector<int> vet = {1,2,3,4};
+    BinaryTree *tree = BST::create();
 
     // Inserting when the root is a null pointer
     InsertResult insert_root = BST::insert(tree, "sabrina", 1); 

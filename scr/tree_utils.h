@@ -41,8 +41,6 @@ struct SearchResult {
 
 Node* createNode(std::string word, std::vector<int> documentsId, Node* parent);
 
-BinaryTree* createTree(Node* root);
-
 int computeDepth(Node* node);
 
 int computeHeight(Node* node);

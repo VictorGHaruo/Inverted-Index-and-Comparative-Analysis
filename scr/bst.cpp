@@ -8,6 +8,13 @@ using namespace BST;
 using namespace std::chrono;
 
 namespace BST{
+    BinaryTree* create(){
+        BinaryTree* tree = new BinaryTree();
+        tree->root = nullptr;
+        tree->NIL = nullptr;
+        return tree;
+    }
+
     InsertResult insert(BinaryTree* tree, const std::string& word, int documentId){
         auto start = high_resolution_clock::now(); //Starts clock
         SearchResult searchNode = search(tree, word);
