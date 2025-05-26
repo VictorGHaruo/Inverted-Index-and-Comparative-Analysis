@@ -1,17 +1,17 @@
-OBJS_DATA = test.o data.o
-DATA = data
+OBJS_BST = main_bst.o
+T_BST = main_bst
 FLAGS = -Wall -Wextra
 
-all: Data
+all: T_BST
 
-Data: $(DATA)
-	./$(DATA)
+T_BST: $(T_BST)
+	./$(T_BST)
 
-$(DATA): $(OBJS_DATA)
-	g++ $(FLAGS) $(OBJS_DATA) -o $(DATA)
+$(T_BST): $(OBJS_BST)
+	g++ $(FLAGS) $(OBJS_BST) -o $(T_BST)
 
 %.o: %.cpp
 	g++ $(FLAGS) -c $<
 
 clean:
-	rm -rf *.o $(DATA) *.out
+	rm -rf *.o $(T_BST) *.out
