@@ -29,12 +29,15 @@ int main(int argc, char** argv) {
     // Validate arguments
     if (argc != 4) {
         cerr << "Usage: " << argv[0] << " <comand> <n_docs> <directory_path>" << endl;
+        cerr << "<comand> : 'search' or 'stats'" << endl;
+        cerr << "<n_dcos> : a positve integer number" << endl;
+        cerr << "<directory_path> : exemple '../data/' " << endl;
         return 1;
     }
     string comand = argv[1];
     if (!(comand == "search" || comand == "stats")) {
         cerr << "Usage: " << argv[0] << " <comand> <n_docs> <directory_path>" << endl;
-        cerr << "Error : The arg <comand> must be 'search' or 'stats'." << endl;
+        cerr << "Error: The arg <comand> must be 'search' or 'stats'." << endl;
         return 1;
     }
     int numMax = -1;
@@ -42,16 +45,16 @@ int main(int argc, char** argv) {
         numMax = stoi(argv[2]);
     } else {
         cerr << "Usage: " << argv[0] << " <comand> <n_docs> <directory_path>" << endl;
-        cerr << "Error : <n_docs> must be a positive integer." << endl;;
+        cerr << "Error: <n_docs> must be a positive integer." << endl;;
         return 1;
     }
     auto texts = data::readData(argv[3], numMax);
     if (texts.empty()){
         cerr << "Usage: " << argv[0] << " <comand> <n_docs> <directory_path>" << endl;
-        cerr << "Error : Directory path is invalid." << endl;
+        cerr << "Error: Directory path is invalid." << endl;
         return 1;
     } else if(texts.size() < numMax){ //opcional
-        cerr << "Warning : n_docs is greater than the number of txt's in the directory." << endl;
+        cerr << "Warning: n_docs is greater than the number of txt's in the directory." << endl;
     }
 
     // Populate the tree 
