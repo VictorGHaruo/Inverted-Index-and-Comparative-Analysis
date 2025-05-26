@@ -64,7 +64,6 @@ int main(int argc, char** argv) {
     for(int i = 0; i < sizeTexts; i++){
         int sizeT = texts[i].size();
         for(int j = 0; j < sizeT; j++){
-            cout << i << endl;
             BST::insert(bst, texts[i][j], i);
         }
     }
@@ -72,7 +71,8 @@ int main(int argc, char** argv) {
     // Commands
     if (comand == "search"){
         
-        cout << "OIII" << endl;
+        printIndex(bst);
+        // cout << "OIII" << endl;
 
     } else { //already garanted that is stats.
         
