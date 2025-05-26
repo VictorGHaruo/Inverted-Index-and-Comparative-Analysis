@@ -7,12 +7,17 @@
 namespace data {
 
     /** 
-     * @brief Retorn a vector of vectors with the words of each text (.txt in the dirname) util the number max.
-     * @param dirname String with the path of the directory data
+     * @brief Retorn a vector of vectors (matrix) with the words of each text (.txt in the directory) util the number max.
+     * 
+     * Returns a empyt vector if the dirpath is invalid.
+     * 
+     * If the function can't read a .txt, means that there's not more to read thus it stops.
+     * 
+     * @param dirpath String with the path of the directory data
      * @param numMax Int with the maximum number of texts read
-     * @return vector<vector<string>> 
+     * @return Matrix of words 
     */
-    std::vector<std::vector<std::string>> readData(std::string dirname, int numMax);
+    std::vector<std::vector<std::string>> readData(std::string dirpath, int numMax);
 
 }
 
