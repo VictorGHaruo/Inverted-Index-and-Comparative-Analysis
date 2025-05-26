@@ -1,6 +1,9 @@
 # include "tree_utils.h"
 
 using namespace std;
+using namespace TreeUtils;
+
+namespace TreeUtils {
 
 Node* createNode(std::string word, std::vector<int> documentsId, Node* parent){
     Node* node = new Node();
@@ -12,13 +15,13 @@ Node* createNode(std::string word, std::vector<int> documentsId, Node* parent){
     node->right = nullptr;
 
     // To be corrected...
-    node->height = 1;
+    node->height = 0;
     node->isRed = 0;
 
     return node;
 }
 
-// Auxiliary function
+// Prints vector elements separated by commas for readable output
 void printVector(const std::vector<int> vec){
     int n = vec.size();
     for (int i = 0; i < n; i++){
@@ -29,6 +32,7 @@ void printVector(const std::vector<int> vec){
     }    
 }
 
+// Auxiliary recursive function for printIndex
 void printIndexAux(Node* root, int &counter){
 
     if (root != nullptr) {
@@ -42,7 +46,6 @@ void printIndexAux(Node* root, int &counter){
     }
 }
 
-// It was necessary to create an auxiliary function
 void printIndex(BinaryTree* tree){
     Node* n = tree->root;
     int counter = 1;
@@ -53,10 +56,9 @@ void printIndex(BinaryTree* tree){
 };
 
 int computeDepth(Node* node){
-    Node* curr = node;
     int depth = 0;
-    while (curr->parent != nullptr){
-        curr=curr->parent;
+    while (node->parent != nullptr){
+        node=node->parent;
         depth++;
     }
 
@@ -72,14 +74,15 @@ int computeHeight(Node* node){
     return 1 + max(x,y);
 }
 
-
+// TODO: fix tree view
+// Auxiliary recursive function for printTree
 void printTreeAux(Node* root, int counter, bool isLast){
 
     if (root != nullptr) {
             
         if (counter > 0) {
             for (int i=1; i < counter; i++)
-            cout << "│   ";
+            cout << "│  ";
  
             if (isLast){
                 cout << "└──";
@@ -109,9 +112,8 @@ void printTree(BinaryTree* tree){
     int counter = 0;
     
     if (n != nullptr) {
-        printTreeAux(n, counter, false);
+        printTreeAux(n, counter, true);
     }
 }
 
-
-
+}
