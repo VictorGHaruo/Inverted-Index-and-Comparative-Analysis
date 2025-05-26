@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
         cerr << "Error: The arg <comand> must be 'search' or 'stats'." << endl;
         return 1;
     }
-    int numMax = -1;
+    unsigned int numMax = 0;
     if (isPosInt(argv[2])){
         numMax = stoi(argv[2]);
     } else {
@@ -70,9 +70,33 @@ int main(int argc, char** argv) {
 
     // Commands
     if (comand == "search"){
-        
-        printIndex(bst);
-        // cout << "OIII" << endl;
+
+        bool quit = false;
+
+        cout << endl << "Welcome to the CLI - Search!" << endl << endl;
+        while (!quit){
+            cout << "To quit, search for 'Q'." << endl;
+            cout << "Search the word: ";
+            string word;
+            cin >> word;
+            if(word == "Q") return 0;
+
+            SearchResult result = BST::search(bst, word);
+            if(result.found){
+                cout << endl << "The word '" << word << "' was found!" << endl;
+                cout << "- It's in the docs with index: ";
+                int sIds = result.documentIds.size();
+                cout << "{" << result.documentIds[0];
+                for(int i = 1; i < sIds; i++){
+                    cout << ", " << result.documentIds[i];
+                }
+                cout << "}" << endl;
+                cout << "- It takes " << result.executionTime << "ms." << endl;
+                cout << "- In " << result.numComparisons << " comparisons." << endl << endl;
+            } else {
+                cout << "This word isn't in the texts! Try another word." << endl << endl;
+            }
+        }
 
     } else { //already garanted that is stats.
         
