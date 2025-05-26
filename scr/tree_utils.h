@@ -5,22 +5,32 @@
 # include <vector>
 # include <string>
 
+namespace TreeUtils {
 
+/**
+ * @struct Node
+ * @brief Structure to represent a node in a binary tree
+*/
 struct Node {
-    std::string word;
-    std::vector<int> documentIds;
-    Node* parent;
-    Node* left;
-    Node* right;
-    int height;    // used in AVL
-    int isRed;     // used in RBT
+    std::string word;               // The indexed word
+    std::vector<int> documentIds;   // List of document IDs containing this word
+    Node* parent;                   // Pointer to parent node
+    Node* left;                     // Pointer to left child
+    Node* right;                    // Pointer to right child
+    int height;                     // Node height (used in AVL)
+    int isRed;                      // Color flag (used in RBT)
 };
 
+/**
+ * @struct BinaryTree
+ * @brief Structure to represent a binary tree
+*/
 struct BinaryTree {
-    Node* root;
-    Node* NIL;  // used in RBT
+    Node* root;                     // Pointer to the root node
+    Node* NIL;                      // used in RBT
 };
 
+// To be documented
 struct InsertResult {
     int numComparisons;
     double executionTime;
@@ -39,23 +49,46 @@ struct SearchResult {
     Node* parent;
 };
 
+/**
+ * @brief Creates a new tree node
+ * 
+ * @param word The word to be stored in the node
+ * @param documentsId Vector of document IDs where the word appears
+ * @param parent The parent of the node 
+ * @return Node* 
+*/
 Node* createNode(std::string word, std::vector<int> documentsId, Node* parent);
 
+/**
+ * @brief Computes the depth of a node
+ * 
+ * @param node Pointer to the node whose depth is to be calculated
+ * @return int Depth of the node (0 for root, -1 for nullptr node)
+ */
 int computeDepth(Node* node);
 
+/**
+ * @brief Computes the height of a node
+ * 
+ * @param node Pointer to the node whose height is to be calculated
+ * @return int Height of the node (-1 for nullptr node)
+ */
 int computeHeight(Node* node);
 
+/**
+ * @brief Prints the inverted index in a formatted list
+ * @param tree Pointer to the binary tree containing the index
+ * @details Displays each word with its corresponding document IDs.
+ *          Format: "1. word: doc1, doc2, doc3"
+ */
 void printIndex(BinaryTree* tree);
 
-// Auxiliary function
-void printIndexAux(Node* root, int &counter);
-
+/**
+ * @brief Prints the tree structure in a visual hierarchical format
+ * @param tree Pointer to the binary tree to be displayed
+*/
 void printTree(BinaryTree* tree);
 
-// Auxiliary function
-void printTreeAux(Node* root, int counter, bool isLast);
-
-// Auxiliary function
-void printVector(const std::vector<int> vec);
+}
 
 # endif
