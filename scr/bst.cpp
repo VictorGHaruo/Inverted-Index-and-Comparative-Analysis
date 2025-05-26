@@ -22,14 +22,18 @@ namespace BST{
         if (searchNode.found == 1){ //The word is already in the tree
 
             //To avoid repeating document IDs when adding words
-            for (int i = 0; i < searchNode.resultedNode->documentIds.size(); i++){
+            int n = searchNode.resultedNode->documentIds.size();
+            bool exists = false;
+            for (int i = 0; i < n; i++){
                 if (searchNode.resultedNode->documentIds[i] == documentId){
+                    exists = true;
                     break;
                 }
-                else{
-                    searchNode.resultedNode->documentIds.push_back(documentId);     
-                }
             }
+            if(!exists){
+                searchNode.resultedNode->documentIds.push_back(documentId); 
+            }
+
         }
         else{ //The word isn't in the tree
             vector<int> documentID = {documentId};
