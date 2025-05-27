@@ -24,7 +24,7 @@ bool isPosInt(string strNum){
     return true;
 }
 
-bool Validade(int argc, char* argv[], string* comand, vector<vector<string>>* texts){
+bool Validate(int argc, char* argv[], string* comand, vector<vector<string>>* texts){
     if (argc != 4) {
         cerr << "Usage: " << argv[0] << " <comand> <n_docs> <directory_path>" << endl;
         cerr << "<comand> : 'search' or 'stats'" << endl;
@@ -94,7 +94,7 @@ void SearchLooping(BinaryTree* bst){
     }
 }
 
-void StatsLoopingg(vector<InsertResult> insRes, BinaryTree* bst, int sizeTexts){
+void StatsLoopingg(BinaryTree* bst, vector<InsertResult> insRes, int sizeTexts){
     int sizeInsRes = insRes.size();
     double totTime = 0;
     int totComp = 0;
@@ -134,7 +134,7 @@ int main(int argc, char** argv) {
     // Validate arguments
     string comand;
     vector<vector<string>> texts;
-    bool valide = Validade(argc, argv, &comand, &texts);
+    bool valide = Validate(argc, argv, &comand, &texts);
     if (!valide) return 1;
 
     // Populate the tree 
@@ -153,7 +153,7 @@ int main(int argc, char** argv) {
     if (comand == "search"){
         SearchLooping(bst);
     } else { 
-        StatsLoopingg(insRes, bst, sizeTexts);
+        StatsLoopingg(bst, insRes, sizeTexts);
     }
 
     return 0;
