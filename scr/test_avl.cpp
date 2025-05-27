@@ -62,7 +62,6 @@ int main(){
     
     cout << "========= Tree =========" << endl;
     printTree(tree);
-    printTree2(tree);
     cout << endl;
 
     cout << "========= Delete Tree =========" << endl;
