@@ -138,29 +138,18 @@ namespace AVL {
         while (current_ancestor != nullptr) {
             Node* original_ancestor_at_this_level = current_ancestor;
             Node* parent_of_current_ancestor = current_ancestor->parent;
-
             // balance() calls computeHeight internally and returns the new root of the subtree
             Node* new_subtree_root = balance(current_ancestor);
-
             // Reconnect the (possibly new) root of the subtree to its parent
             if (parent_of_current_ancestor == nullptr) {
-                // If the parent of the current ancestor is null,
-                // it means the ancestor was the root.
-                // Therefore, new_subtree_root (result of balancing) is the new tree root.
                 tree->root = new_subtree_root;
             } else {
-                // If there is a parent, we need to link new_subtree_root
-                // to the correct child pointer of that parent.
                 if (parent_of_current_ancestor->left == original_ancestor_at_this_level) {
                     parent_of_current_ancestor->left = new_subtree_root;
                 } else {
                     parent_of_current_ancestor->right = new_subtree_root;
                 }
             }
-            // The rotation functions (called by balance) must have updated
-            // the `parent` pointer of `new_subtree_root`
-            // to point to `parent_of_current_ancestor`.
-
             current_ancestor = parent_of_current_ancestor; // Move to the next ancestor
         }
     }
