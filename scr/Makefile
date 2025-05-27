@@ -11,7 +11,7 @@ cmd = search
 endif
 
 ifndef path
-path = "../data/"
+path = ../data/
 endif
 
 OBJS = main_$(tree).o $(tree).o tree_utils.o data.o

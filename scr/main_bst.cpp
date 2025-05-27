@@ -70,7 +70,7 @@ void SearchLooping(BinaryTree* bst){
         getline(cin, line);
         //if the rest of input is just ' ' it's okay, if not it's 2+ words
         if(line.length() > 1 && line.find_first_not_of(' ') != string::npos){
-            cout << "- Please, just one word. Try again." << endl << endl;
+            cout << endl << "- Wait, just one word. Try again." << endl << endl;
             continue;
         }
         
@@ -118,7 +118,7 @@ void StatsLoopingg(vector<InsertResult> insRes, BinaryTree* bst, int sizeTexts){
         getline(cin, line);
         //if the rest of input is just ' ' it's okay, if not it's 2+ words
         if(line.length() > 1 && line.find_first_not_of(' ') != string::npos){
-            cout << endl << "- Please, just one word. Try again." << endl;
+            cout << endl << "- Wait, just one word. Try again." << endl;
             continue;
         }
         if(word == "Q") break;
