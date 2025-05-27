@@ -1,52 +1,31 @@
 #include <iostream>
 #include <vector>
-#include <string> // Adicionado para std::string
-#include <algorithm> // Adicionado para std::max
-#include "avl.h"      // Presume que Node, BinaryTree, SearchResult, InsertResult são definidos aqui
-#include "tree_utils.h" // Presume que createNode e computeHeight são definidos aqui
+#include <string> 
+#include <algorithm> 
+#include "avl.h"    
+#include "tree_utils.h" 
 #include <chrono>
-
 using namespace std;
-// using namespace AVL; // Melhor evitar 'using namespace' globalmente em arquivos .h ou .cpp grandes. Usar std:: e AVL:: explicitamente.
+using namespace AVL;
 using namespace std::chrono;
-
-// Protótipo para computeHeight, assumindo que está em tree_utils.h ou avl.h
-// Se não estiver, você precisará de uma definição como:
-/*
-namespace AVL {
-    void computeHeight(Node* node) {
-        if (node == nullptr) return;
-        int leftHeight = (node->left) ? node->left->height : -1;
-        int rightHeight = (node->right) ? node->right->height : -1;
-        node->height = 1 + std::max(leftHeight, rightHeight);
-    }
-}
-*/
-
 
 namespace AVL {
     BinaryTree* create() {
         BinaryTree* tree = new BinaryTree();
         tree->root = nullptr;
-        tree->NIL = nullptr; // Se NIL for usado como sentinela, precisa de tratamento especial.
-                             // Se for apenas um alias para nullptr, é redundante.
-                             // O código atual usa nullptr para checagens.
+        tree->NIL = nullptr; 
         return tree;
     }
 
     int BalancingFactor(Node* node) {
         if (node == nullptr) {
-            return 0; // Fator de balanceamento de um nó nulo é 0
+            return 0; 
         }
         // Altura de um nó nulo é convencionalmente -1 para que folhas (com filhos nulos) tenham altura 0.
         int leftHeight = (node->left) ? node->left->height : -1;
         int rightHeight = (node->right) ? node->right->height : -1;
         return leftHeight - rightHeight;
     }
-
-    // As funções de rotação devem estar corretas e chamar computeHeight nos nós afetados.
-    // O código original para rotações parece lidar com os ponteiros e alturas.
-    // Elas retornam a nova raiz da subárvore rotacionada.
 
      Node* rotateLeft(Node* root) {
         Node* newRoot = root->right;
@@ -256,21 +235,21 @@ namespace AVL {
     }
 
     void deleteTree(BinaryTree* tree) {
-        if (tree == nullptr) return; // Adiciona verificação para árvore nula
+        if (tree == nullptr) return; 
         deleteTreeRecursive(tree->root);
         delete tree;
-        // tree = nullptr; // Definir o ponteiro original como nullptr é responsabilidade do chamador
+
     }
 
-    void deleteTreeRecursive(Node* node) { // Renomeado 'root' para 'node' para clareza no contexto recursivo
+    void deleteTreeRecursive(Node* node) { 
         if (node == nullptr) {
             return;
         }
 
-        // Deleta os nós em pós-ordem (DFS)
+
         deleteTreeRecursive(node->left);
         deleteTreeRecursive(node->right);
 
         delete node;
     }
-} // Fim do namespace AVL
+}
