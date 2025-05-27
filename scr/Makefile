@@ -1,28 +1,33 @@
-ifdef num
-num = 
-else
+ifndef tree
+tree = bst
+endif
+
+ifndef num
 num = 10103
 endif
 
-OBJS_BST = main_bst.o tree_utils.o data.o bst.o
-T_BST = main_bst
-search_bst = main_bst
-stats_bst = main_bst
+ifndef cmd
+cmd = search
+endif
+
+ifndef path
+path = "../data/"
+endif
+
+OBJS = main_$(tree).o $(tree).o tree_utils.o data.o
+TARGET = main_$(tree)
 FLAGS = -Wall -Wextra
 
-all: search_bst
+all: TARGET
 
-search_bst: $(T_BST)
-	./$(T_BST) search $(num) ../data/
+TARGET: $(TARGET)
+	./$(TARGET) $(cmd) $(num) $(path)
 
-stats_bst: $(T_BST)
-	./$(T_BST) stats $(num) ../data/
-
-$(T_BST): $(OBJS_BST)
-	g++ $(FLAGS) $(OBJS_BST) -o $(T_BST)
+$(TARGET): $(OBJS)
+	g++ $(FLAGS) $(OBJS) -o $(TARGET)
 
 %.o: %.cpp
 	g++ $(FLAGS) -c $<
 
 clean:
-	rm -rf *.o $(T_BST) *.out
+	rm -rf *.o $(TARGET) *.out
