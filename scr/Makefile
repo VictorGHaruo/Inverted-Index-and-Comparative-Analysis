@@ -1,22 +1,33 @@
-OBJS_BST = main_bst.o tree_utils.o data.o bst.o
-T_BST = main_bst
-T_BST_Search = main_bst
-T_BST_Stats = main_bst
+ifndef tree
+tree = bst
+endif
+
+ifndef num
+num = 10103
+endif
+
+ifndef cmd
+cmd = search
+endif
+
+ifndef path
+path = "../data/"
+endif
+
+OBJS = main_$(tree).o $(tree).o tree_utils.o data.o
+TARGET = main_$(tree)
 FLAGS = -Wall -Wextra
 
-all: T_BST_Search
+all: TARGET
 
-T_BST_Search: $(T_BST)
-	./$(T_BST) search 10103 ../data/
+TARGET: $(TARGET)
+	./$(TARGET) $(cmd) $(num) $(path)
 
-T_BST_Stats: $(T_BST)
-	./$(T_BST) stats 10103 ../data/
-
-$(T_BST): $(OBJS_BST)
-	g++ $(FLAGS) $(OBJS_BST) -o $(T_BST)
+$(TARGET): $(OBJS)
+	g++ $(FLAGS) $(OBJS) -o $(TARGET)
 
 %.o: %.cpp
 	g++ $(FLAGS) -c $<
 
 clean:
-	rm -rf *.o $(T_BST) *.out
+	rm -rf *.o $(TARGET) *.out
