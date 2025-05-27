@@ -61,29 +61,36 @@ int main(int argc, char** argv) {
     BinaryTree* bst = BST::create();
 
     int sizeTexts = texts.size();
+    vector<InsertResult> insRes;
     for(int i = 0; i < sizeTexts; i++){
         int sizeT = texts[i].size();
         for(int j = 0; j < sizeT; j++){
-            BST::insert(bst, texts[i][j], i);
+            insRes.push_back(BST::insert(bst, texts[i][j], i));
         }
     }
 
     // Commands
     if (comand == "search"){
 
-        bool quit = false;
-
         cout << endl << "Welcome to the CLI - Search!" << endl << endl;
-        while (!quit){
+        while (true){
             cout << "To quit, search for 'Q'." << endl;
             cout << "Search the word: ";
+            string line;
             string word;
-            cin >> word;
+            cin >> word; // take the fist word
+            getline(cin, line);
+            //if the rest of input is just ' ' it's okay, if not it's 2+ words
+            if(line.length() > 1 && line.find_first_not_of(' ') != string::npos){
+                cout << "- Please, just one word. Try again." << endl << endl;
+                continue;
+            }
+            
             if(word == "Q") return 0;
 
             SearchResult result = BST::search(bst, word);
             if(result.found){
-                cout << endl << "The word '" << word << "' was found!" << endl;
+                cout << endl << "- The word '" << word << "' was found!" << endl;
                 cout << "- It's in the docs with index: ";
                 int sIds = result.documentIds.size();
                 cout << "{" << result.documentIds[0];
@@ -94,14 +101,46 @@ int main(int argc, char** argv) {
                 cout << "- It takes " << result.executionTime << "ms." << endl;
                 cout << "- In " << result.numComparisons << " comparisons." << endl << endl;
             } else {
-                cout << "This word isn't in the texts! Try another word." << endl << endl;
+                cout << endl << "- The word '" << word << "' isn't in the texts! Try another word." << endl << endl;
             }
         }
 
-    } else { //already garanted that is stats.
+    } else { 
+
+        int sizeInsRes = insRes.size();
+        double totTime = 0;
+        int totComp = 0;
+        for(int i = 0; i < sizeInsRes; i++){
+            totTime += insRes[i].executionTime;
+            totComp += insRes[i].numComparisons;
+        }
+
+        cout << "Welcome to the CLI - Stats!" << endl;
+        cout << "The init stats were: " << endl;
+        cout << "- Executation Time : " << totTime << "ms = " << totTime/1000 << "s" << endl;
+        cout << "- Number of comparisons : " << totComp << endl;
         
-        cout << "Not to do yet" << endl;
-    
+        while(true){
+            cout << endl << "To quit, add 'Q'." << endl;
+            cout << "Add a new word: ";
+
+            string line;
+            string word;
+            cin >> word; // take the fist word
+            getline(cin, line);
+            //if the rest of input is just ' ' it's okay, if not it's 2+ words
+            if(line.length() > 1 && line.find_first_not_of(' ') != string::npos){
+                cout << endl << "- Please, just one word. Try again." << endl;
+                continue;
+            }
+            if(word == "Q") return 0;
+
+            InsertResult res = BST::insert(bst, word, sizeTexts);
+            cout << endl << "- Executation Time : " << res.executionTime << "ms = " << res.executionTime/1000 << "s" << endl;
+            cout << "- Number of comparisons : " << res.numComparisons << endl;
+
+
+        }
     }
 
 
