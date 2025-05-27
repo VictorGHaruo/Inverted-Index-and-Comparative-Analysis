@@ -1,29 +1,54 @@
 #include <iostream>
 #include <vector>
-#include "avl.h"
-#include "tree_utils.h"
+#include <string> // Adicionado para std::string
+#include <algorithm> // Adicionado para std::max
+#include "avl.h"      // Presume que Node, BinaryTree, SearchResult, InsertResult são definidos aqui
+#include "tree_utils.h" // Presume que createNode e computeHeight são definidos aqui
 #include <chrono>
+
 using namespace std;
-using namespace AVL;
+// using namespace AVL; // Melhor evitar 'using namespace' globalmente em arquivos .h ou .cpp grandes. Usar std:: e AVL:: explicitamente.
 using namespace std::chrono;
 
-namespace AVL{
-    BinaryTree* create(){
+// Protótipo para computeHeight, assumindo que está em tree_utils.h ou avl.h
+// Se não estiver, você precisará de uma definição como:
+/*
+namespace AVL {
+    void computeHeight(Node* node) {
+        if (node == nullptr) return;
+        int leftHeight = (node->left) ? node->left->height : -1;
+        int rightHeight = (node->right) ? node->right->height : -1;
+        node->height = 1 + std::max(leftHeight, rightHeight);
+    }
+}
+*/
+
+
+namespace AVL {
+    BinaryTree* create() {
         BinaryTree* tree = new BinaryTree();
         tree->root = nullptr;
-        tree->NIL = nullptr;
+        tree->NIL = nullptr; // Se NIL for usado como sentinela, precisa de tratamento especial.
+                             // Se for apenas um alias para nullptr, é redundante.
+                             // O código atual usa nullptr para checagens.
         return tree;
     }
 
     int BalancingFactor(Node* node) {
-        if(node) {
-            return (node->left->height) - (node->right->height);
-        } else { 
-            return 0;
+        if (node == nullptr) {
+            return 0; // Fator de balanceamento de um nó nulo é 0
         }
+        // Altura de um nó nulo é convencionalmente -1 para que folhas (com filhos nulos) tenham altura 0.
+        int leftHeight = (node->left) ? node->left->height : -1;
+        int rightHeight = (node->right) ? node->right->height : -1;
+        return leftHeight - rightHeight;
     }
 
-    Node* rotateLeft(Node* root) {
+    // As funções de rotação devem estar corretas e chamar computeHeight nos nós afetados.
+    // O código original para rotações parece lidar com os ponteiros e alturas.
+    // Elas retornam a nova raiz da subárvore rotacionada.
+
+     Node* rotateLeft(Node* root) {
         Node* newRoot = root->right;
         Node* leftSubtree = newRoot->left;
 
@@ -91,57 +116,75 @@ namespace AVL{
         return rotateRight(root);
     }
 
-    Node* balance(Node* root) {
-        int fb = BalancingFactor(root);
+    Node* balance(Node* node_to_balance) {
+        if(node_to_balance == nullptr){
+            return nullptr;
+        }
+        
+        computeHeight(node_to_balance);
+        int fb = BalancingFactor(node_to_balance);
 
         //Left rotation
-        if(fb < 1 && BalancingFactor(root->right) <= 0) {
-            root = rotateLeft(root);
-        //Right rotation
-        } else if(fb > 1 && BalancingFactor(root->left) >= 0) {
-            root = rotateRight(root);
-        } else if(fb > 1 && BalancingFactor(root->left) < 0) {
-            root = rotateLeftRight(root);
-        } else if(fb < 1 && BalancingFactor(root->right) > 0) {
-            root = rotateRightLeft(root);
+        if(fb > 1) {
+            if(BalancingFactor(node_to_balance->left) >= 0) {
+                return rotateRight(node_to_balance);
+            } else {
+                return rotateLeftRight(node_to_balance);
+            }
+        }
+        else if (fb < -1) {
+            if (BalancingFactor(node_to_balance->right) <= 0) {
+                return rotateLeft(node_to_balance);
+            } else {
+                return rotateRightLeft(node_to_balance);
+            }
         }
 
-        return root;
+        return node_to_balance;
+    }
+
+    int getHeight(Node* n) {
+        return n == nullptr ? -1 : n->height;
     }
 
     InsertResult insert(BinaryTree* tree, const std::string& word, int documentId){
         auto start = high_resolution_clock::now(); //Starts clock
-        SearchResult searchNode = search(tree, word);
+        SearchResult search_result = search(tree, word);
 
-        if(searchNode.found == 1){//The word is already in the tree
+        if(search_result.found == 1){//The word is already in the tree
             
             //To avoid repeating document IDs when adding words
-            int n = searchNode.resultedNode->documentIds.size();
+            int n = search_result.resultedNode->documentIds.size();
             bool exists = false;
             for (int i = 0; i < n; i++){
-                if(searchNode.resultedNode->documentIds[i] == documentId){
+                if(search_result.resultedNode->documentIds[i] == documentId){
                     exists = true;
                     break;
                 }
             }
             if(!exists){
-                searchNode.resultedNode->documentIds.push_back(documentId);
+                search_result.resultedNode->documentIds.push_back(documentId);
             }
         }
         else{ //The word isn't in the tree
-            vector<int> documentID = {documentID};
-            Node *node = createNode(word, documentID, searchNode.parent);
+            vector<int> documentID = {documentId};
+            Node *node = createNode(word, documentID, search_result.parent);
 
-            if(searchNode.parent == nullptr){ //The root is a nullptr
+            if(search_result.parent == nullptr){ //The root is a nullptr
                 tree->root = node;
             } 
-            else if(word < searchNode.parent->word){ // Determine which side to place the word on
-                tree->root->left = node;
+            else if(word < search_result.parent->word){ // Determine which side to place the word on
+                search_result.parent->left = node;
             }
             else {
-                searchNode.parent->right = node;
+                search_result.parent->right = node;
             }
+            
+            tree->root->height = 1 + std::max(getHeight(tree->root->left), getHeight(tree->root->right));
+            tree->root = balance(tree->root);
         }
+
+
         auto end = high_resolution_clock::now(); //Ends clock
 
         //Convert the auto-typed variable to double, representing milliseconds
@@ -152,14 +195,11 @@ namespace AVL{
         InsertResult result;
 
         // + 1 comes drom the comparson that determines which side the word goes
-        result.numComparisons = searchNode.numComparisons + 1;
+        result.numComparisons = search_result.numComparisons + 1;
         result.executionTime = time;
-
-        tree->root = balance(tree->root);
 
         return result;
     }
-
 
     SearchResult search(BinaryTree* tree, const std::string& word){
         auto start = high_resolution_clock::now(); //Starts clock
@@ -168,7 +208,7 @@ namespace AVL{
         Node *parent = nullptr;
         int numComparisons = 1;
 
-        if(current = nullptr){//Root is a nullptr
+        if(current == nullptr){//Root is a nullptr
             result.parent = nullptr;
             result.found = 0;
             result.numComparisons = numComparisons;
@@ -205,7 +245,7 @@ namespace AVL{
         result.resultedNode = current;
         result.parent = parent;
 
-        if(current = nullptr){
+        if(current == nullptr){
             result.found = 0;
         }
         else{
@@ -215,21 +255,22 @@ namespace AVL{
         return result;
     }
 
-    void deleteTree(BinaryTree* tree){
+    void deleteTree(BinaryTree* tree) {
+        if (tree == nullptr) return; // Adiciona verificação para árvore nula
         deleteTreeRecursive(tree->root);
         delete tree;
-        tree = nullptr;
+        // tree = nullptr; // Definir o ponteiro original como nullptr é responsabilidade do chamador
     }
 
-    void deleteTreeRecursive(Node* root) {
-        if(root == nullptr){
+    void deleteTreeRecursive(Node* node) { // Renomeado 'root' para 'node' para clareza no contexto recursivo
+        if (node == nullptr) {
             return;
         }
 
-        // Delete nodes by DFS
-        deleteTreeRecursive(root->left);
-        deleteTreeRecursive(root->right);
-        
-        delete root;
+        // Deleta os nós em pós-ordem (DFS)
+        deleteTreeRecursive(node->left);
+        deleteTreeRecursive(node->right);
+
+        delete node;
     }
-}
+} // Fim do namespace AVL
