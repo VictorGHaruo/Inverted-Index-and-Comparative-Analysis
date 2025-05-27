@@ -116,4 +116,22 @@ void printTree(BinaryTree* tree){
     }
 }
 
+void printTreeAuxiliar(Node* root, int space) {
+    const int spacing = 4; // space between levels
+    if (root == nullptr) return;
+
+    space += spacing;
+    printTreeAuxiliar(root->right, space);
+
+    //std::cout << std::endl;
+    for (int i = spacing; i < space; i++) std::cout << " ";
+    std::cout << root->word << "\n ";
+
+    printTreeAuxiliar(root->left, space);
+}
+
+void printTree2(BinaryTree* root){
+    printTreeAuxiliar(root->root, 0);
+}
+
 }

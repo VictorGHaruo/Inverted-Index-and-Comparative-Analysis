@@ -89,6 +89,9 @@ void printIndex(BinaryTree* tree);
 */
 void printTree(BinaryTree* tree);
 
+void printTreeAuxiliar(BinaryTree* tree, int space);
+
+void printTree2(BinaryTree* root);
 }
 
 # endif

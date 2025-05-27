@@ -17,14 +17,24 @@ namespace AVL {
         return tree;
     }
 
+    int getHeight(Node* n) {
+        return n == nullptr ? -1 : n->height;
+    }
+
+    void computeHeight2(Node* node) {
+        if (node == nullptr) {
+            return; // Não há altura para calcular para um nó nulo
+        }
+        // Usa sua função getHeight que já trata filhos nulos como altura -1
+        node->height = 1 + std::max(getHeight(node->left), getHeight(node->right));
+    }
+
     int BalancingFactor(Node* node) {
         if (node == nullptr) {
             return 0; 
         }
-        // Altura de um nó nulo é convencionalmente -1 para que folhas (com filhos nulos) tenham altura 0.
-        int leftHeight = (node->left) ? node->left->height : -1;
-        int rightHeight = (node->right) ? node->right->height : -1;
-        return leftHeight - rightHeight;
+        
+        return getHeight(node->left) - getHeight(node->right);
     }
 
      Node* rotateLeft(Node* root) {
@@ -50,8 +60,8 @@ namespace AVL {
             leftSubtree->parent = root;
         }
 
-        computeHeight(root);
-        computeHeight(newRoot);
+        computeHeight2(root);
+        computeHeight2(newRoot);
 
         return newRoot;
     }
@@ -79,9 +89,10 @@ namespace AVL {
             rightSubtree->parent = root;
         }
 
-        computeHeight(root);
-        computeHeight(newRoot);
+        computeHeight2(root);
+        computeHeight2(newRoot);
 
+        std::cout << "passei aqui" << std::endl;
         return newRoot;
     }
 
@@ -96,13 +107,16 @@ namespace AVL {
     }
 
     Node* balance(Node* node_to_balance) {
+        
         if(node_to_balance == nullptr){
             return nullptr;
         }
         
-        computeHeight(node_to_balance);
+        computeHeight2(node_to_balance);
         int fb = BalancingFactor(node_to_balance);
 
+        std::cout << "passei aqui" << std::endl;
+        std::cout << "fb = " << fb << std::endl;
         //Left rotation
         if(fb > 1) {
             if(BalancingFactor(node_to_balance->left) >= 0) {
@@ -122,62 +136,102 @@ namespace AVL {
         return node_to_balance;
     }
 
-    int getHeight(Node* n) {
-        return n == nullptr ? -1 : n->height;
-    }
 
-    InsertResult insert(BinaryTree* tree, const std::string& word, int documentId){
-        auto start = high_resolution_clock::now(); //Starts clock
+
+    InsertResult insert(BinaryTree* tree, const std::string& word, int documentId) {
+        auto start_time_measurement = std::chrono::high_resolution_clock::now();
         SearchResult search_result = search(tree, word);
 
-        if(search_result.found == 1){//The word is already in the tree
-            
-            //To avoid repeating document IDs when adding words
-            int n = search_result.resultedNode->documentIds.size();
-            bool exists = false;
-            for (int i = 0; i < n; i++){
-                if(search_result.resultedNode->documentIds[i] == documentId){
-                    exists = true;
-                    break;
+        if (search_result.found == 1) { // A palavra já está na árvore
+            if (search_result.resultedNode != nullptr) {
+                bool exists = false;
+                for (int current_doc_id : search_result.resultedNode->documentIds) {
+                    if (current_doc_id == documentId) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    search_result.resultedNode->documentIds.push_back(documentId);
                 }
             }
-            if(!exists){
-                search_result.resultedNode->documentIds.push_back(documentId);
+        } else { // A palavra não está na árvore
+            std::vector<int> initial_doc_ids = {documentId};
+            // createNode deve definir a altura do novo nó (ex: 0 para folhas) e o ponteiro parent.
+            Node *new_node = createNode(word, initial_doc_ids, search_result.parent);
+
+            if (search_result.parent == nullptr) { // A árvore estava vazia
+                tree->root = new_node;
+            } else {
+                if (word < search_result.parent->word) {
+                    search_result.parent->left = new_node;
+                } else {
+                    search_result.parent->right = new_node;
+                }
+            }
+
+            // === LÓGICA DE BALANCEAMENTO AVL BOTTOM-UP ===
+            Node* current_ancestor = search_result.parent; // Começa pelo pai do nó inserido
+
+            while (current_ancestor != nullptr) {
+                // std::cout << "Balanceando ancestral: " << current_ancestor->word << std::endl;
+
+                Node* original_ancestor_at_this_level = current_ancestor; // CORRIGIDO TYPO
+                Node* parent_of_current_ancestor = current_ancestor->parent;
+
+                // balance() chama computeHeight internamente e retorna a nova raiz da subárvore
+                std::cout << "Passei no balance" << std::endl;
+                Node* new_subtree_root = balance(current_ancestor);
+
+                // Reconecta a (possivelmente nova) raiz da subárvore ao seu pai
+                if (parent_of_current_ancestor == nullptr) {
+                    // Se o pai do ancestral atual é nulo, significa que o ancestral era a raiz.
+                    // Portanto, a new_subtree_root (resultado do balanceamento) é a nova raiz da árvore.
+                    tree->root = new_subtree_root;
+                } else {
+                    // Se há um pai, precisamos ligar new_subtree_root ao filho correto desse pai.
+                    if (parent_of_current_ancestor->left == original_ancestor_at_this_level) {
+                        parent_of_current_ancestor->left = new_subtree_root;
+                    } else {
+                        parent_of_current_ancestor->right = new_subtree_root;
+                    }
+                }
+                // As funções de rotação (chamadas por balance) devem atualizar o ponteiro `parent`
+                // da `new_subtree_root` para que ele aponte para `parent_of_current_ancestor`.
+
+                current_ancestor = parent_of_current_ancestor; // Move para o próximo ancestral
             }
         }
-        else{ //The word isn't in the tree
-            vector<int> documentID = {documentId};
-            Node *node = createNode(word, documentID, search_result.parent);
 
-            if(search_result.parent == nullptr){ //The root is a nullptr
-                tree->root = node;
-            } 
-            else if(word < search_result.parent->word){ // Determine which side to place the word on
-                search_result.parent->left = node;
-            }
-            else {
-                search_result.parent->right = node;
-            }
-            
-            tree->root->height = 1 + std::max(getHeight(tree->root->left), getHeight(tree->root->right));
-            tree->root = balance(tree->root);
+        auto end_time_measurement = std::chrono::high_resolution_clock::now();
+        auto duration = end_time_measurement - start_time_measurement;
+        std::chrono::duration<double, std::milli> duration_ms = duration; // Usar std::milli
+        double time_taken = duration_ms.count();
+
+        InsertResult result_obj;
+        // Ajuste na contagem de comparações se a lógica de search for alterada
+        result_obj.numComparisons = search_result.numComparisons; 
+        // Se search_result.numComparisons já conta todas as comparações para encontrar o local,
+        // o +1 anterior poderia ser removido. Mantendo como estava por enquanto.
+        // Se a busca foi ajustada como sugeri, o +1 pode não ser necessário.
+        // Para ser mais preciso, se a busca retorna o PAI do local de inserção,
+        // o número de comparações da busca é o que levou até lá.
+        // A lógica original `+1` para a comparação que decide esquerda/direita é implícita na busca.
+        // Se a busca retorna 0 para árvore vazia, e N para encontrar o local/nó,
+        // então numComparisons da busca é o correto.
+        if (search_result.found == 0 && tree->root != nullptr) { // Se não encontrou e a árvore não está vazia
+             // O +1 original poderia ser para a comparação final que falhou em encontrar.
+             // Mas a lógica de numComparisons em search já deve cobrir isso.
+             // Vou manter o +1 como no original, mas é um ponto para revisão detalhada.
+            result_obj.numComparisons = search_result.numComparisons +1;
+        } else {
+            result_obj.numComparisons = search_result.numComparisons;
         }
 
 
-        auto end = high_resolution_clock::now(); //Ends clock
+        result_obj.executionTime = time_taken;
 
-        //Convert the auto-typed variable to double, representing milliseconds
-        auto duration = end - start;
-        chrono::duration<double, milli> duration_ms = duration;
-        double time = duration_ms.count();
-
-        InsertResult result;
-
-        // + 1 comes drom the comparson that determines which side the word goes
-        result.numComparisons = search_result.numComparisons + 1;
-        result.executionTime = time;
-
-        return result;
+        return result_obj;
     }
 
     SearchResult search(BinaryTree* tree, const std::string& word){
