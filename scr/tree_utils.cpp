@@ -65,13 +65,15 @@ int computeDepth(Node* node){
     return depth;
 };
 
-int computeHeight(Node* node){
-    if (node == nullptr)
-        return -1;
-    int x = computeHeight(node->left);
-    int y = computeHeight(node->right);
+int getHeight(Node* node) {
+        return node == nullptr ? -1 : node->height;
+    };
 
-    return 1 + max(x,y);
+void computeHeight(Node* node) {
+    if (node == nullptr) {
+        return; 
+    }
+    node->height = 1 + std::max(getHeight(node->left), getHeight(node->right));
 }
 
 // TODO: fix tree view

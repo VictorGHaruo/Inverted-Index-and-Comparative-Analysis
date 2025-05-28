@@ -67,13 +67,20 @@ Node* createNode(std::string word, std::vector<int> documentsId, Node* parent);
  */
 int computeDepth(Node* node);
 
+/**  
+* @brief Gets the height of a node
+*
+* @param node Pointer to the node whose depth is to be calculated
+* @return int Height of the node (-1 for nullptr node)
+*/
+int getHeight(Node* node);
+
 /**
  * @brief Computes the height of a node
  * 
  * @param node Pointer to the node whose height is to be calculated
- * @return int Height of the node (-1 for nullptr node)
  */
-int computeHeight(Node* node);
+void computeHeight(Node* node);
 
 /**
  * @brief Prints the inverted index in a formatted list

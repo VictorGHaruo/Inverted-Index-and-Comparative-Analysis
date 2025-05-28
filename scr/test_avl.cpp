@@ -3,25 +3,46 @@
 #include "avl.h"
 using namespace std;
 
-
 int main(){
     BinaryTree *tree = AVL::create();
 
-    // Inserting when the root is a null pointer
-    InsertResult insert_root = AVL::insert(tree, "sabrina", 1); 
-    AVL::insert(tree, "carpenter", 2);
-    AVL::insert(tree, "olivia", 3);
-    AVL::insert(tree, "taylor", 4);
-    AVL::insert(tree, "swift", 5);
-    AVL::insert(tree, "rodrigo", 5);
-    
-    //Adding a node that already exists, but with a different ID
-    AVL::insert(tree, "swift", 4);
-    
-    // Adding a node that already exists, but with a equal ID
-    InsertResult insert_last = AVL::insert(tree, "olivia", 3);
-    
-    
+    // AVL::insert(tree, "f", 1); 
+    // AVL::insert(tree, "g", 2);
+    // AVL::insert(tree, "h", 3);
+    // printTree(tree);
+    // cout << "========= \\ =========" << endl;
+    // AVL::insert(tree, "b", 4);
+    // printTree(tree);
+    // cout << "========= \\ =========" << endl;
+    // AVL::insert(tree, "a", 5);
+    // printTree(tree);
+    // cout << "========= \\ =========" << endl;
+
+    cout << "========= Teste Right Rotation =========" << endl;
+    InsertResult insert_root = AVL::insert(tree, "charizard", 3);
+    AVL::insert(tree, "bulbasaur", 2);
+    AVL::insert(tree, "arceus", 1); // Right Rotation
+    printTree(tree);
+    cout << endl ;
+
+    cout << "========= Teste Left Rotation =========" << endl;
+    AVL::insert(tree, "dratini", 4);
+    AVL::insert(tree, "elekid", 5); // Left Rotation ao inserir "e"
+    printTree(tree);
+    cout << endl ;
+
+    cout << "========= Teste Left-Right Rotation =========" << endl;
+    AVL::insert(tree, "galade", 7);
+    AVL::insert(tree, "flareon", 6); // Left-Right Rotation ao inserir "f"
+    printTree(tree);
+    cout << endl ;
+
+    cout << "========= Teste Right-Left Rotation =========" << endl;
+    AVL::insert(tree, "igglybuff", 9);
+    InsertResult insert_last = AVL::insert(tree, "hypno", 8); // Right-Left Rotation ao inserir "h"
+    printTree(tree);
+    cout << endl ;
+
     cout << "========= Insert: Root =========" << endl;
     cout << "Execution Time: " << insert_root.executionTime << endl;
     cout << "Number of Comparisons:" << insert_root.numComparisons << endl;
@@ -31,37 +52,6 @@ int main(){
     cout << "Execution Time: " << insert_last.executionTime << endl;
     cout << "Number of Comparisons:" << insert_last.numComparisons << endl;
     cout << endl ;
-
-    cout << "========= Search: Different ID's =========" << endl;
-
-    //Must appear 2 documents ID
-    SearchResult result_one = AVL::search(tree, "swift");
-    cout << "Execution Time: " << result_one.executionTime << endl;
-    cout << "Found...? " << result_one.found << endl;
-    cout << "Number of Comparisons:" << result_one.numComparisons << endl;
-    cout << "Parent: " << result_one.parent->word << endl;
-    cout << "Documents IDs: ";
-    for (int i = 0; i < result_one.documentIds.size(); i++){
-        cout << result_one.documentIds[i]<< " ";
-    }
-    cout << endl << endl;
-
-    cout << "========= Search: Equal ID's =========" << endl;
-    // Must appear 1 documents ID
-    SearchResult result_two = AVL::search(tree, "olivia");
-    cout << "Execution Time: " << result_two.executionTime << endl;
-    cout << "Found...? " << result_two.found << endl;
-    cout << "Number of Comparisons:" << result_two.numComparisons << endl;
-    cout << "Parent: " << result_two.parent->word << endl;
-    cout << "Documents IDs: ";
-    for (int i = 0; i < result_two.documentIds.size(); i++){
-        cout << result_two.documentIds[i]<< " ";
-    }
-    cout << endl << endl;
-    
-    cout << "========= Tree =========" << endl;
-    printTree(tree);
-    cout << endl;
 
     cout << "========= Delete Tree =========" << endl;
     AVL::deleteTree(tree);

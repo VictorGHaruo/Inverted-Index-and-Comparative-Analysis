@@ -30,4 +30,4 @@ $(TARGET): $(OBJS)
 	g++ $(FLAGS) -c $<
 
 clean:
-	del /Q $(subst /,\,$(OBJS)) $(TARGET).exe *.out 2>NUL
+	rm -rf *.o $(TARGET) *.out
