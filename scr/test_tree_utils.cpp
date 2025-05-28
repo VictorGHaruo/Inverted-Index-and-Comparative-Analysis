@@ -30,9 +30,9 @@ int main(){
     cout << "Depth (dernaldo): " << computeDepth(root->left->left) << endl;
     cout << "Depth (enaldo): " << computeDepth(root->left->right)  << endl;
 
-    cout << "\n========= Tests Height =========" << endl;
-    cout << "Height (arnaldo/root): " << computeHeight(root) << endl;
-    cout << "Height (bernaldo): " << computeHeight(root->left) << endl;
-    cout << "Height (cernaldo): " << computeHeight(root->right) << endl;
-    cout << "Height (dernaldo): " << computeHeight(root->left->left) << endl;
-    cout << "Height (enaldo): " << computeHeight(root->left->right) << endl;}
+    // cout << "\n========= Tests Height =========" << endl;
+    // cout << "Height (arnaldo/root): " << computeHeight(root) << endl;
+    // cout << "Height (bernaldo): " << computeHeight(root->left) << endl;
+    // cout << "Height (cernaldo): " << computeHeight(root->right) << endl;
+    // cout << "Height (dernaldo): " << computeHeight(root->left->left) << endl;
+    // cout << "Height (enaldo): " << computeHeight(root->left->right) << endl;}
