@@ -30,4 +30,4 @@ $(TARGET): $(OBJS)
 	g++ $(FLAGS) -c $<
 
 clean:
-	rm -rf *.o $(TARGET) *.out
+	rm -rf *.o main_bst main_avl main_rbt
