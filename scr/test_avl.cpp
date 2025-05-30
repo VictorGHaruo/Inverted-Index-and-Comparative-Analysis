@@ -5,21 +5,11 @@ using namespace std;
 
 int main(){
     BinaryTree *tree = AVL::create();
-
-    // AVL::insert(tree, "f", 1); 
-    // AVL::insert(tree, "g", 2);
-    // AVL::insert(tree, "h", 3);
-    // printTree(tree);
-    // cout << "========= \\ =========" << endl;
-    // AVL::insert(tree, "b", 4);
-    // printTree(tree);
-    // cout << "========= \\ =========" << endl;
-    // AVL::insert(tree, "a", 5);
-    // printTree(tree);
-    // cout << "========= \\ =========" << endl;
+    InsertResult insert_root;
+    InsertResult insert_last;
 
     cout << "========= Teste Right Rotation =========" << endl;
-    InsertResult insert_root = AVL::insert(tree, "charizard", 3);
+    insert_root = AVL::insert(tree, "charizard", 3);
     AVL::insert(tree, "bulbasaur", 2);
     AVL::insert(tree, "arceus", 1); // Right Rotation
     printTree(tree);
@@ -27,21 +17,56 @@ int main(){
 
     cout << "========= Teste Left Rotation =========" << endl;
     AVL::insert(tree, "dratini", 4);
-    AVL::insert(tree, "elekid", 5); // Left Rotation ao inserir "e"
+    AVL::insert(tree, "elekid", 5); // Left Rotation ao inserir "elekid"
     printTree(tree);
     cout << endl ;
 
     cout << "========= Teste Left-Right Rotation =========" << endl;
     AVL::insert(tree, "galade", 7);
-    AVL::insert(tree, "flareon", 6); // Left-Right Rotation ao inserir "f"
+    AVL::insert(tree, "flareon", 6); // Left-Right Rotation ao inserir "flareon"
     printTree(tree);
     cout << endl ;
 
     cout << "========= Teste Right-Left Rotation =========" << endl;
     AVL::insert(tree, "igglybuff", 9);
-    InsertResult insert_last = AVL::insert(tree, "hypno", 8); // Right-Left Rotation ao inserir "h"
+    AVL::insert(tree, "hypno", 8); // Right-Left Rotation ao inserir "hypno"
     printTree(tree);
+
     cout << endl ;
+
+        string pokemons[] = {
+        "bulbasaur", "ivysaur", "venusaur", "charmander", "charmeleon", "charizard",
+        "squirtle", "wartortle", "blastoise", "caterpie", "metapod", "butterfree",
+        "weedle", "kakuna", "beedrill", "pidgey", "pidgeotto", "pidgeot",
+        "rattata", "raticate", "spearow", "fearow", "ekans", "arbok",
+        "pikachu", "raichu", "sandshrew", "sandslash", "nidoran-f", "nidorina",
+        "nidoqueen", "nidoran-m", "nidorino", "nidoking", "clefairy", "clefable",
+        "vulpix", "ninetales", "jigglypuff", "wigglytuff", "zubat", "golbat",
+        "oddish", "gloom", "vileplume", "paras", "parasect", "venonat",
+        "venomoth", "diglett", "dugtrio", "meowth", "persian", "psyduck",
+        "golduck", "mankey", "primeape", "growlithe", "arcanine", "poliwag",
+        "poliwhirl", "poliwrath", "abra", "kadabra", "alakazam", "machop",
+        "machoke", "machamp", "bellsprout", "weepinbell", "victreebel", "tentacool",
+        "tentacruel", "geodude", "graveler", "golem", "ponyta", "rapidash",
+        "slowpoke", "slowbro", "magnemite", "magneton", "farfetchd", "doduo",
+        "dodrio", "seel", "dewgong", "grimer", "muk", "shellder",
+        "cloyster", "gastly", "haunter", "gengar", "onix", "drowzee",
+        "hypno", "krabby", "kingler", "voltorb", "electrode", "exeggcute",
+        "exeggutor", "cubone", "marowak", "hitmonlee", "hitmonchan", "lickitung",
+        "koffing", "weezing", "rhyhorn", "rhydon", "chansey", "tangela",
+        "kangaskhan", "horsea", "seadra", "goldeen", "seaking", "staryu",
+        "starmie", "mr-mime", "scyther", "jynx", "electabuzz", "magmar",
+        "pinsir", "tauros", "magikarp", "gyarados", "lapras", "ditto",
+        "eevee", "vaporeon", "jolteon", "flareon", "porygon", "omanyte",
+        "omastar", "kabuto", "kabutops", "aerodactyl", "snorlax", "articuno",
+        "zapdos", "moltres", "dratini", "dragonair", "dragonite", "mewtwo", "mew"
+    };
+
+    for (int i = 0; i < 151; i++) {
+        AVL::insert(tree, pokemons[i], i + 1); 
+        if (i == 150)
+            insert_last = AVL::insert(tree, pokemons[i], i + 1);
+    }
 
     cout << "========= Insert: Root =========" << endl;
     cout << "Execution Time: " << insert_root.executionTime << endl;

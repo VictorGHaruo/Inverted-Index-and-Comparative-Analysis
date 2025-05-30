@@ -175,6 +175,7 @@ namespace AVL{
                     tree->root = new_subtree_root;
             }
             ancestral = ancestral->parent;
+            searchNode.numComparisons++;
         }
         auto end = high_resolution_clock::now(); //Ends clock
         //Convert the auto-typed variable to double, representing milliseconds

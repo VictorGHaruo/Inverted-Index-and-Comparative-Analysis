@@ -35,4 +35,5 @@ int main(){
     // cout << "Height (bernaldo): " << computeHeight(root->left) << endl;
     // cout << "Height (cernaldo): " << computeHeight(root->right) << endl;
     // cout << "Height (dernaldo): " << computeHeight(root->left->left) << endl;
-    // cout << "Height (enaldo): " << computeHeight(root->left->right) << endl;}
+    // cout << "Height (enaldo): " << computeHeight(root->left->right) << endl;
+    }
