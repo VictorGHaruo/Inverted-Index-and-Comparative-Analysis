@@ -79,7 +79,7 @@ void SearchLooping(BinaryTree* bst){
         SearchResult result = BST::search(bst, word);
         if(result.found){
             cout << endl << "- The word '" << word << "' was found!" << endl;
-            cout << "- It's in the docs with index: ";
+            cout << "- It's in " << result.documentIds.size() << " docs, with index: ";
             int sIds = result.documentIds.size();
             cout << "{" << result.documentIds[0];
             for(int i = 1; i < sIds; i++){
@@ -94,7 +94,7 @@ void SearchLooping(BinaryTree* bst){
     }
 }
 
-void StatsLoopingg(BinaryTree* bst, vector<InsertResult> insRes, int sizeTexts){
+void Stats(BinaryTree* bst, vector<InsertResult> insRes, int sizeTexts){
     int sizeInsRes = insRes.size();
     double totTime = 0;
     int totComp = 0;
@@ -108,25 +108,27 @@ void StatsLoopingg(BinaryTree* bst, vector<InsertResult> insRes, int sizeTexts){
     cout << "- Executation Time : " << totTime << "ms = " << totTime/1000 << "s" << endl;
     cout << "- Number of comparisons : " << totComp << endl;
     
-    while(true){
-        cout << endl << "To quit, add 'Q'." << endl;
-        cout << "Add a new word: ";
+    // printTree(bst);
 
-        string line;
-        string word;
-        cin >> word; // take the fist word
-        getline(cin, line);
-        //if the rest of input is just ' ' it's okay, if not it's 2+ words
-        if(line.length() > 1 && line.find_first_not_of(' ') != string::npos){
-            cout << endl << "- Wait, just one word. Try again." << endl;
-            continue;
-        }
-        if(word == "Q") break;
+    // while(true){
+    //     cout << endl << "To quit, add 'Q'." << endl;
+    //     cout << "Add a new word: ";
 
-        InsertResult res = BST::insert(bst, word, sizeTexts);
-        cout << endl << "- Executation Time : " << res.executionTime << "ms = " << res.executionTime/1000 << "s" << endl;
-        cout << "- Number of comparisons : " << res.numComparisons << endl;
-    }
+    //     string line;
+    //     string word;
+    //     cin >> word; // take the fist word
+    //     getline(cin, line);
+    //     //if the rest of input is just ' ' it's okay, if not it's 2+ words
+    //     if(line.length() > 1 && line.find_first_not_of(' ') != string::npos){
+    //         cout << endl << "- Wait, just one word. Try again." << endl;
+    //         continue;
+    //     }
+    //     if(word == "Q") break;
+
+    //     InsertResult res = BST::insert(bst, word, sizeTexts);
+    //     cout << endl << "- Executation Time : " << res.executionTime << "ms = " << res.executionTime/1000 << "s" << endl;
+    //     cout << "- Number of comparisons : " << res.numComparisons << endl;
+    // }
 }
 
 int main(int argc, char** argv) {
@@ -153,7 +155,7 @@ int main(int argc, char** argv) {
     if (comand == "search"){
         SearchLooping(bst);
     } else { 
-        StatsLoopingg(bst, insRes, sizeTexts);
+        Stats(bst, insRes, sizeTexts);
     }
 
     return 0;
