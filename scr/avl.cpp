@@ -83,14 +83,14 @@ namespace AVL{
     }
 
     Node* rotateRightLeft(Node* root) {
-    Node* newRight = rotateRight(root->right);
-    root->right = newRight;
-    if (newRight != nullptr) {
-        newRight->parent = root;
-    }
+        Node* newRight = rotateRight(root->right);
+        root->right = newRight;
+        if (newRight != nullptr) {
+            newRight->parent = root;
+        }
 
-    return rotateLeft(root);
-}
+        return rotateLeft(root);
+    }
 
     Node* rotateLeftRight(Node* root) {
         Node* newLeft = rotateLeft(root->left);
@@ -147,8 +147,7 @@ namespace AVL{
             if(!exists){
                 searchNode.resultedNode->documentIds.push_back(documentId);
             }
-        }
-        else{ //The word isn't in the tree
+        }else{ //The word isn't in the tree
             vector<int> documentID = {documentId};
             Node *node = createNode(word, documentID, searchNode.parent);
 
