@@ -4,34 +4,33 @@
 using namespace std;
 
 // TESTS With color
-void printRBTAux(Node* root, int counter, bool isLast){
 
-    if (root != nullptr) {
-            
-        if (counter > 0) {
-            for (int i=1; i < counter; i++)
-            cout << "│  ";
- 
-            if (isLast){
-                cout << "└──";
-            } else {
-                cout << "├──";
-            }
+void printRBTAux(Node* root, const std::string &prefix, bool isLast){
+
+    if (root == nullptr) return;
+
+    cout << prefix;
+
+    if (! prefix.empty()){
+        if (isLast) {
+            cout << "└──";
+        } else {
+            cout << "├──";
         }
-
-        // The diference of printTree e printRBT:
-        cout << root->word << "| Color: "<< root->isRed << endl;
-
-        if(root->right == nullptr)
-            printRBTAux(root->left, counter + 1, true);
-        else {
-            printRBTAux(root->left, counter + 1, false);
-            printRBTAux(root->right, counter + 1, true);
-        }
-        
     }
+ 
+    cout << root->word << " c: " << root->isRed << endl;
 
-};
+    string newPrefix = prefix + (isLast ? "   " : "│  ");
+
+    if(root->right == nullptr)
+        printRBTAux(root->left, newPrefix, true);
+    else {
+        printRBTAux(root->left,  newPrefix, false);
+        printRBTAux(root->right, newPrefix, true);
+    }
+        
+}
 
 void printRBT(BinaryTree* tree){
 
@@ -39,7 +38,7 @@ void printRBT(BinaryTree* tree){
     int counter = 0;
     
     if (n != nullptr) {
-        printRBTAux(n, counter, true);
+        printRBTAux(n, "", true);
     }
 }
 
@@ -111,8 +110,8 @@ int main(){
 
     // printRBT(tree);
 
-    // cout << "========= Delete Tree =========" << endl;
-    // RBT::deleteTree(tree);
+    cout << "========= Delete Tree =========" << endl;
+    RBT::deleteTree(tree);
 
 
 }
