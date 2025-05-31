@@ -14,9 +14,8 @@ Node* createNode(std::string word, std::vector<int> documentsId, Node* parent){
     node->left = nullptr;
     node->right = nullptr;
 
-    // To be corrected...
     node->height = 0;
-    node->isRed = 0;
+    node->isRed = 1;
 
     return node;
 }
