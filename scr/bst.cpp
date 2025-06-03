@@ -119,7 +119,7 @@ namespace BST{
         return result;
     }
 
-    void deleteTree(BinaryTree* tree){
+    void destroy(BinaryTree* tree){
         deleteTreeRecursive(tree -> root);
         delete tree;
         tree = nullptr;

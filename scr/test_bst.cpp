@@ -64,6 +64,6 @@ int main(){
     cout << endl;
 
     cout << "========= Delete Tree =========" << endl;
-    BST::deleteTree(tree);
+    BST::destroy(tree);
 
 }

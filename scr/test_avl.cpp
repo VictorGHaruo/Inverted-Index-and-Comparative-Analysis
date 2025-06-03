@@ -79,6 +79,6 @@ int main(){
     cout << endl ;
 
     cout << "========= Delete Tree =========" << endl;
-    AVL::deleteTree(tree);
+    AVL::destroy(tree);
 
 }
