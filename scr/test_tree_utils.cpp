@@ -23,6 +23,7 @@ int main(){
     cout << "========= PrintIndex =========" << endl;
     printIndex(tree);
 
+    // Is necessary??
     cout << "\n========= Tests Depth =========" << endl;
     cout << "Depth (arnaldo/root): " << computeDepth(root) << endl;
     cout << "Depth (bernaldo): " << computeDepth(root->left) << endl;
