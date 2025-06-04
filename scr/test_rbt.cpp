@@ -111,7 +111,7 @@ int main(){
     // printRBT(tree);
 
     cout << "========= Delete Tree =========" << endl;
-    RBT::deleteTree(tree);
+    RBT::destroy(tree);
 
 
 }
