@@ -94,7 +94,7 @@ void SearchLooping(BinaryTree* avl){
     }
 }
 
-void Stats(BinaryTree* avl, vector<InsertResult> insRes, int sizeTexts){
+void Stats(vector<InsertResult> insRes){
     int sizeInsRes = insRes.size();
     double totTime = 0;
     int totComp = 0;
@@ -119,28 +119,6 @@ void Stats(BinaryTree* avl, vector<InsertResult> insRes, int sizeTexts){
     cout << "The stats were: " << endl;
     cout << "- Executation Time : " << totTime << "ms = " << totTime/1000 << "s" << endl;
     cout << "- Total number of comparisons : " << totComp << endl;
-    
-    // printTree(avl);
-
-    // while(true){
-    //     cout << endl << "To quit, add 'Q'." << endl;
-    //     cout << "Add a new word: ";
-
-    //     string line;
-    //     string word;
-    //     cin >> word; // take the fist word
-    //     getline(cin, line);
-    //     //if the rest of input is just ' ' it's okay, if not it's 2+ words
-    //     if(line.length() > 1 && line.find_first_not_of(' ') != string::npos){
-    //         cout << endl << "- Wait, just one word. Try again." << endl;
-    //         continue;
-    //     }
-    //     if(word == "Q") break;
-
-    //     InsertResult res = AVL::insert(avl, word, sizeTexts);
-    //     cout << endl << "- Executation Time : " << res.executionTime << "ms = " << res.executionTime/1000 << "s" << endl;
-    //     cout << "- Number of comparisons : " << res.numComparisons << endl;
-    // }
 }
 
 int main(int argc, char** argv) {
@@ -167,7 +145,7 @@ int main(int argc, char** argv) {
     if (comand == "search"){
         SearchLooping(avl);
     } else { 
-        Stats(avl, insRes, sizeTexts);
+        Stats(insRes);
     }
 
     return 0;

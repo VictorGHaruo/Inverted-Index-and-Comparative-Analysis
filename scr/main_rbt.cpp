@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include "data.h"
-#include "bst.h"
+#include "rbt.h"
 #include "tree_utils.h"
 
 using namespace std;
@@ -59,7 +59,7 @@ bool Validate(int argc, char* argv[], string* comand, vector<vector<string>>* te
     return true;
 }
 
-void SearchLooping(BinaryTree* bst){
+void SearchLooping(BinaryTree* rbt){
     cout << endl << "Welcome to the CLI - Search!" << endl << endl;
     while (true){
         cout << "To quit, search for 'Q'." << endl;
@@ -76,7 +76,7 @@ void SearchLooping(BinaryTree* bst){
         
         if(word == "Q") break;
  
-        SearchResult result = BST::search(bst, word);
+        SearchResult result = RBT::search(rbt, word);
         if(result.found){
             cout << endl << "- The word '" << word << "' was found!" << endl;
             cout << "- It's in " << result.documentIds.size() << " docs, with index: ";
@@ -102,11 +102,23 @@ void Stats(vector<InsertResult> insRes){
         totTime += insRes[i].executionTime;
         totComp += insRes[i].numComparisons;
     }
+    
+    // cout << sizeInsRes << endl;
+    // vector<vector<string>> vecWords= {{},{},{}};
+    // for(int i = 0; i < sizeInsRes; i++){
+    //     if (i < 10){
+    //         vecWords.push_back()
+    //     } else if(i < 100){
+
+    //     } else if(i < 1000){
+
+    //     } else break;
+    // }
 
     cout << "Welcome to the CLI - Stats!" << endl;
-    cout << "The init stats were: " << endl;
+    cout << "The stats were: " << endl;
     cout << "- Executation Time : " << totTime << "ms = " << totTime/1000 << "s" << endl;
-    cout << "- Number of comparisons : " << totComp << endl;
+    cout << "- Total number of comparisons : " << totComp << endl;
 }
 
 int main(int argc, char** argv) {
@@ -118,20 +130,20 @@ int main(int argc, char** argv) {
     if (!valide) return 1;
 
     // Populate the tree 
-    BinaryTree* bst = BST::create();
+    BinaryTree* rbt = RBT::create();
 
-    int sizeTexts = texts.size();
+    int sizeTexts = texts.size(); //botar no data.cpp
     vector<InsertResult> insRes;
     for(int i = 0; i < sizeTexts; i++){
         int sizeT = texts[i].size();
         for(int j = 0; j < sizeT; j++){
-            insRes.push_back(BST::insert(bst, texts[i][j], i));
+            insRes.push_back(RBT::insert(rbt, texts[i][j], i));
         }
-    }
+    }  
 
     // Commands
     if (comand == "search"){
-        SearchLooping(bst);
+        SearchLooping(rbt);
     } else { 
         Stats(insRes);
     }

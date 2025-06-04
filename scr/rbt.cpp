@@ -139,7 +139,8 @@ namespace RBT {
             //To avoid repeating document IDs when adding words
             int n = searchNode.resultedNode->documentIds.size();
             bool exists = false;
-            for (int i = 0; i < n; i++){
+            // In the massive insert on main, it's just important the last ID (fewer operations)
+            for (int i = n-1; i >= 0; i--){ 
                 if (searchNode.resultedNode->documentIds[i] == documentId){
                     exists = true;
                     break;
