@@ -5,6 +5,7 @@
 #include "../scr/data.h"
 #include "../scr/avl.h"
 #include "../scr/bst.h"
+#include "../scr/rbt.h"
 using namespace std;
 
 struct PlotConfig {
@@ -27,6 +28,7 @@ struct PlotConfig {
     // Estilos de pontos
     QCPScatterStyle AVL_style = QCPScatterStyle(QCPScatterStyle::ssCircle, 5);
     QCPScatterStyle BST_style = QCPScatterStyle(QCPScatterStyle::ssSquare, 5);
+    QCPScatterStyle RBT_style = QCPScatterStyle(QCPScatterStyle::ssTriangle, 5);
 
     // Dados
     vector<vector<string>> texts;
@@ -83,21 +85,28 @@ int main(int argc, char *argv[]) {
     QVector<double>  x(config.texts.size());
     QVector<double>  AVL_1(config.texts.size());
     QVector<double>  BST_1(config.texts.size());
+    QVector<double>  RBT_1(config.texts.size());
     QVector<double>  AVL_2(config.texts.size());
     QVector<double>  BST_2(config.texts.size());
+    QVector<double>  RBT_2(config.texts.size());
     QVector<double>  AVL_3(config.texts.size());
     QVector<double>  BST_3(config.texts.size());
+    QVector<double>  RBT_3(config.texts.size());
     QVector<double>  AVL_4(config.texts.size());
     QVector<double>  BST_4(config.texts.size());
+    QVector<double>  RBT_4(config.texts.size());
     QVector<double>  extra(config.texts.size());
 
     BinaryTree *AVLtree = AVL::create();
     BinaryTree *BSTtree = BST::create();
+    BinaryTree *RBTtree = RBT::create();
 
     double totalComparisonsAVL = 0;
     double totalComparisonsBST = 0;
+    double totalComparisonsRBT = 0;
     double timeAVL = 0;
     double timeBST = 0;
+    double timeRBT = 0;
     vector<string> words;
     int sizeTexts = config.texts.size();
 
@@ -105,6 +114,7 @@ int main(int argc, char *argv[]) {
         int sizeT = config.texts[i].size();
         double meanAVL = 0;
         double meanBST = 0;
+        double meanRBT = 0;
 
         for(int j = 0; j < sizeT; j++){
 
@@ -117,39 +127,53 @@ int main(int argc, char *argv[]) {
             InsertResult bstResult = BST::insert(BSTtree, config.texts[i][j], i);
             meanBST += bstResult.numComparisons;
             timeBST += bstResult.executionTime;
+            InsertResult rbtResult = RBT::insert(RBTtree, config.texts[i][j], i);
+            meanRBT += rbtResult.numComparisons;
+            timeRBT += rbtResult.executionTime;
 
         }
         totalComparisonsBST += meanBST;
         totalComparisonsAVL += meanAVL;
+        totalComparisonsRBT += meanRBT;
         x[i] = i + 1;
         AVL_1[i] = totalComparisonsAVL;
         BST_1[i] = totalComparisonsBST;
+        RBT_1[i] = totalComparisonsRBT;
         AVL_2[i] = TreeUtils::getHeight(AVLtree->root);
         BST_2[i] = height(BSTtree->root);
+        RBT_2[i] = height(RBTtree->root);
         AVL_3[i] = meanAVL/sizeT;
         BST_3[i] = meanBST/sizeT;
+        RBT_3[i] = meanRBT/sizeT;
         AVL_4[i] = timeAVL;
         BST_4[i] = timeBST;
+        RBT_4[i] = timeRBT;
     }
 
-    QVector<double> x2 = {1, 2, 3, 4, 5, 6, 7, 8};
-    QVector<double> AVL_5(8);
-    QVector<double> BST_5(8);
+    int h = height(BSTtree->root);
+    QVector<double> x2(h);
+    for (int i = 0; i < h; ++i) x2[i] = i + 1;
+
+    QVector<double> AVL_5(h);
+    QVector<double> BST_5(h);
+    QVector<double> RBT_5(h);
 
     int size = words.size();
+
     for (int i = 0; i < size; i++) {
         SearchResult avlResult = AVL::search(AVLtree, words[i]);
         SearchResult bstResult = BST::search(BSTtree, words[i]);
+        SearchResult rbtResult = RBT::search(RBTtree, words[i]);
 
-        int idx_avl = round(static_cast<double>(avlResult.numComparisons) / 8.0);
-        int idx_bst = round(static_cast<double>(bstResult.numComparisons) / 8.0);
-
-        idx_avl = min(max(idx_avl, 0), 7);
-        idx_bst = min(max(idx_bst, 0), 7);
+        int idx_avl = avlResult.numComparisons;
+        int idx_bst = bstResult.numComparisons;
+        int idx_rbt = rbtResult.numComparisons;
 
         AVL_5[idx_avl]++;
         BST_5[idx_bst]++;
-    }
+        RBT_5[idx_rbt]++;
+}
+
     // Adicionando os dados
 
     first_plot.addGraph();
@@ -164,6 +188,12 @@ int main(int argc, char *argv[]) {
     first_plot.graph(1)->setScatterStyle(config.BST_style);
     first_plot.graph(1)->setName("BST");
 
+    first_plot.addGraph();
+    first_plot.graph(2)->setData(x, RBT_1);
+    first_plot.graph(2)->setPen(QPen(config.RBT_color));
+    first_plot.graph(2)->setScatterStyle(config.RBT_style);
+    first_plot.graph(2)->setName("RBT");
+
     second_plot.addGraph();
     second_plot.graph(0)->setData(x, AVL_2);
     second_plot.graph(0)->setPen(QPen(config.AVL_color));
@@ -175,6 +205,12 @@ int main(int argc, char *argv[]) {
     second_plot.graph(1)->setPen(QPen(config.BST_color));
     second_plot.graph(1)->setScatterStyle(config.BST_style);
     second_plot.graph(1)->setName("BST");
+
+    second_plot.addGraph();
+    second_plot.graph(2)->setData(x, RBT_2);
+    second_plot.graph(2)->setPen(QPen(config.RBT_color));
+    second_plot.graph(2)->setScatterStyle(config.RBT_style);
+    second_plot.graph(2)->setName("RBT");
 
     third_plot.addGraph();
     third_plot.graph(0)->setData(x, AVL_3);
@@ -188,6 +224,12 @@ int main(int argc, char *argv[]) {
     third_plot.graph(1)->setScatterStyle(config.BST_style);
     third_plot.graph(1)->setName("BST");
 
+    third_plot.addGraph();
+    third_plot.graph(2)->setData(x, RBT_3);
+    third_plot.graph(2)->setPen(QPen(config.RBT_color));
+    third_plot.graph(2)->setScatterStyle(config.RBT_style);
+    third_plot.graph(2)->setName("RBT");
+
     fourth_plot.addGraph();
     fourth_plot.graph(0)->setData(x, AVL_4);
     fourth_plot.graph(0)->setPen(QPen(config.AVL_color));
@@ -200,6 +242,12 @@ int main(int argc, char *argv[]) {
     fourth_plot.graph(1)->setScatterStyle(config.BST_style);
     fourth_plot.graph(1)->setName("BST");
 
+    fourth_plot.addGraph();
+    fourth_plot.graph(2)->setData(x, RBT_4);
+    fourth_plot.graph(2)->setPen(QPen(config.RBT_color));
+    fourth_plot.graph(2)->setScatterStyle(config.RBT_style);
+    fourth_plot.graph(2)->setName("RBT");
+
     fifth_plot.addGraph();
     fifth_plot.graph(0)->setData(x2, AVL_5);
     fifth_plot.graph(0)->setPen(QPen(config.AVL_color));
@@ -211,6 +259,12 @@ int main(int argc, char *argv[]) {
     fifth_plot.graph(1)->setPen(QPen(config.BST_color));
     fifth_plot.graph(1)->setScatterStyle(config.BST_style);
     fifth_plot.graph(1)->setName("BST");
+
+    fifth_plot.addGraph();
+    fifth_plot.graph(2)->setData(x2, RBT_5);
+    fifth_plot.graph(2)->setPen(QPen(config.RBT_color));
+    fifth_plot.graph(2)->setScatterStyle(config.RBT_style);
+    fifth_plot.graph(2)->setName("RBT");
 
     // Aplicar configuração de estilo
     configurePlot(first_plot, config);
@@ -295,8 +349,9 @@ int main(int argc, char *argv[]) {
     fourth_plot.savePng("Tempo_de_execução.png", 1000, 600);
     fifth_plot.savePng("Número_de_comparações.png", 1000, 600);
 
-    BST::deleteTree(BSTtree);
-    AVL::deleteTree(AVLtree);
+    BST::destroy(BSTtree);
+    AVL::destroy(AVLtree);
+    RBT::destroy(RBTtree);
 
     return 0;
 }
