@@ -69,9 +69,10 @@ void configurePlot(QCustomPlot &customPlot, const PlotConfig &config) {
     customPlot.axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop | Qt::AlignRight);
 }
 
-
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
+
+    
 
     PlotConfig config;
     config.texts = data::readData("../data/", 10103); 
@@ -150,8 +151,8 @@ int main(int argc, char *argv[]) {
         RBT_4[i] = timeRBT;
     }
 
-    int h = height(BSTtree->root);
-    QVector<double> x2(h);
+    int h = height(BSTtree->root );
+    QVector<double> x2(h,0);
     for (int i = 0; i < h; ++i) x2[i] = i + 1;
 
     QVector<double> AVL_5(h);
@@ -165,13 +166,13 @@ int main(int argc, char *argv[]) {
         SearchResult bstResult = BST::search(BSTtree, words[i]);
         SearchResult rbtResult = RBT::search(RBTtree, words[i]);
 
-        int idx_avl = avlResult.numComparisons;
-        int idx_bst = bstResult.numComparisons;
-        int idx_rbt = rbtResult.numComparisons;
+        int idx_avl = avlResult.numComparisons -1;
+        int idx_bst = bstResult.numComparisons -1;
+        int idx_rbt = rbtResult.numComparisons -1;
 
-        AVL_5[idx_avl]++;
-        BST_5[idx_bst]++;
-        RBT_5[idx_rbt]++;
+        if (idx_avl >= 0 && idx_avl < AVL_5.size()) AVL_5[idx_avl]++;
+        if (idx_bst >= 0 && idx_bst < BST_5.size()) BST_5[idx_bst]++;
+        if (idx_rbt >= 0 && idx_rbt < RBT_5.size()) RBT_5[idx_rbt]++;
 }
 
     // Adicionando os dados
