@@ -34,6 +34,8 @@ struct BinaryTree {
 struct InsertResult {
     int numComparisons;
     double executionTime;
+    std::string word;
+    bool isNew;
     // others possible variables
 };
 

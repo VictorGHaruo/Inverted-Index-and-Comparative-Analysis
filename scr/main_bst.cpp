@@ -96,7 +96,7 @@ void searchLooping(BinaryTree* bst){
 }
 
 int getHeightTree(Node* node, string type){
-    if(node == nullptr) return 0;
+    if(node == nullptr) return -1;
 
     if(type == "max") return 1 + max(getHeightTree(node->left, type), getHeightTree(node->right, type)); 
     if(type == "min") return 1 + min(getHeightTree(node->left, type), getHeightTree(node->right, type)); 
@@ -105,24 +105,53 @@ int getHeightTree(Node* node, string type){
 }
 
 void stats(vector<InsertResult> insRes, BinaryTree* bst){
+    //stats of insert
     int sizeInsRes = insRes.size();
-    double totTime = 0;
-    int totComp = 0;
+    double totTimeInsert = 0;
+    int totCompInsert = 0;
+    vector<string> uniqWords;
     for(int i = 0; i < sizeInsRes; i++){
-        totTime += insRes[i].executionTime;
-        totComp += insRes[i].numComparisons;
+        totTimeInsert += insRes[i].executionTime;
+        totCompInsert += insRes[i].numComparisons;
+        if(insRes[i].isNew){
+            uniqWords.push_back(insRes[i].word);
+        }
     }
-    double aveTime = totTime / sizeInsRes;
-    int maxHeighTree = getHeightTree(bst->root, "max");
-    int minHeighTree = getHeightTree(bst->root, "min");
+    double aveTimeInsert = totTimeInsert / sizeInsRes;
+
+    //stats of search
+    int sizeUniqWords = uniqWords.size();
+    double totTimeSearch = 0;
+    int totCompSearch = 0;
+    vector<SearchResult> searchResults;
+    double maxTimeSearch = 0;
+    double minTimeSearch = 0;
+    for(int i = 0; i < sizeUniqWords; i++){
+        searchResults.push_back(BST::search(bst, uniqWords[i]));
+        totTimeSearch += searchResults[i].executionTime;
+        totCompSearch += searchResults[i].numComparisons;
+        if(searchResults[i].executionTime > maxTimeSearch) maxTimeSearch = searchResults[i].executionTime;
+        if(searchResults[i].executionTime < minTimeSearch) minTimeSearch = searchResults[i].executionTime;
+    }
+    double aveTimeSearch = totTimeSearch / sizeUniqWords;
+
+    //height
+    int maxHeightTree = getHeightTree(bst->root, "max");
+    int minHeightTree = getHeightTree(bst->root, "min");
 
     cout << endl <<  "Welcome to the CLI - Stats!" << endl;
     cout << "The stats were: " << endl;
-    cout << "- Executation time : " << totTime << "ms = " << totTime/1000 << "s" << endl;
-    cout << "- Average insertion time : " << aveTime << "ms = " << aveTime/1000 << "s" << endl;
-    cout << "- Total number of comparisons : " << totComp << endl;
-    cout << "- The max height is : " << maxHeighTree << endl;
-    cout << "- The min height is : " << minHeighTree << endl;
+    cout << "- "<< sizeUniqWords << " different words were added." << endl;
+    cout << "- Height of longest path and Tree's height: " << maxHeightTree << endl;
+    cout << "- Height of shortest path : " << minHeightTree << endl << endl;
+    cout << "Insertion: " << endl;
+    cout << "- Total time : " << totTimeInsert << "ms = " << totTimeInsert/1000 << "s" << endl;
+    cout << "- Average time : " << aveTimeInsert << "ms = " << aveTimeInsert/1000 << "s" << endl;
+    cout << "- Total number of comparisons : " << totCompInsert << endl << endl;
+    cout << "Search: " << endl;
+    cout << "- Total time : " << totTimeSearch << "ms = " << totTimeSearch/1000 << "s" << endl;
+    cout << "- Average time : " << aveTimeSearch << "ms = " << aveTimeSearch/1000 << "s" << endl;
+    cout << "- Total number of comparisons : " << totCompSearch << endl;
 
     while (true) {
         cout << endl << "Options to do:" << endl;
@@ -153,7 +182,7 @@ void stats(vector<InsertResult> insRes, BinaryTree* bst){
 
         if(option == 3){
             while(true){
-                cout << "- Chose the file name (also you can add the path \"../example\"): ";
+                cout << "- Chose the file name (also you can add the path : \"../example\"): ";
                 string filename;
                 cin >> filename;
                 getline(cin, line);
