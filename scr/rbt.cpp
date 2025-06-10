@@ -68,16 +68,17 @@ namespace RBT {
     }
 
     // Adjust the insert to RBT
-    void fixInsert(BinaryTree* tree, Node* z){
-
+    int fixInsert(BinaryTree* tree, Node* z){
+        int comp = 1;
         if (z == nullptr || z->parent == nullptr) {
             if (tree->root != nullptr) {
                 tree->root->isRed = 0;
             }
-            return;
+            return comp;
         }
 
         while (z->parent != nullptr && z->parent->isRed){
+            comp++;
             // Cases in the left
             if (z->parent == z->parent->parent->left){
                 Node* y = z->parent->parent->right; // Uncle
@@ -128,11 +129,13 @@ namespace RBT {
                 
         }
         tree->root->isRed = 0;
+        return comp;
     }
 
     InsertResult insert(BinaryTree* tree, const std::string& word, int documentId){
         auto start = high_resolution_clock::now(); //Starts clock
         SearchResult searchNode = search(tree, word);
+        int comp = 0;
 
         if (searchNode.found == 1){ //The word is already in the tree
 
@@ -163,7 +166,7 @@ namespace RBT {
                 searchNode.parent->right = node;
             }
 
-            fixInsert(tree, node);
+            comp += fixInsert(tree, node);
             
         }
 
@@ -177,7 +180,8 @@ namespace RBT {
         InsertResult result;
         
         // +1 comes from the comparison that determines which side the word goes
-        result.numComparisons = searchNode.numComparisons + 1; 
+        // and plus the comparisons when it's fixing
+        result.numComparisons = searchNode.numComparisons + 1 + comp; 
         result.executionTime = time;
 
         return result;
