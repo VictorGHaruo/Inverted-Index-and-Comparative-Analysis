@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include "data.h"
@@ -24,7 +25,7 @@ bool isPosInt(string strNum){
     return true;
 }
 
-bool Validate(int argc, char* argv[], string* comand, vector<vector<string>>* texts){
+bool validate(int argc, char* argv[], string* comand, vector<vector<string>>* texts){
     if (argc != 4) {
         cerr << "Usage: " << argv[0] << " <comand> <n_docs> <directory_path>" << endl;
         cerr << "<comand> : 'search' or 'stats'" << endl;
@@ -59,7 +60,7 @@ bool Validate(int argc, char* argv[], string* comand, vector<vector<string>>* te
     return true;
 }
 
-void SearchLooping(BinaryTree* bst){
+void searchLooping(BinaryTree* bst){
     cout << endl << "Welcome to the CLI - Search!" << endl << endl;
     while (true){
         cout << "To quit, search for 'Q'." << endl;
@@ -94,7 +95,16 @@ void SearchLooping(BinaryTree* bst){
     }
 }
 
-void Stats(vector<InsertResult> insRes){
+int getHeightTree(Node* node, string type){
+    if(node == nullptr) return 0;
+
+    if(type == "max") return 1 + max(getHeightTree(node->left, type), getHeightTree(node->right, type)); 
+    if(type == "min") return 1 + min(getHeightTree(node->left, type), getHeightTree(node->right, type)); 
+
+    return -1;
+}
+
+void stats(vector<InsertResult> insRes, BinaryTree* bst){
     int sizeInsRes = insRes.size();
     double totTime = 0;
     int totComp = 0;
@@ -102,11 +112,74 @@ void Stats(vector<InsertResult> insRes){
         totTime += insRes[i].executionTime;
         totComp += insRes[i].numComparisons;
     }
+    double aveTime = totTime / sizeInsRes;
+    int maxHeighTree = getHeightTree(bst->root, "max");
+    int minHeighTree = getHeightTree(bst->root, "min");
 
-    cout << "Welcome to the CLI - Stats!" << endl;
-    cout << "The init stats were: " << endl;
-    cout << "- Executation Time : " << totTime << "ms = " << totTime/1000 << "s" << endl;
-    cout << "- Number of comparisons : " << totComp << endl;
+    cout << endl <<  "Welcome to the CLI - Stats!" << endl;
+    cout << "The stats were: " << endl;
+    cout << "- Executation time : " << totTime << "ms = " << totTime/1000 << "s" << endl;
+    cout << "- Average insertion time : " << aveTime << "ms = " << aveTime/1000 << "s" << endl;
+    cout << "- Total number of comparisons : " << totComp << endl;
+    cout << "- The max height is : " << maxHeighTree << endl;
+    cout << "- The min height is : " << minHeighTree << endl;
+
+    while (true) {
+        cout << endl << "Options to do:" << endl;
+        cout << "1 - Nothing/Out." << endl;
+        cout << "2 - Print the tree." << endl;
+        cout << "3 - Save the print of the tree in a '.txt'." << endl << endl;
+        cout << "- Select the option: ";
+        
+        string answer; 
+        cin >> answer;
+        // Ignore after the space
+        string line;
+        getline(cin, line);
+
+        unsigned int option = 0;
+        if(isPosInt(answer)){
+            option = stoi(answer);
+        } else {
+            cout << endl << "- Sorry, but it's not a positve integer. Try again." << endl;
+            continue;
+        }
+        if(option == 1) return;
+
+        if(option == 2){
+            printTree(bst);
+            return;
+        }
+
+        if(option == 3){
+            while(true){
+                cout << "- Chose the file name (also you can add the path \"../example\"): ";
+                string filename;
+                cin >> filename;
+                getline(cin, line);
+                //if the rest of input is just ' ' it's okay, if not it's 2+ words
+                if(line.length() > 1 && line.find_first_not_of(' ') != string::npos){
+                    cout << endl << "- Wait, just one word. Try again." << endl << endl;
+                    continue;
+                }
+                filename += ".txt";
+                ofstream txt(filename);
+                if(txt.is_open()){
+                    streambuf* coutOriginal = cout.rdbuf();
+                    cout.rdbuf(txt.rdbuf());
+                    printTree(bst);
+                    cout.rdbuf(coutOriginal);
+                    cout << "- Saved!" << endl;
+                    break;
+                } else {
+                    cerr << "Error opening file " << filename << endl;
+                }
+            }
+            return;
+        }
+        cout << endl << "- Number out of range. Try again." << endl;
+    }
+    
 }
 
 int main(int argc, char** argv) {
@@ -114,26 +187,26 @@ int main(int argc, char** argv) {
     // Validate arguments
     string comand;
     vector<vector<string>> texts;
-    bool valide = Validate(argc, argv, &comand, &texts);
+    bool valide = validate(argc, argv, &comand, &texts);
     if (!valide) return 1;
 
     // Populate the tree 
     BinaryTree* bst = BST::create();
 
-    int sizeTexts = texts.size();
+    int sizeTexts = texts.size(); //botar no data.cpp
     vector<InsertResult> insRes;
     for(int i = 0; i < sizeTexts; i++){
         int sizeT = texts[i].size();
         for(int j = 0; j < sizeT; j++){
             insRes.push_back(BST::insert(bst, texts[i][j], i));
         }
-    }
+    }  
 
     // Commands
     if (comand == "search"){
-        SearchLooping(bst);
+        searchLooping(bst);
     } else { 
-        Stats(insRes);
+        stats(insRes, bst);
     }
 
     return 0;

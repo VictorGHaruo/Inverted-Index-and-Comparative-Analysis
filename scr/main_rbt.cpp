@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include "data.h"
@@ -24,7 +25,7 @@ bool isPosInt(string strNum){
     return true;
 }
 
-bool Validate(int argc, char* argv[], string* comand, vector<vector<string>>* texts){
+bool validate(int argc, char* argv[], string* comand, vector<vector<string>>* texts){
     if (argc != 4) {
         cerr << "Usage: " << argv[0] << " <comand> <n_docs> <directory_path>" << endl;
         cerr << "<comand> : 'search' or 'stats'" << endl;
@@ -59,7 +60,7 @@ bool Validate(int argc, char* argv[], string* comand, vector<vector<string>>* te
     return true;
 }
 
-void SearchLooping(BinaryTree* rbt){
+void searchLooping(BinaryTree* rbt){
     cout << endl << "Welcome to the CLI - Search!" << endl << endl;
     while (true){
         cout << "To quit, search for 'Q'." << endl;
@@ -94,7 +95,7 @@ void SearchLooping(BinaryTree* rbt){
     }
 }
 
-void Stats(vector<InsertResult> insRes){
+void stats(vector<InsertResult> insRes, BinaryTree* rbt){
     int sizeInsRes = insRes.size();
     double totTime = 0;
     int totComp = 0;
@@ -102,23 +103,74 @@ void Stats(vector<InsertResult> insRes){
         totTime += insRes[i].executionTime;
         totComp += insRes[i].numComparisons;
     }
-    
-    // cout << sizeInsRes << endl;
-    // vector<vector<string>> vecWords= {{},{},{}};
-    // for(int i = 0; i < sizeInsRes; i++){
-    //     if (i < 10){
-    //         vecWords.push_back()
-    //     } else if(i < 100){
+    double aveTime = totTime / sizeInsRes;
+    int maxHeighTree = getHeight(rbt->root);
+    // int minHeighTree = getMinHeight(rbt->root);
 
-    //     } else if(i < 1000){
-
-    //     } else break;
-    // }
-
-    cout << "Welcome to the CLI - Stats!" << endl;
+    cout << endl <<  "Welcome to the CLI - Stats!" << endl;
     cout << "The stats were: " << endl;
-    cout << "- Executation Time : " << totTime << "ms = " << totTime/1000 << "s" << endl;
+    cout << "- Executation time : " << totTime << "ms = " << totTime/1000 << "s" << endl;
+    cout << "- Average insertion time : " << aveTime << "ms = " << aveTime/1000 << "s" << endl;
     cout << "- Total number of comparisons : " << totComp << endl;
+    cout << "- The max height is : " << maxHeighTree << endl;
+    // cout << "- The min height is : " << minHeighTree << endl;
+
+    while (true) {
+        cout << endl << "Options to do:" << endl;
+        cout << "1 - Nothing/Out." << endl;
+        cout << "2 - Print the tree." << endl;
+        cout << "3 - Save the print of the tree in a '.txt'." << endl << endl;
+        cout << "- Select the option: ";
+        
+        string answer; 
+        cin >> answer;
+        // Ignore after the space
+        string line;
+        getline(cin, line);
+
+        unsigned int option = 0;
+        if(isPosInt(answer)){
+            option = stoi(answer);
+        } else {
+            cout << endl << "- Sorry, but it's not a positve integer. Try again." << endl;
+            continue;
+        }
+        if(option == 1) return;
+
+        if(option == 2){
+            printTree(rbt);
+            return;
+        }
+
+        if(option == 3){
+            while(true){
+                cout << "- Chose the file name (also you can add the path \"../example\"): ";
+                string filename;
+                cin >> filename;
+                getline(cin, line);
+                //if the rest of input is just ' ' it's okay, if not it's 2+ words
+                if(line.length() > 1 && line.find_first_not_of(' ') != string::npos){
+                    cout << endl << "- Wait, just one word. Try again." << endl << endl;
+                    continue;
+                }
+                filename += ".txt";
+                ofstream txt(filename);
+                if(txt.is_open()){
+                    streambuf* coutOriginal = cout.rdbuf();
+                    cout.rdbuf(txt.rdbuf());
+                    printTree(rbt);
+                    cout.rdbuf(coutOriginal);
+                    cout << "- Saved!" << endl;
+                    break;
+                } else {
+                    cerr << "Error opening file " << filename << endl;
+                }
+            }
+            return;
+        }
+        cout << endl << "- Number out of range. Try again." << endl;
+    }
+    
 }
 
 int main(int argc, char** argv) {
@@ -126,7 +178,7 @@ int main(int argc, char** argv) {
     // Validate arguments
     string comand;
     vector<vector<string>> texts;
-    bool valide = Validate(argc, argv, &comand, &texts);
+    bool valide = validate(argc, argv, &comand, &texts);
     if (!valide) return 1;
 
     // Populate the tree 
@@ -143,9 +195,9 @@ int main(int argc, char** argv) {
 
     // Commands
     if (comand == "search"){
-        SearchLooping(rbt);
+        searchLooping(rbt);
     } else { 
-        Stats(insRes);
+        stats(insRes, rbt);
     }
 
     return 0;
