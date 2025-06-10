@@ -21,22 +21,15 @@ namespace AVL{
     }
 
     Node* rotateLeft(Node* root) {
+        if (root == nullptr || root->right == nullptr) {
+            return root; // Cannot rotate
+        }
+
         Node* newRoot = root->right;
         Node* leftSubtree = newRoot->left;
+        Node* oldParent = root->parent;
 
-        newRoot->parent = root->parent;
-
-        // First conect the newRoot on the root place
-        if(root->parent == nullptr) {
-            // root is the tree root
-        } else if(root == root->parent->left) {
-            root->parent->left = newRoot;
-        } else {
-            root->parent->right = newRoot;
-        }
-        newRoot->parent = root->parent;
-
-        // Now rearrange the children
+        // Performs the rotation
         newRoot->left = root;
         root->parent = newRoot;
 
@@ -45,41 +38,56 @@ namespace AVL{
             leftSubtree->parent = root;
         }
 
+        // Reconnects the rotated subtree to the rest of the tree
+        newRoot->parent = oldParent;
+        if (oldParent != nullptr) {
+            if (oldParent->left == root) {
+                oldParent->left = newRoot;
+            } else {
+                oldParent->right = newRoot;
+            }
+        }
+
+        // Updates heights (order is important: child first, then parent)
         computeHeight(root);
         computeHeight(newRoot);
 
-        return newRoot;
+        return newRoot; // Returns the new root of the subtree
     }
 
     Node* rotateRight(Node* root) {
+        if (root == nullptr || root->left == nullptr) {
+            return root; // Cannot rotate
+        }
+        
         Node* newRoot = root->left;
         Node* rightSubtree = newRoot->right;
+        Node* oldParent = root->parent;
 
-        newRoot->parent = root->parent;
-
-        // Firs conect the newroot on the root place
-        if (root->parent == nullptr) {
-        // root is the root tree
-        } else if(root == root->parent->left) {
-            root->parent->left = newRoot;
-        } else {
-            root->parent->right = newRoot;
-        }
-        newRoot->parent = root->parent;
-
-        // Now rearrange the children
+        // Perfoms the rotation
         newRoot->right = root;
         root->parent = newRoot;
 
         root->left = rightSubtree;
-        if(rightSubtree != nullptr) {
+        if (rightSubtree != nullptr) {
             rightSubtree->parent = root;
         }
 
+        // Reconnects the rotated subtree to the rest of the tree
+        newRoot->parent = oldParent;
+        if (oldParent != nullptr) {
+            if (oldParent->left == root) {
+                oldParent->left = newRoot;
+            } else {
+                oldParent->right = newRoot;
+            }
+        }
+
+        // Updates heights (order is important: child first, then parent)
         computeHeight(root);
         computeHeight(newRoot);
 
-        return newRoot;
+        return newRoot; // Return the new root of the subtree
     }
 
     Node* rotateRightLeft(Node* root) {
@@ -102,14 +110,11 @@ namespace AVL{
         return rotateRight(root);
     }
 
-
     Node* balance(Node* node_to_balance) {
         
         if(node_to_balance == nullptr){
             return nullptr;
         }
-        
-        computeHeight(node_to_balance);
         int fb = BalancingFactor(node_to_balance);
         //Left rotation
         if(fb > 1) {
@@ -161,21 +166,23 @@ namespace AVL{
             else {
                 searchNode.parent->right = node;
             }
+
+            // Balancing the tree
+            Node* ancestral = searchNode.parent;
+
+            while (ancestral != nullptr){
+                computeHeight(ancestral); // Updating the height of ancestor nodes
+                if (abs(BalancingFactor(ancestral)) > 1){
+                    searchNode.numComparisons++;
+                    Node* parent = ancestral->parent;
+                    Node* new_subtree_root = balance(ancestral);
+
+                    if (parent == nullptr) 
+                        tree->root = new_subtree_root;
+                }
+                ancestral = ancestral->parent;
+                searchNode.numComparisons++;
         }
-        Node* ancestral = searchNode.parent;
-
-        while (ancestral != nullptr){
-            computeHeight(ancestral);
-            if (abs(BalancingFactor(ancestral)) > 1){
-
-                Node* parent = ancestral->parent;
-                Node* new_subtree_root = balance(ancestral);
-
-                if (parent == nullptr) 
-                    tree->root = new_subtree_root;
-            }
-            ancestral = ancestral->parent;
-            searchNode.numComparisons++;
         }
         auto end = high_resolution_clock::now(); //Ends clock
         //Convert the auto-typed variable to double, representing milliseconds
@@ -191,7 +198,6 @@ namespace AVL{
 
         return result;
     }
-
 
     SearchResult search(BinaryTree* tree, const std::string& word){
         auto start = high_resolution_clock::now(); //Starts clock
