@@ -95,6 +95,15 @@ void searchLooping(BinaryTree* bst){
     }
 }
 
+int getHeightTree(Node* node, string type){
+    if(node == nullptr) return 0;
+
+    if(type == "max") return 1 + max(getHeightTree(node->left, type), getHeightTree(node->right, type)); 
+    if(type == "min") return 1 + min(getHeightTree(node->left, type), getHeightTree(node->right, type)); 
+
+    return -1;
+}
+
 void stats(vector<InsertResult> insRes, BinaryTree* bst){
     int sizeInsRes = insRes.size();
     double totTime = 0;
@@ -103,11 +112,17 @@ void stats(vector<InsertResult> insRes, BinaryTree* bst){
         totTime += insRes[i].executionTime;
         totComp += insRes[i].numComparisons;
     }
+    double aveTime = totTime / sizeInsRes;
+    int maxHeighTree = getHeightTree(bst->root, "max");
+    int minHeighTree = getHeightTree(bst->root, "min");
 
-    cout << "Welcome to the CLI - Stats!" << endl;
+    cout << endl <<  "Welcome to the CLI - Stats!" << endl;
     cout << "The stats were: " << endl;
-    cout << "- Executation Time : " << totTime << "ms = " << totTime/1000 << "s" << endl;
+    cout << "- Executation time : " << totTime << "ms = " << totTime/1000 << "s" << endl;
+    cout << "- Average insertion time : " << aveTime << "ms = " << aveTime/1000 << "s" << endl;
     cout << "- Total number of comparisons : " << totComp << endl;
+    cout << "- The max height is : " << maxHeighTree << endl;
+    cout << "- The min height is : " << minHeighTree << endl;
 
     while (true) {
         cout << endl << "Options to do:" << endl;

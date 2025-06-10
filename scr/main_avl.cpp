@@ -103,11 +103,17 @@ void stats(vector<InsertResult> insRes, BinaryTree* avl){
         totTime += insRes[i].executionTime;
         totComp += insRes[i].numComparisons;
     }
+    double aveTime = totTime / sizeInsRes;
+    int maxHeighTree = getHeight(avl->root);
+    // int minHeighTree = getMinHeight(avl->root);
 
-    cout << "Welcome to the CLI - Stats!" << endl;
+    cout << endl <<  "Welcome to the CLI - Stats!" << endl;
     cout << "The stats were: " << endl;
-    cout << "- Executation Time : " << totTime << "ms = " << totTime/1000 << "s" << endl;
+    cout << "- Executation time : " << totTime << "ms = " << totTime/1000 << "s" << endl;
+    cout << "- Average insertion time : " << aveTime << "ms = " << aveTime/1000 << "s" << endl;
     cout << "- Total number of comparisons : " << totComp << endl;
+    cout << "- The max height is : " << maxHeighTree << endl;
+    // cout << "- The min height is : " << minHeighTree << endl;
 
     while (true) {
         cout << endl << "Options to do:" << endl;

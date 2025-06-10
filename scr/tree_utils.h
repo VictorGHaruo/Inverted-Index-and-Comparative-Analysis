@@ -44,7 +44,7 @@ struct SearchResult {
     int numComparisons;
     // others possible variables
     
-    //created for BST
+    //created for insert
     Node* resultedNode;
     Node* parent;
 };
