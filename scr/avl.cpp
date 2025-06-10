@@ -110,14 +110,11 @@ namespace AVL{
         return rotateRight(root);
     }
 
-
     Node* balance(Node* node_to_balance) {
         
         if(node_to_balance == nullptr){
             return nullptr;
         }
-        
-        computeHeight(node_to_balance);
         int fb = BalancingFactor(node_to_balance);
         //Left rotation
         if(fb > 1) {
@@ -169,21 +166,23 @@ namespace AVL{
             else {
                 searchNode.parent->right = node;
             }
+
+            // Balancing the tree
+            Node* ancestral = searchNode.parent;
+
+            while (ancestral != nullptr){
+                computeHeight(ancestral); // Updating the height of ancestor nodes
+                if (abs(BalancingFactor(ancestral)) > 1){
+                    searchNode.numComparisons++;
+                    Node* parent = ancestral->parent;
+                    Node* new_subtree_root = balance(ancestral);
+
+                    if (parent == nullptr) 
+                        tree->root = new_subtree_root;
+                }
+                ancestral = ancestral->parent;
+                searchNode.numComparisons++;
         }
-        Node* ancestral = searchNode.parent;
-
-        while (ancestral != nullptr){
-            computeHeight(ancestral);
-            if (abs(BalancingFactor(ancestral)) > 1){
-
-                Node* parent = ancestral->parent;
-                Node* new_subtree_root = balance(ancestral);
-
-                if (parent == nullptr) 
-                    tree->root = new_subtree_root;
-            }
-            ancestral = ancestral->parent;
-            searchNode.numComparisons++;
         }
         auto end = high_resolution_clock::now(); //Ends clock
         //Convert the auto-typed variable to double, representing milliseconds
@@ -199,7 +198,6 @@ namespace AVL{
 
         return result;
     }
-
 
     SearchResult search(BinaryTree* tree, const std::string& word){
         auto start = high_resolution_clock::now(); //Starts clock
