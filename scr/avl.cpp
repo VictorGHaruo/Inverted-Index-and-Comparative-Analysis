@@ -192,6 +192,13 @@ namespace AVL{
 
         InsertResult result;
 
+        result.word = word;
+        if(searchNode.found==1){
+            result.isNew = false;
+        } else{
+            result.isNew = true;
+        }
+
         // + 1 comes drom the comparson that determines which side the word goes
         result.numComparisons = searchNode.numComparisons + 1;
         result.executionTime = time;

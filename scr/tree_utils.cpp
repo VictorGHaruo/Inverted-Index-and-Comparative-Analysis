@@ -52,7 +52,7 @@ void printIndex(BinaryTree* tree){
     if (n != nullptr) {
         printIndexAux(n, counter);
     }
-};
+}
 
 int computeDepth(Node* node){
     int depth = 0;
@@ -62,11 +62,11 @@ int computeDepth(Node* node){
     }
 
     return depth;
-};
+}
 
 int getHeight(Node* node) {
         return node == nullptr ? -1 : node->height;
-    };
+}
 
 void computeHeight(Node* node) {
     if (node == nullptr) {
