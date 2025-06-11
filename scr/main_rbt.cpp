@@ -149,13 +149,13 @@ void stats(vector<InsertResult> insRes, BinaryTree* rbt){
     cout << "- Average time : " << aveTimeInsert << "ms = " << aveTimeInsert/1000 << "s" << endl;
     cout << "- Total number of comparisons : " << totCompInsert << endl << endl;
     cout << "Search: " << endl;
-    cout << "- Total time : " << totTimeSearch << "ms = " << totTimeSearch/1000 << "s" << endl;
+    cout << "- Total time to search for all the words : " << totTimeSearch << "ms = " << totTimeSearch/1000 << "s" << endl;
     cout << "- Average time : " << aveTimeSearch << "ms = " << aveTimeSearch/1000 << "s" << endl;
     cout << "- Total number of comparisons : " << totCompSearch << endl;
 
     while (true) {
         cout << endl << "Options to do:" << endl;
-        cout << "1 - Nothing/Out." << endl;
+        cout << "1 - Nothing/Quit." << endl;
         cout << "2 - Print the tree." << endl;
         cout << "3 - Save the print of the tree in a '.txt'." << endl;
         cout << "4 - Print index of the tree." << endl;
@@ -175,14 +175,15 @@ void stats(vector<InsertResult> insRes, BinaryTree* rbt){
             cout << endl << "- Sorry, but it's not a positve integer. Try again." << endl;
             continue;
         }
+
         if(option == 1) return;
 
-        if(option == 2){
+        else if(option == 2){
             printTree(rbt);
-            return;
+            // return;
         }
 
-        if(option == 3){
+        else if(option == 3){
             while(true){
                 cout << "- Chose the file name (also you can add the path : \"../example\"): ";
                 string filename;
@@ -195,16 +196,18 @@ void stats(vector<InsertResult> insRes, BinaryTree* rbt){
                 }
                 filename += ".txt";
                 savePrintTree(rbt, filename);
-                return;
+                cout << endl << "- Saved!" << endl;
+                break;
+                // return;
             }
         }
 
-        if(option == 4){
+        else if(option == 4){
             printIndex(rbt);
-            return;
+            // return;
         }
 
-        if(option == 5){
+        else if(option == 5){
             while(true){
                 cout << "- Chose the file name (also you can add the path : \"../example\"): ";
                 string filename;
@@ -223,14 +226,16 @@ void stats(vector<InsertResult> insRes, BinaryTree* rbt){
                     printIndex(rbt);
                     cout.rdbuf(coutOriginal);
                     cout << endl << "- Saved!" << endl; 
+                    break;
                 } else{
                     cerr << "Error opening file." << endl;
                 }
-                return;
+                // return;
             }
+        } else {
+            cout << endl << "- Number out of range. Try again." << endl;
         }
 
-        cout << endl << "- Number out of range. Try again." << endl;
     }
     
 }
