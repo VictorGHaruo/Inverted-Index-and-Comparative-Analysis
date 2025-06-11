@@ -156,6 +156,7 @@ namespace RBT {
         } else { //The word isn't in the tree
             vector<int> documentID = {documentId};
             Node *node = createNode(word, documentID, searchNode.parent);
+            node->isRed = 1;
 
             if (searchNode.parent == nullptr){ //The root is a nullptr
                 tree->root = node;
