@@ -3,6 +3,7 @@
 
 # include <iostream>
 # include <vector>
+#include <fstream>
 # include <string>
 
 namespace TreeUtils {
@@ -97,6 +98,13 @@ void printIndex(BinaryTree* tree);
  * @param tree Pointer to the binary tree to be displayed
 */
 void printTree(BinaryTree* tree);
+
+/**
+ * @brief Save the print of the tree structure in a visual hierarchical format
+ * @param tree Pointer to the binary tree to be displayed
+ * @param filename The path of .txt
+*/
+void savePrintTree(BinaryTree* tree, std::string filename);
 
 }
 
