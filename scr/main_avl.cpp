@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include "data.h"
@@ -24,7 +25,7 @@ bool isPosInt(string strNum){
     return true;
 }
 
-bool Validate(int argc, char* argv[], string* comand, vector<vector<string>>* texts){
+bool validate(int argc, char* argv[], string* comand, vector<vector<string>>* texts){
     if (argc != 4) {
         cerr << "Usage: " << argv[0] << " <comand> <n_docs> <directory_path>" << endl;
         cerr << "<comand> : 'search' or 'stats'" << endl;
@@ -59,7 +60,7 @@ bool Validate(int argc, char* argv[], string* comand, vector<vector<string>>* te
     return true;
 }
 
-void SearchLooping(BinaryTree* avl){
+void searchLooping(BinaryTree* avl){
     cout << endl << "Welcome to the CLI - Search!" << endl << endl;
     while (true){
         cout << "To quit, search for 'Q'." << endl;
@@ -94,31 +95,149 @@ void SearchLooping(BinaryTree* avl){
     }
 }
 
-void Stats(vector<InsertResult> insRes){
+int getHeightTree(Node* node, string type){
+    if(node == nullptr) return -1;
+
+    if(type == "max") return 1 + max(getHeightTree(node->left, type), getHeightTree(node->right, type)); 
+    if(type == "min") return 1 + min(getHeightTree(node->left, type), getHeightTree(node->right, type)); 
+
+    return -1;
+}
+
+void stats(vector<InsertResult> insRes, BinaryTree* avl){
+    //stats of insert
     int sizeInsRes = insRes.size();
-    double totTime = 0;
-    int totComp = 0;
+    double totTimeInsert = 0;
+    int totCompInsert = 0;
+    vector<string> uniqWords;
     for(int i = 0; i < sizeInsRes; i++){
-        totTime += insRes[i].executionTime;
-        totComp += insRes[i].numComparisons;
+        totTimeInsert += insRes[i].executionTime;
+        totCompInsert += insRes[i].numComparisons;
+        if(insRes[i].isNew){
+            uniqWords.push_back(insRes[i].word);
+        }
+    }
+    double aveTimeInsert = totTimeInsert / sizeInsRes;
+
+    //stats of search
+    int sizeUniqWords = uniqWords.size();
+    double totTimeSearch = 0;
+    int totCompSearch = 0;
+    vector<SearchResult> searchResults;
+    double maxTimeSearch = 0;
+    double minTimeSearch = 0;
+    for(int i = 0; i < sizeUniqWords; i++){
+        searchResults.push_back(AVL::search(avl, uniqWords[i]));
+        totTimeSearch += searchResults[i].executionTime;
+        totCompSearch += searchResults[i].numComparisons;
+        if(searchResults[i].executionTime > maxTimeSearch) maxTimeSearch = searchResults[i].executionTime;
+        if(searchResults[i].executionTime < minTimeSearch) minTimeSearch = searchResults[i].executionTime;
+    }
+    double aveTimeSearch = totTimeSearch / sizeUniqWords;
+
+    //height
+    int maxHeightTree = getHeightTree(avl->root, "max");
+    int minHeightTree = getHeightTree(avl->root, "min");
+
+    cout << endl <<  "Welcome to the CLI - Stats!" << endl;
+    cout << "The stats were: " << endl;
+    cout << "- "<< sizeUniqWords << " different words were added." << endl;
+    cout << "- Height of longest path and Tree's height: " << maxHeightTree << endl;
+    cout << "- Height of shortest path : " << minHeightTree << endl << endl;
+    cout << "Insertion: " << endl;
+    cout << "- Total time : " << totTimeInsert << "ms = " << totTimeInsert/1000 << "s" << endl;
+    cout << "- Average time : " << aveTimeInsert << "ms = " << aveTimeInsert/1000 << "s" << endl;
+    cout << "- Total number of comparisons : " << totCompInsert << endl << endl;
+    cout << "Search: " << endl;
+    cout << "- Total time to search for all the words : " << totTimeSearch << "ms = " << totTimeSearch/1000 << "s" << endl;
+    cout << "- Average time : " << aveTimeSearch << "ms = " << aveTimeSearch/1000 << "s" << endl;
+    cout << "- Total number of comparisons : " << totCompSearch << endl;
+
+    while (true) {
+        cout << endl << "Options to do:" << endl;
+        cout << "1 - Nothing/Quit." << endl;
+        cout << "2 - Print the tree." << endl;
+        cout << "3 - Save the print of the tree in a '.txt'." << endl;
+        cout << "4 - Print index of the tree." << endl;
+        cout << "5 - Save the print index of the tree." << endl << endl;
+        cout << "- Select the option: ";
+        
+        string answer; 
+        cin >> answer;
+        // Ignore after the space
+        string line;
+        getline(cin, line);
+
+        unsigned int option = 0;
+        if(isPosInt(answer)){
+            option = stoi(answer);
+        } else {
+            cout << endl << "- Sorry, but it's not a positve integer. Try again." << endl;
+            continue;
+        }
+
+        if(option == 1) return;
+
+        else if(option == 2){
+            printTree(avl);
+            // return;
+        }
+
+        else if(option == 3){
+            while(true){
+                cout << "- Chose the file name (also you can add the path : \"../example\"): ";
+                string filename;
+                cin >> filename;
+                getline(cin, line);
+                //if the rest of input is just ' ' it's okay, if not it's 2+ words
+                if(line.length() > 1 && line.find_first_not_of(' ') != string::npos){
+                    cout << endl << "- Wait, just one word. Try again." << endl << endl;
+                    continue;
+                }
+                filename += ".txt";
+                savePrintTree(avl, filename);
+                cout << endl << "- Saved!" << endl;
+                break;
+                // return;
+            }
+        }
+
+        else if(option == 4){
+            printIndex(avl);
+            // return;
+        }
+
+        else if(option == 5){
+            while(true){
+                cout << "- Chose the file name (also you can add the path : \"../example\"): ";
+                string filename;
+                cin >> filename;
+                getline(cin, line);
+                //if the rest of input is just ' ' it's okay, if not it's 2+ words
+                if(line.length() > 1 && line.find_first_not_of(' ') != string::npos){
+                    cout << endl << "- Wait, just one word. Try again." << endl << endl;
+                    continue;
+                }
+                filename += ".txt";
+                ofstream txt(filename);
+                if(txt.is_open()){
+                    streambuf* coutOriginal = cout.rdbuf();
+                    cout.rdbuf(txt.rdbuf());
+                    printIndex(avl);
+                    cout.rdbuf(coutOriginal);
+                    cout << endl << "- Saved!" << endl; 
+                    break;
+                } else{
+                    cerr << "Error opening file." << endl;
+                }
+                // return;
+            }
+        } else {
+            cout << endl << "- Number out of range. Try again." << endl;
+        }
+
     }
     
-    // cout << sizeInsRes << endl;
-    // vector<vector<string>> vecWords= {{},{},{}};
-    // for(int i = 0; i < sizeInsRes; i++){
-    //     if (i < 10){
-    //         vecWords.push_back()
-    //     } else if(i < 100){
-
-    //     } else if(i < 1000){
-
-    //     } else break;
-    // }
-
-    cout << "Welcome to the CLI - Stats!" << endl;
-    cout << "The stats were: " << endl;
-    cout << "- Executation Time : " << totTime << "ms = " << totTime/1000 << "s" << endl;
-    cout << "- Total number of comparisons : " << totComp << endl;
 }
 
 int main(int argc, char** argv) {
@@ -126,7 +245,7 @@ int main(int argc, char** argv) {
     // Validate arguments
     string comand;
     vector<vector<string>> texts;
-    bool valide = Validate(argc, argv, &comand, &texts);
+    bool valide = validate(argc, argv, &comand, &texts);
     if (!valide) return 1;
 
     // Populate the tree 
@@ -143,9 +262,9 @@ int main(int argc, char** argv) {
 
     // Commands
     if (comand == "search"){
-        SearchLooping(avl);
+        searchLooping(avl);
     } else { 
-        Stats(insRes);
+        stats(insRes, avl);
     }
 
     return 0;

@@ -14,6 +14,14 @@ ifndef path
 path = ../data/
 endif
 
+ifeq ($(OS),Windows_NT)
+    RM = cmd /C "del /Q"
+    EXT = .exe
+else
+    RM = rm -rf
+    EXT =
+endif
+
 OBJS = main_$(tree).o $(tree).o tree_utils.o data.o
 TARGET = main_$(tree)
 FLAGS = -Wall -Wextra
@@ -30,4 +38,4 @@ $(TARGET): $(OBJS)
 	g++ $(FLAGS) -c $<
 
 clean:
-	rm -rf *.o main_bst main_avl main_rbt
+	$(RM) *.o main_bst$(EXT) main_avl$(EXT) main_rbt$(EXT)

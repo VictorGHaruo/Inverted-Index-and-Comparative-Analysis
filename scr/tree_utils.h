@@ -3,6 +3,7 @@
 
 # include <iostream>
 # include <vector>
+#include <fstream>
 # include <string>
 
 namespace TreeUtils {
@@ -34,6 +35,8 @@ struct BinaryTree {
 struct InsertResult {
     int numComparisons;
     double executionTime;
+    std::string word;
+    bool isNew;
     // others possible variables
 };
 
@@ -44,7 +47,7 @@ struct SearchResult {
     int numComparisons;
     // others possible variables
     
-    //created for BST
+    //created for insert
     Node* resultedNode;
     Node* parent;
 };
@@ -95,6 +98,13 @@ void printIndex(BinaryTree* tree);
  * @param tree Pointer to the binary tree to be displayed
 */
 void printTree(BinaryTree* tree);
+
+/**
+ * @brief Save the print of the tree structure in a visual hierarchical format
+ * @param tree Pointer to the binary tree to be displayed
+ * @param filename The path of .txt
+*/
+void savePrintTree(BinaryTree* tree, std::string filename);
 
 }
 

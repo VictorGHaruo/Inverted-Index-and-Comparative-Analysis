@@ -15,7 +15,7 @@ Node* createNode(std::string word, std::vector<int> documentsId, Node* parent){
     node->right = nullptr;
 
     node->height = 0;
-    node->isRed = 1;
+    node->isRed = 0;
 
     return node;
 }
@@ -52,7 +52,7 @@ void printIndex(BinaryTree* tree){
     if (n != nullptr) {
         printIndexAux(n, counter);
     }
-};
+}
 
 int computeDepth(Node* node){
     int depth = 0;
@@ -62,11 +62,11 @@ int computeDepth(Node* node){
     }
 
     return depth;
-};
+}
 
 int getHeight(Node* node) {
         return node == nullptr ? -1 : node->height;
-    };
+}
 
 void computeHeight(Node* node) {
     if (node == nullptr) {
@@ -90,8 +90,12 @@ void printTreeAux(Node* root, const std::string &prefix, bool isLast){
             cout << "├──";
         }
     }
- 
-    cout << root->word << endl;
+    if(root->isRed){
+        std::string color = "\033[31m" + root->word + "\033[0m";
+        cout << color << endl;
+    } else {
+        cout << root->word << endl;
+    }
 
     string newPrefix = prefix + (isLast ? "   " : "│  ");
 
@@ -110,6 +114,47 @@ void printTree(BinaryTree* tree){
     
     if (n != nullptr) {
         printTreeAux(n, "", true);
+    }
+}
+
+// Auxiliary recursive function for savePrintTree
+void savePrintTreeAux(Node* root, const std::string &prefix, bool isLast, std::ofstream& txt){
+
+    if (root == nullptr) return;
+
+    txt << prefix;
+
+    if (! prefix.empty()){
+        if (isLast) {
+            txt << "└──";
+        } else {
+            txt << "├──";
+        }
+    }
+    
+    txt << root->word << endl;
+
+    std::string newPrefix = prefix + (isLast ? "   " : "│  ");
+
+    if(root->right == nullptr)
+        savePrintTreeAux(root->left, newPrefix, true, txt);
+    else {
+        savePrintTreeAux(root->left,  newPrefix, false, txt);
+        savePrintTreeAux(root->right, newPrefix, true, txt);
+    }
+        
+}
+
+void savePrintTree(BinaryTree* tree, std::string filename){
+    Node* n = tree->root;
+    std::ofstream txt(filename);
+    if(!n){
+        cerr << "Eroor: Tree empty." << endl;
+    }
+    if(txt.is_open()) {
+        savePrintTreeAux(n, "", true, txt);
+    } else{
+        cerr << "Error opening file " << filename << endl;
     }
 }
 

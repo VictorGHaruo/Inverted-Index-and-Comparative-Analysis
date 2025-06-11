@@ -58,7 +58,14 @@ namespace BST{
         double time = duration_ms.count();
 
         InsertResult result;
-        
+
+        result.word = word;
+        if(searchNode.found==1){
+            result.isNew = false;
+        } else{
+            result.isNew = true;
+        }
+
         // +1 comes from the comparison that determines which side the word goes
         result.numComparisons = searchNode.numComparisons + 1; 
         result.executionTime = time;

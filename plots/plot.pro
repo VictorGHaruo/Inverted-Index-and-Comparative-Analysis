@@ -13,6 +13,7 @@ SOURCES += \
     ../scr/bst.cpp \
     ../scr/data.cpp \
     ../scr/tree_utils.cpp \
+    "../scr/rbt.cpp" \
     qcustomplot.cpp
 
 HEADERS += \
@@ -20,4 +21,5 @@ HEADERS += \
     ../scr/bst.h \
     ../scr/data.h \
     ../scr/tree_utils.h \
+    "../scr/rbt.h" \
     qcustomplot.h
