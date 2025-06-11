@@ -1,0 +1,22 @@
+\subsection{Binary Search Tree - BST}
+
+\subsubsection{Concept}
+
+A \textbf{Binary Search Tree (BST)} is a data structure used in computer science to organize and store data in an ordered manner. Conceptually, a tree must adhere to specific criteria to be considered a binary search tree:
+
+Each node in a Binary Search Tree has, at most, two children: a left child and a right child. The left child contains values smaller than the parent node, while the right child contains values larger than the parent node.
+
+This hierarchical structure allows for efficient search, insertion, and deletion operations on the data stored in the tree. In time complexity analysis, the efficiency of a BST is linear in relation to the height of the tree. Furthermore, the best time for basic operations—insertion, deletion, and search—takes $O(\log n)$ for $n$ nodes. In the worst case, when the tree degenerates (becoming similar to a linked list), the time can reach $O(n)$.
+
+\subsubsection{Implementation}
+
+\begin{itemize}
+    \item \underline{\textbf{Insert Function:}}
+
+    For inserting a word into the tree, the main idea is to preserve the existing structure. Thus, the insertion process is divided into two primary cases: the word already exists in the tree, or it is a new word. This distinction is made using the previously implemented `Search` function.
+
+    In the first case, where the word already belongs to a node in the tree, the function searches for the ID of the text to be inserted within the `documentIds` list of the corresponding node. If the ID is already present, no action is taken. Otherwise, the ID for that text is added to the list. As an optimization, the list of IDs is traversed in reverse. Since texts are inserted in ascending order, this means that if the word was already present in the text, its ID would have been the last one added, thus saving computational time. However, to ensure the code remains functional regardless of the file insertion order, the decision was made to retain a full loop through the list.
+
+    On the other hand, if the word is not already in the tree, it must be added as a child node of a leaf. Since the `Search` function already stores the parent node, one simply compares the new word with the parent node's word to determine if the new node will be inserted as a left or right child. A special case occurs when the tree is empty (i.e., the parent is null); in this scenario, the new node is set as the root of the tree.
+    
+\end{itemize}
