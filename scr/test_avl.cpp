@@ -21,14 +21,14 @@ int main(){
     printTree(tree);
     cout << endl ;
 
-    cout << "========= Teste Left-Right Rotation =========" << endl;
-    AVL::insert(tree, "galade", 7);
+    cout << "========= Teste Right-Left Rotation =========" << endl;
+    AVL::insert(tree, "ivysaur", 8);
     AVL::insert(tree, "flareon", 6); // Left-Right Rotation ao inserir "flareon"
     printTree(tree);
     cout << endl ;
 
-    cout << "========= Teste Right-Left Rotation =========" << endl;
-    AVL::insert(tree, "igglybuff", 9);
+    cout << "========= Teste Left-Right Rotation =========" << endl;
+    AVL::insert(tree, "gallade", 9);
     AVL::insert(tree, "hypno", 8); // Right-Left Rotation ao inserir "hypno"
     printTree(tree);
 
@@ -76,7 +76,8 @@ int main(){
     cout << "========= Insert: Last =========" << endl;
     cout << "Execution Time: " << insert_last.executionTime << endl;
     cout << "Number of Comparisons:" << insert_last.numComparisons << endl;
-    cout << endl ;
+    cout << "Tree height :" << getHeight(tree->root) << endl;
+    cout << "========= Balance test: =========" << endl;
 
     cout << "========= Delete Tree =========" << endl;
     AVL::destroy(tree);

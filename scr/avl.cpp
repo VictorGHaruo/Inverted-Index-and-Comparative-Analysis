@@ -51,7 +51,6 @@ namespace AVL{
         // Updates heights (order is important: child first, then parent)
         computeHeight(root);
         computeHeight(newRoot);
-
         return newRoot; // Returns the new root of the subtree
     }
 
@@ -86,7 +85,6 @@ namespace AVL{
         // Updates heights (order is important: child first, then parent)
         computeHeight(root);
         computeHeight(newRoot);
-
         return newRoot; // Return the new root of the subtree
     }
 
@@ -96,7 +94,6 @@ namespace AVL{
         if (newRight != nullptr) {
             newRight->parent = root;
         }
-
         return rotateLeft(root);
     }
 
@@ -106,7 +103,6 @@ namespace AVL{
         if (newLeft != nullptr) {
             newLeft->parent = root;
         }
-
         return rotateRight(root);
     }
 
@@ -168,7 +164,7 @@ namespace AVL{
             }
 
             // Balancing the tree
-            Node* ancestral = searchNode.parent;
+            Node* ancestral = searchNode.parent;    
 
             while (ancestral != nullptr){
                 computeHeight(ancestral); // Updating the height of ancestor nodes
@@ -179,10 +175,12 @@ namespace AVL{
 
                     if (parent == nullptr) 
                         tree->root = new_subtree_root;
+
+                    break;
                 }
                 ancestral = ancestral->parent;
                 searchNode.numComparisons++;
-        }
+            }
         }
         auto end = high_resolution_clock::now(); //Ends clock
         //Convert the auto-typed variable to double, representing milliseconds
