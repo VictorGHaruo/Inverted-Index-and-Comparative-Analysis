@@ -134,7 +134,7 @@ int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
     PlotConfig config;
-    config.texts = data::readData("../data/", 10103); 
+    config.texts = data::readData("../data2/", 10001); 
 
     QCustomPlot first_plot;
     QCustomPlot second_plot;
@@ -277,7 +277,7 @@ int main(int argc, char *argv[]) {
     configurePlot(third_plot, config, "Média do número de comparações por documento lido","Número de documentos lidos","Média do número de comparações");
     configurePlot(fourth_plot, config, "Soma dos tempos de execução","Número de documentos lidos","Tempo médio");
     configurePlot(fifth_plot, config,  "Número de palavras por número de comparações","Número de comparações","Número de palavras");
-    configurePlot(sixth_plot, config, "Soma do número de comparações na inserção","Número de comparações","Número de palavras");
+    configurePlot(sixth_plot, config, "Soma do número de comparações na inserção","Número de novas palavras","Soma do número de comparações");
     configurePlot(seventh_plot,config, "Menor caminho de uma folha até a raiz","Menor caminho","Número de documentos lidos");
 
     // Ajustar escalas
