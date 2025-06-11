@@ -3,8 +3,7 @@
 #include "rbt.h"
 using namespace std;
 
-// TESTS With color
-
+// PrintTree with colors for better visualization and debug
 void printRBTAux(Node* root, const std::string &prefix, bool isLast){
 
     if (root == nullptr) return;
@@ -19,7 +18,7 @@ void printRBTAux(Node* root, const std::string &prefix, bool isLast){
         }
     }
  
-    cout << root->word << " c: " << root->isRed << endl;
+    cout << (root->isRed ? "\033[31m" : "\033[0m") << root->word << "\033[0m" << endl;
 
     string newPrefix = prefix + (isLast ? "   " : "│  ");
 
@@ -42,76 +41,88 @@ void printRBT(BinaryTree* tree){
     }
 }
 
-
 int main(){
 
     BinaryTree *tree = RBT::create();
 
+    cout << "=========== Initial Tree ===========" << endl;
     // Inserting when the root is a null pointer
-    // Need more tests...
-    InsertResult insert_root = RBT::insert(tree, "arnaldo", 1); 
-    RBT::insert(tree, "bernaldo", 2);
-    RBT::insert(tree, "cernaldo", 3);
-    RBT::insert(tree, "dernaldo", 4);
+    InsertResult insert_root = RBT::insert(tree, "fernaldo", 1); 
     RBT::insert(tree, "enaldo", 5);
-    RBT::insert(tree, "fernaldo", 5);
-    RBT::insert(tree, "gernaldo", 5);
-    
-    //Adding a node that already exists, but with a different ID
-    RBT::insert(tree, "dernaldo", 4);
-
+    printRBT(tree);
+    // Cases in the left, dernaldo is left child, so we need to RotateRight
+    cout << "======== Case 3 in the left ========" << endl;
+    RBT::insert(tree, "dernaldo", 5);
     printRBT(tree);
 
-    // InsertResult insert_last;
+    // Uncle is red, so we need to recolor
+    cout << "======== Case 1 in the left ========" << endl;
+    RBT::insert(tree, "bernaldo", 2);
+    printRBT(tree);
+    
+    // Uncle doesn't exists, cernaldo is right child, so, case 2 and after, case 3.
+    cout << "======== Case 2 in the left ========" << endl;
+    RBT::insert(tree, "cernaldo", 3);
+    printRBT(tree);
+    
+    
+    // Inserting same word with different ID
+    RBT::insert(tree, "dernaldo", 4);
+    cout << "============ PrintIndex ============" << endl;
+    printIndex(tree);
 
-    // string pokemons[] = {
-    //     "bulbasaur", "ivysaur", "venusaur", "charmander", "charmeleon", "charizard",
-    //     "squirtle", "wartortle", "blastoise", "caterpie", "metapod", "butterfree",
-    //     "weedle", "kakuna", "beedrill", "pidgey", "pidgeotto", "pidgeot",
-    //     "rattata", "raticate", "spearow", "fearow", "ekans", "arbok",
-    //     "pikachu", "raichu", "sandshrew", "sandslash", "nidoran-f", "nidorina",
-    //     "nidoqueen", "nidoran-m", "nidorino", "nidoking", "clefairy", "clefable",
-    //     "vulpix", "ninetales", "jigglypuff", "wigglytuff", "zubat", "golbat",
-    //     "oddish", "gloom", "vileplume", "paras", "parasect", "venonat",
-    //     "venomoth", "diglett", "dugtrio", "meowth", "persian", "psyduck",
-    //     "golduck", "mankey", "primeape", "growlithe", "arcanine", "poliwag",
-    //     "poliwhirl", "poliwrath", "abra", "kadabra", "alakazam", "machop",
-    //     "machoke", "machamp", "bellsprout", "weepinbell", "victreebel", "tentacool",
-    //     "tentacruel", "geodude", "graveler", "golem", "ponyta", "rapidash",
-    //     "slowpoke", "slowbro", "magnemite", "magneton", "farfetchd", "doduo",
-    //     "dodrio", "seel", "dewgong", "grimer", "muk", "shellder",
-    //     "cloyster", "gastly", "haunter", "gengar", "onix", "drowzee",
-    //     "hypno", "krabby", "kingler", "voltorb", "electrode", "exeggcute",
-    //     "exeggutor", "cubone", "marowak", "hitmonlee", "hitmonchan", "lickitung",
-    //     "koffing", "weezing", "rhyhorn", "rhydon", "chansey", "tangela",
-    //     "kangaskhan", "horsea", "seadra", "goldeen", "seaking", "staryu",
-    //     "starmie", "mr-mime", "scyther", "jynx", "electabuzz", "magmar",
-    //     "pinsir", "tauros", "magikarp", "gyarados", "lapras", "ditto",
-    //     "eevee", "vaporeon", "jolteon", "flareon", "porygon", "omanyte",
-    //     "omastar", "kabuto", "kabutops", "aerodactyl", "snorlax", "articuno",
-    //     "zapdos", "moltres", "dratini", "dragonair", "dragonite", "mewtwo", "mew"
-    // };
+    RBT::insert(tree, "gernaldo", 3); // No need fixInsert
+    
+    InsertResult insert_last = RBT::insert(tree, "gabriel", 1);
+    cout << "=========== Insert: Root ===========" << endl;
+    cout << "Execution Time: " << insert_root.executionTime << endl;
+    cout << "Number of Comparisons:" << insert_root.numComparisons << endl;
+    cout << endl;
 
-    // for (int i = 0; i < 151; i++) {
-    //     RBT::insert(tree, pokemons[i], i + 1); 
-    //     if (i == 150)
-    //         insert_last = RBT::insert(tree, pokemons[i], i + 1);
-    // }
+    cout << "=========== Insert: Last ===========" << endl;
+    cout << "Execution Time: " << insert_last.executionTime << endl;
+    cout << "Number of Comparisons:" << insert_last.numComparisons << endl;
+    cout << endl ;
 
-    // cout << "========= Insert: Root =========" << endl;
-    // cout << "Execution Time: " << insert_root.executionTime << endl;
-    // cout << "Number of Comparisons:" << insert_root.numComparisons << endl;
-    // cout << endl;
+    // Search for dernaldo
+    cout << "========= Search: dernaldo =========" << endl;
 
-    // cout << "========= Insert: Last =========" << endl;
-    // cout << "Execution Time: " << insert_last.executionTime << endl;
-    // cout << "Number of Comparisons:" << insert_last.numComparisons << endl;
-    // cout << endl ;
+    SearchResult result_one = RBT::search(tree, "dernaldo");
+    cout << "Execution Time: " << result_one.executionTime << endl;
+    cout << "Found...? " << result_one.found << endl;
+    cout << "Number of Comparisons: " << result_one.numComparisons << endl;
+    cout << "Parent: " 
+         << (result_one.parent == nullptr 
+         ? "None (this node is the root)" 
+         : result_one.parent->word) << endl;
+    cout << "Documents IDs: ";
+    for (int i = 0; i < result_one.documentIds.size(); i++){
+        cout << result_one.documentIds[i]<< " ";
+    }
+    cout << endl << endl;
 
-    // printRBT(tree);
+    // Search for root (enaldo)
+    cout << "=========== Search: Root ===========" << endl;
 
-    cout << "========= Delete Tree =========" << endl;
+    SearchResult result_two = RBT::search(tree, "enaldo");
+    cout << "Execution Time: " << result_two.executionTime << endl;
+    cout << "Found...? " << result_two.found << endl;
+    cout << "Number of Comparisons: " << result_two.numComparisons << endl;
+    cout << "Parent: " 
+         << (result_two.parent == nullptr 
+         ? "None (this node is the root)" 
+         : result_two.parent->word) << endl;
+    cout << "Documents IDs: ";
+    for (int i = 0; i < result_two.documentIds.size(); i++){
+        cout << result_two.documentIds[i]<< " ";
+    }
+    cout << endl << endl;
+    
+    cout << "============= The Tree =============" << endl;
+    printRBT(tree);
+    cout << endl;
+
+    cout << "============ Delete Tree ===========" << endl;
     RBT::destroy(tree);
-
 
 }
