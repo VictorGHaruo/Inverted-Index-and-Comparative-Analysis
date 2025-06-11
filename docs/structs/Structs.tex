@@ -1,0 +1,33 @@
+\section{Structs}
+
+
+
+\input{structs/BST}
+\input{structs/AVL}
+\input{structs/RBT}
+
+\subsection{General Functions}
+Since BST, AVL, and Red-Black trees are all binary trees, they naturally share similar functions due to their fundamentally similar structure. Therefore, the \texttt{create}, \texttt{search}, and \texttt{destroy} functions are the same for all of them.
+
+\begin{itemize}
+    \item \underline{\textbf{Create Function:}}
+    
+    The \texttt{create} function is responsible for creating the tree by initializing the root and the NIL node (used in the Red-Black Tree) as null pointers, thereby preventing invalid memory access.\newline
+    
+    \item \underline{\textbf{Search Function:}}
+    
+    By definition, a binary tree is constructed so that for any given node, smaller values are stored in the left subtree and larger values in the right. Based on this principle, the search operation is executed efficiently by leveraging the structure's inherent order.
+    
+    The search algorithm traverses the tree by comparing the target word with the keys in each node, using a \texttt{compare} function that returns the difference of the first diverging letter based on the ASCII table. Depending on this return value, the algorithm decides whether to traverse to the left or right child. This process repeats until the word is found or a null pointer is reached (a child of a leaf), indicating the word is not in the tree. If the word is located, the function returns a structure containing the result information. For statistical purposes, a timer is used to measure the search execution time.
+    
+    Regarding complexity, the algorithm's efficiency is closely tied to the tree's height, with a complexity of \(O(h)\), where \(h\) is the height of the binary tree. In the best-case analysis, when the tree is perfectly balanced, the complexity is \(O(\log n)\), where \(n\) is the number of nodes. On the other hand, in the worst case—when the tree degenerates into the shape of a linked list—the search has a complexity of \(O(n)\), this applies to the BST, which does not self-balance.\newline
+
+    \item \underline{\textbf{Destroy Function:}}
+
+    Finally, the \texttt{destroy} function is responsible for freeing all memory allocated by the binary tree structure. To accomplish this, it uses a helper function called \texttt{deleteTreeRecursive}, which employs a Post-Order Depth-First Search (DFS). Through recursion, it deletes nodes from the leaves up to the root. Once the node deallocation process is complete, the tree's root pointer is reset to null, ensuring the structure is completely cleared.
+
+\end{itemize}
+
+
+
+

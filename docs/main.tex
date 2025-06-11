@@ -1,0 +1,97 @@
+\documentclass{article}
+
+% Pacotes de formatação e utilidades
+\usepackage{fontspec}
+\usepackage[portuguese]{babel} % Língua portuguesa
+\usepackage{geometry}          % Margens
+\usepackage{listings}          % Inserção de códigos
+\usepackage{xcolor}            % Cores para códigos
+\usepackage{graphicx}          % Imagens
+\usepackage{url}               % Links
+\usepackage{amsmath}           % Matemática avançada
+\usepackage{mdframed}          % Caixas com bordas
+\usepackage{float}             % Controle de posição de figuras/tabelas
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{mdframed} % <-- pacote para caixas
+\usepackage{xcolor}
+
+\usepackage{multirow} % Coloque isso no preâmbulo do seu documento
+\usepackage{graphicx} % Required for inserting images
+\usepackage{minted}
+\usepackage{forest} 
+\usepackage{enumitem}
+\usepackage{pmboxdraw}
+\usepackage{url}
+\usepackage{tikz}
+\usepackage{enumitem}
+
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0.7em}
+
+\usetikzlibrary{graphs, graphdrawing}
+\usegdlibrary{force} % para organizar o layout automaticamente
+\usetikzlibrary{trees}
+\newtheorem{definicao_interna}{Definição} % o conteúdo "interno" da definição
+\newtheorem{teorema}{Teorema}[section]
+
+
+\newmdenv[
+  linecolor=black,
+  linewidth=1pt,
+  roundcorner=5pt,
+  backgroundcolor=gray!10,
+  innertopmargin=10pt,
+  innerbottommargin=10pt,
+  innerleftmargin=10pt,
+  innerrightmargin=10pt,
+]{definicao}
+
+
+% Definição de cores personalizadas para código
+\definecolor{bggray}{RGB}{245, 245, 245}      % Fundo cinza claro
+\definecolor{keywordblue}{RGB}{0, 0, 180}      % Azul escuro para palavras-chave
+\definecolor{stringred}{RGB}{180, 0, 0}        % Vermelho escuro para strings
+\definecolor{commentgreen}{RGB}{34, 139, 34}   % Verde para comentários
+\definecolor{numberpurple}{RGB}{128, 0, 128}   % Roxo para números
+
+% Configuração personalizada para código Python
+\lstdefinestyle{PythonStyle}{
+    backgroundcolor=\color{bggray},   % Cor de fundo suave
+    basicstyle=\ttfamily\footnotesize, % Fonte monoespaçada pequena
+    frame=single,                     % Borda ao redor do código
+    rulecolor=\color{gray},           % Cor da borda
+    keywordstyle=\color{keywordblue}\bfseries, % Palavras-chave em azul e negrito
+    stringstyle=\color{stringred},    % Strings em vermelho
+    commentstyle=\color{commentgreen}\itshape, % Comentários em verde e itálico
+    numberstyle=\color{numberpurple}, % Números em roxo
+    showstringspaces=false,           % Não mostrar espaços em branco nos textos
+    numbers=left,                     % Numeração à esquerda
+    numbersep=5pt,                    % Espaçamento entre números e código
+    tabsize=4,                        % Tamanho do tab (4 espaços)
+    captionpos=b,                     % Posição da legenda (b = abaixo)
+    breaklines=true,                   % Quebra de linha automática
+    language=Python                   % Define a linguagem como Python
+}
+% Configuração de margens
+\geometry{
+    a4paper,
+    left=3cm,
+    right=2cm,
+    top=3cm,
+    bottom=2cm
+}
+
+\usepackage{graphicx} % Required for inserting images
+
+\title{A2 - Estrutura de Dados}
+\author{Victor Gabriel Iwamoto}
+\date{June 2025}
+
+\begin{document}
+
+\maketitle
+\input{introduction}
+\input{structs/Structs}
+\input{Structures}
+\end{document}
