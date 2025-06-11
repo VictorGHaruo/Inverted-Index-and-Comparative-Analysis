@@ -14,9 +14,8 @@ Node* createNode(std::string word, std::vector<int> documentsId, Node* parent){
     node->left = nullptr;
     node->right = nullptr;
 
-    // To be corrected...
     node->height = 0;
-    node->isRed = 0;
+    node->isRed = 1;
 
     return node;
 }
@@ -76,46 +75,42 @@ void computeHeight(Node* node) {
     node->height = 1 + std::max(getHeight(node->left), getHeight(node->right));
 }
 
-// TODO: fix tree view
+
 // Auxiliary recursive function for printTree
-void printTreeAux(Node* root, int counter, bool isLast){
+void printTreeAux(Node* root, const std::string &prefix, bool isLast){
 
-    if (root != nullptr) {
-            
-        if (counter > 0) {
-            for (int i=1; i < counter; i++)
-            cout << "│  ";
- 
-            if (isLast){
-                cout << "└──";
-            } else {
-                cout << "├──";
-            }
+    if (root == nullptr) return;
+
+    cout << prefix;
+
+    if (! prefix.empty()){
+        if (isLast) {
+            cout << "└──";
+        } else {
+            cout << "├──";
         }
-
-        cout << root->word << endl;
-
-        // If there is no child on the right, the child 
-        // on the left will be the last
-        if(root->right == nullptr)
-            printTreeAux(root->left, counter + 1, true);
-        else {
-            printTreeAux(root->left, counter + 1, false);
-            printTreeAux(root->right, counter + 1, true);
-        }
-        
     }
+ 
+    cout << root->word << endl;
 
-};
+    string newPrefix = prefix + (isLast ? "   " : "│  ");
+
+    if(root->right == nullptr)
+        printTreeAux(root->left, newPrefix, true);
+    else {
+        printTreeAux(root->left,  newPrefix, false);
+        printTreeAux(root->right, newPrefix, true);
+    }
+        
+}
 
 void printTree(BinaryTree* tree){
 
     Node* n = tree->root;
-    int counter = 0;
     
     if (n != nullptr) {
-        printTreeAux(n, counter, true);
+        printTreeAux(n, "", true);
     }
 }
 
-}
+};

@@ -83,14 +83,14 @@ namespace AVL{
     }
 
     Node* rotateRightLeft(Node* root) {
-    Node* newRight = rotateRight(root->right);
-    root->right = newRight;
-    if (newRight != nullptr) {
-        newRight->parent = root;
-    }
+        Node* newRight = rotateRight(root->right);
+        root->right = newRight;
+        if (newRight != nullptr) {
+            newRight->parent = root;
+        }
 
-    return rotateLeft(root);
-}
+        return rotateLeft(root);
+    }
 
     Node* rotateLeftRight(Node* root) {
         Node* newLeft = rotateLeft(root->left);
@@ -138,7 +138,8 @@ namespace AVL{
             //To avoid repeating document IDs when adding words
             int n = searchNode.resultedNode->documentIds.size();
             bool exists = false;
-            for (int i = 0; i < n; i++){
+            // In the massive insert on main, it's just important the last ID (fewer operations)
+            for (int i = n-1; i >= 0; i--){  
                 if(searchNode.resultedNode->documentIds[i] == documentId){
                     exists = true;
                     break;
@@ -147,8 +148,7 @@ namespace AVL{
             if(!exists){
                 searchNode.resultedNode->documentIds.push_back(documentId);
             }
-        }
-        else{ //The word isn't in the tree
+        }else{ //The word isn't in the tree
             vector<int> documentID = {documentId};
             Node *node = createNode(word, documentID, searchNode.parent);
 
@@ -247,7 +247,7 @@ namespace AVL{
         return result;
     }
 
-    void deleteTree(BinaryTree* tree){
+    void destroy(BinaryTree* tree){
         deleteTreeRecursive(tree->root);
         delete tree;
         tree = nullptr;

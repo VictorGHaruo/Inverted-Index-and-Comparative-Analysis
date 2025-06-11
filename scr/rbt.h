@@ -1,12 +1,12 @@
 #include <vector>
 #include <iostream>
 #include "tree_utils.h"
-#ifndef AVL_H
-#define AVL_H
+#ifndef RBT_H
+#define RBT_H
 
 using namespace TreeUtils;
 
-namespace AVL{
+namespace RBT{
     BinaryTree* create();
     InsertResult insert(BinaryTree* tree, const std::string& word, int documentId);
     SearchResult search(BinaryTree* tree, const std::string& word);
@@ -14,4 +14,3 @@ namespace AVL{
     void deleteTreeRecursive(Node* root);
 }    
 #endif
-    

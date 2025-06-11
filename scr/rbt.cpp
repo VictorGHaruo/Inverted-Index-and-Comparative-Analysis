@@ -1,18 +1,133 @@
 #include <iostream>
 #include <vector>
-#include "bst.h"
+#include "rbt.h"
 #include "tree_utils.h"
 #include <chrono>
 using namespace std;
-using namespace BST;
 using namespace std::chrono;
 
-namespace BST{
+namespace RBT {
+
     BinaryTree* create(){
         BinaryTree* tree = new BinaryTree();
         tree->root = nullptr;
         tree->NIL = nullptr;
         return tree;
+    }
+
+    // Replace a node u with a node v in the tree
+    void transplant(BinaryTree* tree, Node* u, Node* v) {
+        if (u->parent == nullptr) {
+            tree->root = v;
+        } else if (u == u->parent->left) {
+            u->parent->left = v;
+        } else {
+            u->parent->right = v;
+        }
+        
+        if (v != nullptr) {
+            v->parent = u->parent;
+        }
+    }
+
+    void rotateLeft(BinaryTree* tree, Node* x) {
+
+        Node* y = x->right; 
+        
+        // Left subtree of y becomes right child of x
+        x->right = y->left;
+        if (y->left != nullptr) {
+            y->left->parent = x;
+        }
+        
+        // y takes x's position in the tree
+        transplant(tree, x, y);
+        
+        // x becomes left child of y
+        y->left = x;
+        x->parent = y;
+    }
+
+    void rotateRight(BinaryTree* tree, Node* x) {
+
+        Node* y = x->left; 
+        
+        // right subtree of y becomes left child of x
+        x->left = y->right;
+        if (y->right != nullptr) {
+            y->right->parent = x;
+        }
+        
+        // y takes x's position in the tree 
+        transplant(tree, x, y);
+        
+        // x becomes right child of y
+        y->right = x;
+        x->parent = y;
+
+    }
+
+    // Adjust the insert to RBT
+    void fixInsert(BinaryTree* tree, Node* z){
+
+        if (z == nullptr || z->parent == nullptr) {
+            if (tree->root != nullptr) {
+                tree->root->isRed = 0;
+            }
+            return;
+        }
+
+        while (z->parent != nullptr && z->parent->isRed){
+            // Cases in the left
+            if (z->parent == z->parent->parent->left){
+                Node* y = z->parent->parent->right; // Uncle
+
+                // Case 1: Uncle is red - recolor
+                if (y != nullptr && y->isRed){
+                    y->parent->isRed = 1;
+                    y->isRed = 0;
+                    z->parent->isRed = 0;
+                    z = z->parent->parent;
+
+                } else { // Uncle is black
+
+                    // Case 2: z is right child 
+                    if (z == z->parent->right) {
+                        z = z->parent;
+                        rotateLeft(tree, z);
+                    }
+                    // Case 3: z is left child
+                    z->parent->isRed = 0;     
+                    z->parent->parent->isRed = 1;    
+                    rotateRight(tree, z->parent->parent);
+
+                }
+            
+            } else { // Cases in the right
+                Node* y = z->parent->parent->left; // Uncle
+                
+                // Case 1: Uncle is red - recolor
+                if (y != nullptr && y->isRed) {
+                    z->parent->isRed = 0;
+                    y->isRed = 0;
+                    z->parent->parent->isRed = 1;
+                    z = z->parent->parent;
+                } else {
+                    // Case 2: z is left child 
+                    if (z == z->parent->left) {
+                        z = z->parent;
+                        rotateRight(tree, z);
+                    }
+                    
+                    // Case 3: z is right child
+                    z->parent->isRed = 0;
+                    z->parent->parent->isRed = 1;
+                    rotateLeft(tree, z->parent->parent);
+                }
+            }
+                
+        }
+        tree->root->isRed = 0;
     }
 
     InsertResult insert(BinaryTree* tree, const std::string& word, int documentId){
@@ -25,7 +140,7 @@ namespace BST{
             int n = searchNode.resultedNode->documentIds.size();
             bool exists = false;
             // In the massive insert on main, it's just important the last ID (fewer operations)
-            for (int i = n-1; i >= 0 ; i--){ 
+            for (int i = n-1; i >= 0; i--){ 
                 if (searchNode.resultedNode->documentIds[i] == documentId){
                     exists = true;
                     break;
@@ -35,21 +150,23 @@ namespace BST{
                 searchNode.resultedNode->documentIds.push_back(documentId); 
             }
 
-        }
-        else{ //The word isn't in the tree
+        } else { //The word isn't in the tree
             vector<int> documentID = {documentId};
             Node *node = createNode(word, documentID, searchNode.parent);
 
             if (searchNode.parent == nullptr){ //The root is a nullptr
                 tree->root = node;
-            }
-            else if(word < searchNode.parent->word){ // Determine which side to place the word on
+                node->isRed = 0; // Maybe is not necessary here
+            }else if(word < searchNode.parent->word){ // Determine which side to place the word on
                 searchNode.parent->left = node;
-            }
-            else{
+            }else{
                 searchNode.parent->right = node;
             }
+
+            fixInsert(tree, node);
+            
         }
+
         auto end = high_resolution_clock::now(); //Ends clock
 
         //Convert the auto-typed variable to double, representing milliseconds
@@ -64,6 +181,7 @@ namespace BST{
         result.executionTime = time;
 
         return result;
+
     }
 
     SearchResult search(BinaryTree* tree, const std::string& word){
@@ -112,8 +230,7 @@ namespace BST{
         
         if (current == nullptr){
             result.found = 0;
-        }
-        else{
+        }else{
             result.found = 1;
             result.documentIds = current->documentIds;
         }
@@ -137,4 +254,5 @@ namespace BST{
 
         delete root;
     }
+
 }
