@@ -158,4 +158,13 @@ void savePrintTree(BinaryTree* tree, std::string filename){
     }
 }
 
+int getMinOrMaxPath(Node* node, std::string type){
+    if(node == nullptr) return -1;
+
+    if(type == "max") return 1 + max(getMinOrMaxPath(node->left, type), getMinOrMaxPath(node->right, type)); 
+    if(type == "min") return 1 + min(getMinOrMaxPath(node->left, type), getMinOrMaxPath(node->right, type)); 
+
+    return -1;
+}
+
 };

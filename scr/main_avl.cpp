@@ -25,32 +25,32 @@ bool isPosInt(string strNum){
     return true;
 }
 
-bool validate(int argc, char* argv[], string* comand, vector<vector<string>>* texts){
+bool validate(int argc, char* argv[], string* command, vector<vector<string>>* texts){
     if (argc != 4) {
-        cerr << "Usage: " << argv[0] << " <comand> <n_docs> <directory_path>" << endl;
-        cerr << "<comand> : 'search' or 'stats'" << endl;
-        cerr << "<n_dcos> : a positve integer number" << endl;
+        cerr << "Usage: " << argv[0] << " <command> <n_docs> <directory_path>" << endl;
+        cerr << "<command> : 'search' or 'stats'" << endl;
+        cerr << "<n_dcos> : a positive integer number" << endl;
         cerr << "<directory_path> : exemple '../data/' " << endl;
         return false;
     }
-    *comand = argv[1];
-    if (!(*comand == "search" || *comand == "stats")) {
-        cerr << "Usage: " << argv[0] << " <comand> <n_docs> <directory_path>" << endl;
-        cerr << "Error: The arg <comand> must be 'search' or 'stats'." << endl;
+    *command = argv[1];
+    if (!(*command == "search" || *command == "stats")) {
+        cerr << "Usage: " << argv[0] << " <command> <n_docs> <directory_path>" << endl;
+        cerr << "Error: The arg <command> must be 'search' or 'stats'." << endl;
         return false;
     }
     unsigned int numMax = 0;
     if (isPosInt(argv[2])){
         numMax = stoi(argv[2]);
     } else {
-        cerr << "Usage: " << argv[0] << " <comand> <n_docs> <directory_path>" << endl;
+        cerr << "Usage: " << argv[0] << " <command> <n_docs> <directory_path>" << endl;
         cerr << "Error: <n_docs> must be a positive integer." << endl;;
         return false;
     }
     //matrix of texts' words
     *texts = data::readData(argv[3], numMax);
     if ((*texts).empty()){
-        cerr << "Usage: " << argv[0] << " <comand> <n_docs> <directory_path>" << endl;
+        cerr << "Usage: " << argv[0] << " <command> <n_docs> <directory_path>" << endl;
         cerr << "Error: Directory path is invalid." << endl;
         return false;
     } else if((*texts).size() < numMax){ //opcional
@@ -95,15 +95,6 @@ void searchLooping(BinaryTree* avl){
     }
 }
 
-int getHeightTree(Node* node, string type){
-    if(node == nullptr) return -1;
-
-    if(type == "max") return 1 + max(getHeightTree(node->left, type), getHeightTree(node->right, type)); 
-    if(type == "min") return 1 + min(getHeightTree(node->left, type), getHeightTree(node->right, type)); 
-
-    return -1;
-}
-
 void stats(vector<InsertResult> insRes, BinaryTree* avl){
     //stats of insert
     int sizeInsRes = insRes.size();
@@ -136,8 +127,8 @@ void stats(vector<InsertResult> insRes, BinaryTree* avl){
     double aveTimeSearch = totTimeSearch / sizeUniqWords;
 
     //height
-    int maxHeightTree = getHeightTree(avl->root, "max");
-    int minHeightTree = getHeightTree(avl->root, "min");
+    int maxHeightTree = getMinOrMaxPath(avl->root, "max");
+    int minHeightTree = getMinOrMaxPath(avl->root, "min");
 
     cout << endl <<  "Welcome to the CLI - Stats!" << endl;
     cout << "The stats were: " << endl;
@@ -172,7 +163,7 @@ void stats(vector<InsertResult> insRes, BinaryTree* avl){
         if(isPosInt(answer)){
             option = stoi(answer);
         } else {
-            cout << endl << "- Sorry, but it's not a positve integer. Try again." << endl;
+            cout << endl << "- Sorry, but it's not a positive integer. Try again." << endl;
             continue;
         }
 
@@ -243,9 +234,9 @@ void stats(vector<InsertResult> insRes, BinaryTree* avl){
 int main(int argc, char** argv) {
     
     // Validate arguments
-    string comand;
+    string command;
     vector<vector<string>> texts;
-    bool valide = validate(argc, argv, &comand, &texts);
+    bool valide = validate(argc, argv, &command, &texts);
     if (!valide) return 1;
 
     // Populate the tree 
@@ -261,7 +252,7 @@ int main(int argc, char** argv) {
     }  
 
     // Commands
-    if (comand == "search"){
+    if (command == "search"){
         searchLooping(avl);
     } else { 
         stats(insRes, avl);

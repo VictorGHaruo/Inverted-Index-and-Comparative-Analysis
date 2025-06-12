@@ -106,6 +106,14 @@ void printTree(BinaryTree* tree);
 */
 void savePrintTree(BinaryTree* tree, std::string filename);
 
+/**
+ * @brief This function returns the heigth of the shortest or of the longest path
+ * @param node Pointer to the node (root) whose height's path is going to be calculated
+ * @param type Can be "max" or "min", only!
+ * @return The height of the path or -1 to wrong uses.
+*/
+int getMinOrMaxPath(Node* node, std::string type);
+
 }
 
 # endif
