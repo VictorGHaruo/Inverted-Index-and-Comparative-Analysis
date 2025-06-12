@@ -1,0 +1,103 @@
+\section{How to Run}
+
+This guide provides instructions for compiling and running the project on Linux systems or the Windows Subsystem for Linux (WSL).
+
+\subsection{Prerequisites}
+
+Ensure the following packages are installed on your system:
+\begin{itemize}
+    \item C++ Compiler (g++ 11.4.0 or later)
+    \item \texttt{make}
+    \item \texttt{unzip}
+    \item Qt5 development libraries
+\end{itemize}
+
+\subsection{Setup}
+
+\subsubsection{1. Install Dependencies}
+
+On Debian-based systems like Ubuntu, run the following commands to update your package lists and install the required dependencies:
+
+\begin{minted}[frame=single, bgcolor=lightgray!50]{bash}
+# Update package lists
+sudo apt update
+
+# Install make and unzip
+sudo apt install make unzip
+
+# Install Qt5 development tools
+sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools -y 
+\end{minted}
+
+\subsubsection{2. Prepare the Datasets}
+
+The project datasets are provided as compressed \texttt{.zip} files. Due to how they are archived, unzipping them creates a nested directory structure (e.g., \texttt{data/data/}). The commands below will unzip the archives and move the files into their correct locations.
+
+From the project's root \texttt{InvertedIndex/} directory, run:
+\begin{minted}[frame=single, bgcolor=lightgray!50]{bash}
+# Unzip the primary dataset into the data/ directory
+unzip data/data.zip -d data/
+# Unzip the secondary dataset into the data2/ directory
+unzip data2/data_v2.zip -d data2/
+
+# Move the files out of the nested 'data' directories
+mv data/data/* data/
+mv data2/data/* data2/
+\end{minted}
+
+
+\subsection{Compilation \& Execution}
+
+This project uses a \texttt{Makefile} located in the \texttt{src/} directory to simplify compilation and execution. You can run the program with default settings or provide custom parameters.
+
+\subsubsection{Using the Makefile}
+
+The following commands should be run from the project's root directory.
+    
+    \begin{minted}[frame=single, bgcolor=lightgray!50]{bash}
+#To run with default settings:
+(cd scr/ ; make)
+
+#To specify the number of documents (uses default BST tree):
+(cd scr/ ; make num=n)
+    
+#To run with fully custom parameters:
+(cd scr/ ; make tree=tree path="../data_folder/" num=num cmd=stats)
+
+#Delete object files and executables: 
+(cd scr/ ; make clean)
+    \end{minted}
+
+
+
+The following parameters can be passed to the \texttt{make} command to customize execution.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|>{\centering\arraybackslash}p{6cm}|c|c|c|} 
+\hline
+\textbf{Parameter} & \textbf{Description} & \textbf{Default} & \textbf{Arguments} & \textbf{Example} \\
+\hline
+\texttt{tree} & Data structure to use & \texttt{bst} & bst, avl, rbt & \texttt{tree=avl} \\
+\texttt{num} & Number of documents to process & \texttt{10103} & 1, 2, 3, ... & \texttt{num=1000} \\
+\texttt{cmd} & Command to execute & \texttt{search} & search, stats & \texttt{cmd=stats} \\
+\texttt{path} & Path to the documents folder & \texttt{../data/} & \texttt{../data/}, \texttt{../data2/} & \texttt{path=../data2/} \\
+\hline
+\end{tabular}
+\caption{Makefile Parameters}
+\label{tab:config_params}
+\end{table}
+
+\textbf{Note:} If parameters are not specified, the program will default to using the \textbf{BST} structure with all \textbf{10103} documents from the \texttt{data/} folder and will execute the \texttt{search} command.
+
+\subsection{Plot Graphs}
+
+
+The graphs will be created on the plots folder.
+
+    \begin{minted}[frame=single, bgcolor=lightgray!50]{bash}
+#Compiling files to plot graph
+(cd plots && qmake && make && ./plot)
+    \end{minted}
+
