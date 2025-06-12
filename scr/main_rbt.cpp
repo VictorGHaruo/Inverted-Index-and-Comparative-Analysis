@@ -126,7 +126,7 @@ void save(vector<InsertResult> insertResults, vector<SearchResult> searchResults
                 << searchResults[i].numComparisons << "\n";
         }
     }else{
-        cerr << "Error opening fileor directory ../stats/" << endl;
+        cerr << "Error opening file or directory ../stats/" << endl;
     }
 
 }
