@@ -149,7 +149,7 @@ void savePrintTree(BinaryTree* tree, std::string filename){
     Node* n = tree->root;
     std::ofstream txt(filename);
     if(!n){
-        cerr << "Eroor: Tree empty." << endl;
+        cerr << "Error: Tree empty." << endl;
     }
     if(txt.is_open()) {
         savePrintTreeAux(n, "", true, txt);
