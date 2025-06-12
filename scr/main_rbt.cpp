@@ -95,17 +95,53 @@ void searchLooping(BinaryTree* rbt){
     }
 }
 
-void stats(vector<InsertResult> insRes, BinaryTree* rbt){
+void save(vector<InsertResult> insertResults, vector<SearchResult> searchResults){
+    ofstream insertFileOut("../stats/insertResultsRBT.csv");
+    ofstream searchFileOut("../stats/searchResultsRBT.csv");
+    if(insertFileOut.is_open()){
+        int sizeInsert = insertResults.size();
+        for(int i = 0; i < sizeInsert; i++){
+            insertFileOut << insertResults[i].executionTime << "," 
+                << insertResults[i].isNew << "," 
+                << insertResults[i].numComparisons << "," 
+                << insertResults[i].word << "\n";
+        }
+    }else{
+        cerr << "Error opening file or directory ../stats/" << endl;
+    }
+    
+    if(searchFileOut.is_open()){
+        int sizeSearch = searchResults.size();
+        for(int i = 0; i < sizeSearch; i++){
+
+            int sizeDocumentIds = searchResults[i].documentIds.size();
+            string strDocumentIds = "[" + to_string((searchResults[i]).documentIds[0]);
+            for(int j = 1; j < sizeDocumentIds; j++){
+                strDocumentIds += "," + to_string((searchResults[i]).documentIds[j]);
+            }
+            strDocumentIds += "]";
+
+            searchFileOut << strDocumentIds << "," 
+                << searchResults[i].executionTime << ","
+                << searchResults[i].numComparisons << "\n";
+        }
+    }else{
+        cerr << "Error opening fileor directory ../stats/" << endl;
+    }
+
+}
+
+void stats(vector<InsertResult> insertResults, BinaryTree* rbt){
     //stats of insert
-    int sizeInsRes = insRes.size();
+    int sizeInsRes = insertResults.size();
     double totTimeInsert = 0;
     int totCompInsert = 0;
     vector<string> uniqWords;
     for(int i = 0; i < sizeInsRes; i++){
-        totTimeInsert += insRes[i].executionTime;
-        totCompInsert += insRes[i].numComparisons;
-        if(insRes[i].isNew){
-            uniqWords.push_back(insRes[i].word);
+        totTimeInsert += insertResults[i].executionTime;
+        totCompInsert += insertResults[i].numComparisons;
+        if(insertResults[i].isNew){
+            uniqWords.push_back(insertResults[i].word);
         }
     }
     double aveTimeInsert = totTimeInsert / sizeInsRes;
@@ -146,7 +182,7 @@ void stats(vector<InsertResult> insRes, BinaryTree* rbt){
 
     while (true) {
         cout << endl << "Options to do:" << endl;
-        cout << "1 - Nothing/Quit." << endl;
+        cout << "1 - Quit and Save the Stats in a csv." << endl;
         cout << "2 - Print the tree." << endl;
         cout << "3 - Save the print of the tree in a '.txt'." << endl;
         cout << "4 - Print index of the tree." << endl;
@@ -167,7 +203,11 @@ void stats(vector<InsertResult> insRes, BinaryTree* rbt){
             continue;
         }
 
-        if(option == 1) return;
+        if(option == 1){
+            save(insertResults, searchResults);
+            cout << endl << "- Saved!" << endl;
+            return;
+        }
 
         else if(option == 2){
             printTree(rbt);
@@ -212,6 +252,7 @@ void stats(vector<InsertResult> insRes, BinaryTree* rbt){
                 filename += ".txt";
                 ofstream txt(filename);
                 if(txt.is_open()){
+                    //Make the cout write in the txt
                     streambuf* coutOriginal = cout.rdbuf();
                     cout.rdbuf(txt.rdbuf());
                     printIndex(rbt);
@@ -243,11 +284,11 @@ int main(int argc, char** argv) {
     BinaryTree* rbt = RBT::create();
 
     int sizeTexts = texts.size(); //botar no data.cpp
-    vector<InsertResult> insRes;
+    vector<InsertResult> insertResults;
     for(int i = 0; i < sizeTexts; i++){
         int sizeT = texts[i].size();
         for(int j = 0; j < sizeT; j++){
-            insRes.push_back(RBT::insert(rbt, texts[i][j], i));
+            insertResults.push_back(RBT::insert(rbt, texts[i][j], i));
         }
     }  
 
@@ -255,7 +296,7 @@ int main(int argc, char** argv) {
     if (command == "search"){
         searchLooping(rbt);
     } else { 
-        stats(insRes, rbt);
+        stats(insertResults, rbt);
     }
 
     return 0;
