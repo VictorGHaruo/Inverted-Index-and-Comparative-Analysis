@@ -25,16 +25,34 @@
 \usepackage{url}
 \usepackage{tikz}
 \usepackage{enumitem}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{fancyhdr}
+\usepackage{lastpage}
 
 \setlength{\parindent}{1.5em}
 \setlength{\parskip}{0.7em}
+\setlength{\headheight}{17.8264pt} 
 
 \usetikzlibrary{graphs, graphdrawing}
 \usegdlibrary{force} % para organizar o layout automaticamente
 \usetikzlibrary{trees}
 \newtheorem{definicao_interna}{Definição} % o conteúdo "interno" da definição
 \newtheorem{teorema}{Teorema}[section]
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\includegraphics[height=0.4cm]{img/emap.png}} % Substitua pelo caminho da sua logo
+\rhead{\textbf{Fundação Getúlio Vargas}}
 
+\lfoot{Data Structure Course}
+\rfoot{Page \thepage\ of \pageref{LastPage}}
+
+
+
+
+
+% Linhas horizontais
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
 
 \newmdenv[
   linecolor=black,
@@ -82,16 +100,9 @@
     bottom=2cm
 }
 
-\usepackage{graphicx} % Required for inserting images
-
-\title{A2 - Estrutura de Dados}
-\author{Victor Gabriel Iwamoto}
-\date{June 2025}
-
 \begin{document}
 
-\maketitle
-\input{capa.tex}
+\input{cape.tex}
 \input{introduction}
 \input{structs/Structs}
 \input{Structures}
