@@ -1,23 +1,22 @@
 \documentclass{article}
 
-% Pacotes de formatação e utilidades
 \usepackage{fontspec}
-\usepackage[portuguese]{babel} % Língua portuguesa
-\usepackage{geometry}          % Margens
-\usepackage{listings}          % Inserção de códigos
-\usepackage{xcolor}            % Cores para códigos
-\usepackage{graphicx}          % Imagens
-\usepackage{url}               % Links
-\usepackage{amsmath}           % Matemática avançada
-\usepackage{mdframed}          % Caixas com bordas
-\usepackage{float}             % Controle de posição de figuras/tabelas
+\usepackage[portuguese]{babel} 
+\usepackage{geometry}          
+\usepackage{listings}          
+\usepackage{xcolor}            
+\usepackage{graphicx}          
+\usepackage{url}               
+\usepackage{amsmath}           
+\usepackage{mdframed}          
+\usepackage{float}             
 \usepackage{amsfonts}
 \usepackage{amsthm}
-\usepackage{mdframed} % <-- pacote para caixas
+\usepackage{mdframed} 
 \usepackage{xcolor}
 \usepackage{array}
-\usepackage{multirow} % Coloque isso no preâmbulo do seu documento
-\usepackage{graphicx} % Required for inserting images
+\usepackage{multirow} 
+\usepackage{graphicx} 
 \usepackage{minted}
 \usepackage{forest} 
 \usepackage{enumitem}
@@ -25,7 +24,7 @@
 \usepackage{url}
 \usepackage{tikz}
 \usepackage{enumitem}
-\usepackage{graphicx} % Required for inserting images
+\usepackage{graphicx} 
 \usepackage{fancyhdr}
 \usepackage{lastpage}
 
@@ -34,23 +33,18 @@
 \setlength{\headheight}{17.8264pt} 
 
 \usetikzlibrary{graphs, graphdrawing}
-\usegdlibrary{force} % para organizar o layout automaticamente
+\usegdlibrary{force} 
 \usetikzlibrary{trees}
-\newtheorem{definicao_interna}{Definição} % o conteúdo "interno" da definição
+\newtheorem{definicao_interna}{Definição} 
 \newtheorem{teorema}{Teorema}[section]
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{\includegraphics[height=0.4cm]{img/emap.png}} % Substitua pelo caminho da sua logo
+\lhead{\includegraphics[height=0.4cm]{img/emap.png}} 
 \rhead{\textbf{Fundação Getúlio Vargas}}
 
 \lfoot{Data Structure Course}
 \rfoot{Page \thepage\ of \pageref{LastPage}}
 
-
-
-
-
-% Linhas horizontais
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
 
@@ -65,33 +59,31 @@
   innerrightmargin=10pt,
 ]{definicao}
 
+\definecolor{bggray}{RGB}{245, 245, 245}      
+\definecolor{keywordblue}{RGB}{0, 0, 180}      
+\definecolor{stringred}{RGB}{180, 0, 0}        
+\definecolor{commentgreen}{RGB}{34, 139, 34}   
+\definecolor{numberpurple}{RGB}{128, 0, 128}   
 
-% Definição de cores personalizadas para código
-\definecolor{bggray}{RGB}{245, 245, 245}      % Fundo cinza claro
-\definecolor{keywordblue}{RGB}{0, 0, 180}      % Azul escuro para palavras-chave
-\definecolor{stringred}{RGB}{180, 0, 0}        % Vermelho escuro para strings
-\definecolor{commentgreen}{RGB}{34, 139, 34}   % Verde para comentários
-\definecolor{numberpurple}{RGB}{128, 0, 128}   % Roxo para números
 
-% Configuração personalizada para código Python
 \lstdefinestyle{PythonStyle}{
-    backgroundcolor=\color{bggray},   % Cor de fundo suave
-    basicstyle=\ttfamily\footnotesize, % Fonte monoespaçada pequena
-    frame=single,                     % Borda ao redor do código
-    rulecolor=\color{gray},           % Cor da borda
-    keywordstyle=\color{keywordblue}\bfseries, % Palavras-chave em azul e negrito
-    stringstyle=\color{stringred},    % Strings em vermelho
-    commentstyle=\color{commentgreen}\itshape, % Comentários em verde e itálico
-    numberstyle=\color{numberpurple}, % Números em roxo
-    showstringspaces=false,           % Não mostrar espaços em branco nos textos
-    numbers=left,                     % Numeração à esquerda
-    numbersep=5pt,                    % Espaçamento entre números e código
-    tabsize=4,                        % Tamanho do tab (4 espaços)
-    captionpos=b,                     % Posição da legenda (b = abaixo)
-    breaklines=true,                   % Quebra de linha automática
-    language=Python                   % Define a linguagem como Python
+    backgroundcolor=\color{bggray},   
+    basicstyle=\ttfamily\footnotesize, 
+    frame=single,                     
+    rulecolor=\color{gray},           
+    keywordstyle=\color{keywordblue}\bfseries, 
+    stringstyle=\color{stringred},    
+    commentstyle=\color{commentgreen}\itshape, 
+    numberstyle=\color{numberpurple}, 
+    showstringspaces=false,           
+    numbers=left,                     
+    numbersep=5pt,                    
+    tabsize=4,                        
+    captionpos=b,                     
+    breaklines=true,                   
+    language=Python                   
 }
-% Configuração de margens
+
 \geometry{
     a4paper,
     left=3cm,
