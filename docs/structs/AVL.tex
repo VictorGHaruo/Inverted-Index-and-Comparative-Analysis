@@ -147,7 +147,7 @@ This self-balancing mechanism ensures that operations like insertion, search, an
                 child {node (C) [fill=blue!20] {C}}
             }
             child[missing];
-        \node[draw=none, fill=none] at (0, -4) {\textbf{1. Original (Esquerda-Direita)}};
+        \node[draw=none, fill=none] at (0, -4) {\textbf{1. Original (Left-Right)}};
     \end{scope}
     
     \draw[->, very thick, line width=1.5pt] (-4.2cm,-1.5cm) -- (-2cm,-1.5cm) 
@@ -160,7 +160,7 @@ This self-balancing mechanism ensures that operations like insertion, search, an
                 child[missing]
             }
             child[missing];
-        \node[draw=none, fill=none] at (0, -4) {\textbf{2. Intermediário}};
+        \node[draw=none, fill=none] at (0, -4) {\textbf{2. Intermediary}};
     \end{scope}
     
     \draw[->, very thick, line width=1.5pt] (1.2cm,-1.5cm) -- (3.4cm,-1.5cm) 
@@ -170,12 +170,12 @@ This self-balancing mechanism ensures that operations like insertion, search, an
         \node (C) [fill=green!20] {C}
             child {node (P) [fill=green!20] {P}}
             child {node (G) [fill=green!20] {G}};
-        \node[draw=none, fill=none] at (0, -4) {\textbf{3. Final Balanceado}};
+        \node[draw=none, fill=none] at (0, -4) {\textbf{3. Balanced Final}};
     \end{scope}
     
     \end{tikzpicture}
     \end{center}
-    
+
   \end{itemize}
 
   \item \underline{\textbf{Balance Function:}}
