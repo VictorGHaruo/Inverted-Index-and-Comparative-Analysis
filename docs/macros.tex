@@ -1,0 +1,64 @@
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0.7em}
+\setlength{\headheight}{17.8264pt} 
+
+\usetikzlibrary{graphs, graphdrawing}
+\usegdlibrary{force} 
+\usetikzlibrary{trees}
+\newtheorem{definicao_interna}{Definição} 
+\newtheorem{teorema}{Teorema}[section]
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\includegraphics[height=0.4cm]{img/emap.png}} 
+\rhead{\textbf{Fundação Getúlio Vargas}}
+
+\lfoot{Data Structure and Algorithms Course}
+\rfoot{Page \thepage\ of \pageref{LastPage}}
+
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\newmdenv[
+  linecolor=black,
+  linewidth=1pt,
+  roundcorner=5pt,
+  backgroundcolor=gray!10,
+  innertopmargin=10pt,
+  innerbottommargin=10pt,
+  innerleftmargin=10pt,
+  innerrightmargin=10pt,
+]{definicao}
+
+\definecolor{bggray}{RGB}{245, 245, 245}      
+\definecolor{keywordblue}{RGB}{0, 0, 180}      
+\definecolor{stringred}{RGB}{180, 0, 0}        
+\definecolor{commentgreen}{RGB}{34, 139, 34}   
+\definecolor{numberpurple}{RGB}{128, 0, 128}   
+
+\addcontentsline{toc}{section}{References}
+
+\lstdefinestyle{PythonStyle}{
+    backgroundcolor=\color{bggray},   
+    basicstyle=\ttfamily\footnotesize, 
+    frame=single,                     
+    rulecolor=\color{gray},           
+    keywordstyle=\color{keywordblue}\bfseries, 
+    stringstyle=\color{stringred},    
+    commentstyle=\color{commentgreen}\itshape, 
+    numberstyle=\color{numberpurple}, 
+    showstringspaces=false,           
+    numbers=left,                     
+    numbersep=5pt,                    
+    tabsize=4,                        
+    captionpos=b,                     
+    breaklines=true,                   
+    language=Python                   
+}
+
+\geometry{
+    a4paper,
+    left=3cm,
+    right=2cm,
+    top=3cm,
+    bottom=2cm
+}
