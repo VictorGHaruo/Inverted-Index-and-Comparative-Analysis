@@ -37,6 +37,8 @@ struct InsertResult {
     double executionTime;
     std::string word;
     bool isNew;
+    int maxHeight;
+    int minHeight;
     // others possible variables
 };
 

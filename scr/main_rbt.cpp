@@ -99,12 +99,15 @@ void save(vector<InsertResult> insertResults, vector<SearchResult> searchResults
     ofstream insertFileOut("../stats/insertResultsRBT.csv");
     ofstream searchFileOut("../stats/searchResultsRBT.csv");
     if(insertFileOut.is_open()){
+        insertFileOut << "Execution Time, Is new, Num Comparasion, Word, Max Height, Min Height \n";
         int sizeInsert = insertResults.size();
         for(int i = 0; i < sizeInsert; i++){
             insertFileOut << insertResults[i].executionTime << "," 
                 << insertResults[i].isNew << "," 
                 << insertResults[i].numComparisons << "," 
-                << insertResults[i].word << "\n";
+                << insertResults[i].word << ","
+                << insertResults[i].maxHeight << ", "
+                << insertResults[i].minHeight << "\n";
         }
     }else{
         cerr << "Error opening file or directory ../stats/" << endl;
@@ -112,16 +115,10 @@ void save(vector<InsertResult> insertResults, vector<SearchResult> searchResults
     
     if(searchFileOut.is_open()){
         int sizeSearch = searchResults.size();
+        searchFileOut << "Size of DocumentIds, Execution Time, Num Comparisions \n";
         for(int i = 0; i < sizeSearch; i++){
-
             int sizeDocumentIds = searchResults[i].documentIds.size();
-            string strDocumentIds = "[" + to_string((searchResults[i]).documentIds[0]);
-            for(int j = 1; j < sizeDocumentIds; j++){
-                strDocumentIds += "," + to_string((searchResults[i]).documentIds[j]);
-            }
-            strDocumentIds += "]";
-
-            searchFileOut << strDocumentIds << "," 
+            searchFileOut << sizeDocumentIds << "," 
                 << searchResults[i].executionTime << ","
                 << searchResults[i].numComparisons << "\n";
         }
