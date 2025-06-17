@@ -65,12 +65,12 @@ void searchLooping(BinaryTree* bst){
     while (true){
         cout << "To quit, search for 'Q'." << endl;
         cout << "Search the word: ";
-        string line;
+        string line_ignored;
         string word;
         cin >> word; // take the fist word
-        getline(cin, line);
-        //  if the rest of input is just ' ' it's okay, if not it's 2+ words
-        if(line.length() > 1 && line.find_first_not_of(' ') != string::npos){
+        getline(cin, line_ignored);
+        //if the rest of input is just ' ' it's okay, if not it's 2+ words
+        if(line_ignored.length() > 1 && line_ignored.find_first_not_of(' ') != string::npos){
             cout << endl << "- Wait, just one word. Try again." << endl << endl;
             continue;
         }
@@ -95,9 +95,9 @@ void searchLooping(BinaryTree* bst){
     }
 }
 
-void save(vector<InsertResult> insertResults, vector<SearchResult> searchResults){
-    ofstream insertFileOut("../stats/insertResultsBST.csv");
-    ofstream searchFileOut("../stats/searchResultsBST.csv");
+void save(vector<InsertResult> insertResults, vector<SearchResult> searchResults, string filename){
+    ofstream insertFileOut("../stats/insertResultsBST_" + filename);
+    ofstream searchFileOut("../stats/searchResultsBST_" + filename);
     if(insertFileOut.is_open()){
         insertFileOut << "Execution Time, Is new, Num Comparasion, Word, Max Height, Min Height \n";
         int sizeInsert = insertResults.size();
@@ -188,9 +188,10 @@ void stats(vector<InsertResult> insertResults, BinaryTree* bst){
         
         string answer; 
         cin >> answer;
+
         // Ignore after the space
-        string line;
-        getline(cin, line);
+        string line_ignored;
+        getline(cin, line_ignored);
 
         unsigned int option = 0;
         if(isPosInt(answer)){
@@ -201,7 +202,20 @@ void stats(vector<InsertResult> insertResults, BinaryTree* bst){
         }
 
         if(option == 1){
-            save(insertResults, searchResults);
+            string filename;
+            while(true){
+                cout << "- Chose the file name: ";
+                cin >> filename;
+                getline(cin, line_ignored);
+                //if the rest of input is just ' ' it's okay, if not it's 2+ words
+                if(line_ignored.length() > 1 && line_ignored.find_first_not_of(' ') != string::npos){
+                    cout << endl << "- Wait, just one word. Try again." << endl << endl;
+                    continue;
+                }
+                filename += ".csv";
+                break;
+            }
+            save(insertResults, searchResults, filename);
             cout << endl << "- Saved!" << endl;
             return;
         }
@@ -213,16 +227,16 @@ void stats(vector<InsertResult> insertResults, BinaryTree* bst){
 
         else if(option == 3){
             while(true){
-                cout << "- Chose the file name (also you can add the path : \"../example\"): ";
+                cout << "- Chose the file name: ";
                 string filename;
                 cin >> filename;
-                getline(cin, line);
-                //  if the rest of input is just ' ' it's okay, if not it's 2+ words
-                if(line.length() > 1 && line.find_first_not_of(' ') != string::npos){
+                getline(cin, line_ignored);
+                //if the rest of input is just ' ' it's okay, if not it's 2+ words
+                if(line_ignored.length() > 1 && line_ignored.find_first_not_of(' ') != string::npos){
                     cout << endl << "- Wait, just one word. Try again." << endl << endl;
                     continue;
                 }
-                filename += ".txt";
+                filename = "../stats/" + filename + ".txt";
                 savePrintTree(bst, filename);
                 cout << endl << "- Saved!" << endl;
                 break;
@@ -237,16 +251,16 @@ void stats(vector<InsertResult> insertResults, BinaryTree* bst){
 
         else if(option == 5){
             while(true){
-                cout << "- Chose the file name (also you can add the path : \"../example\"): ";
+                cout << "- Chose the file name: ";
                 string filename;
                 cin >> filename;
-                getline(cin, line);
-                // if the rest of input is just ' ' it's okay, if not it's 2+ words
-                if(line.length() > 1 && line.find_first_not_of(' ') != string::npos){
+                getline(cin, line_ignored);
+                //if the rest of input is just ' ' it's okay, if not it's 2+ words
+                if(line_ignored.length() > 1 && line_ignored.find_first_not_of(' ') != string::npos){
                     cout << endl << "- Wait, just one word. Try again." << endl << endl;
                     continue;
                 }
-                filename += ".txt";
+                filename = "../stats/" + filename + ".txt";
                 ofstream txt(filename);
                 if(txt.is_open()){
                     // Make the cout write in the txt
