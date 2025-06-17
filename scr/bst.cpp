@@ -60,7 +60,7 @@ namespace BST{
         InsertResult result;
 
         result.word = word;
-        if(searchNode.found==1){
+        if(searchNode.found == 1){
             result.isNew = false;
         } else{
             result.isNew = true;
@@ -69,6 +69,13 @@ namespace BST{
         // +1 comes from the comparison that determines which side the word goes
         result.numComparisons = searchNode.numComparisons + 1; 
         result.executionTime = time;
+        if(searchNode.found == 0){
+            result.maxHeight = getMinOrMaxPath(tree->root, "max");
+            result.minHeight = getMinOrMaxPath(tree->root, "min");
+        } else{
+            result.maxHeight = 0;
+            result.minHeight = 0;            
+        }
 
         return result;
     }

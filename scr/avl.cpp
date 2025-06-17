@@ -200,6 +200,13 @@ namespace AVL{
         // + 1 comes drom the comparson that determines which side the word goes
         result.numComparisons = searchNode.numComparisons + 1;
         result.executionTime = time;
+        if(searchNode.found == 0){
+            result.maxHeight = getMinOrMaxPath(tree->root, "max");
+            result.minHeight = getMinOrMaxPath(tree->root, "min");
+        } else{
+            result.maxHeight = 0;
+            result.minHeight = 0;            
+        }
 
         return result;
     }
