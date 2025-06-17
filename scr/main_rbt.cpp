@@ -280,7 +280,7 @@ int main(int argc, char** argv) {
     // Populate the tree 
     BinaryTree* rbt = RBT::create();
 
-    int sizeTexts = texts.size(); // botar no data.cpp
+    int sizeTexts = texts.size(); 
     vector<InsertResult> insertResults;
     for(int i = 0; i < sizeTexts; i++){
         int sizeT = texts[i].size();

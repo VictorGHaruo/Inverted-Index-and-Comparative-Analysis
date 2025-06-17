@@ -31,7 +31,10 @@ struct BinaryTree {
     Node* NIL;                      // used in RBT
 };
 
-// To be documented
+/**
+ * @struct InsertResult
+ * @brief The structure that stores the insertion data in the tree 
+ */
 struct InsertResult {
     int numComparisons;
     double executionTime;
@@ -42,6 +45,10 @@ struct InsertResult {
     // others possible variables
 };
 
+/**
+ * @struct SearchResult
+ * @brief The structure that stores the search data in the tree
+ */
 struct SearchResult {
     int found;
     std::vector<int> documentIds;
@@ -56,7 +63,7 @@ struct SearchResult {
 
 /**
  * @brief Creates a new tree node
- * 
+
  * @param word The word to be stored in the node
  * @param documentsId Vector of document IDs where the word appears
  * @param parent The parent of the node 
