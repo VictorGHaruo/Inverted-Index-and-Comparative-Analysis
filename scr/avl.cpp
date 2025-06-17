@@ -106,13 +106,14 @@ namespace AVL{
         return rotateRight(root);
     }
 
+    // An important function to keep the tree balanced
     Node* balance(Node* node_to_balance) {
         
         if(node_to_balance == nullptr){
             return nullptr;
         }
         int fb = BalancingFactor(node_to_balance);
-        //Left rotation
+        // Left rotation
         if(fb > 1) {
             if(BalancingFactor(node_to_balance->left) >= 0) {
                 return rotateRight(node_to_balance);
@@ -120,6 +121,7 @@ namespace AVL{
                 return rotateLeftRight(node_to_balance);
             }
         }
+        // Right rotation
         else if (fb < -1) {
             if (BalancingFactor(node_to_balance->right) <= 0) {
                 return rotateLeft(node_to_balance);
@@ -132,11 +134,11 @@ namespace AVL{
     }
 
     InsertResult insert(BinaryTree* tree, const std::string& word, int documentId){
-        auto start = high_resolution_clock::now(); //Starts clock
+        auto start = high_resolution_clock::now(); // Starts clock
         SearchResult searchNode = search(tree, word);
-        if(searchNode.found == 1){//The word is already in the tree
+        if(searchNode.found == 1){// The word is already in the tree
             
-            //To avoid repeating document IDs when adding words
+            // To avoid repeating document IDs when adding words
             int n = searchNode.resultedNode->documentIds.size();
             bool exists = false;
             // In the massive insert on main, it's just important the last ID (fewer operations)
@@ -149,11 +151,11 @@ namespace AVL{
             if(!exists){
                 searchNode.resultedNode->documentIds.push_back(documentId);
             }
-        }else{ //The word isn't in the tree
+        }else{ // The word isn't in the tree
             vector<int> documentID = {documentId};
             Node *node = createNode(word, documentID, searchNode.parent);
 
-            if(searchNode.parent == nullptr){ //The root is a nullptr
+            if(searchNode.parent == nullptr){ // The root is a nullptr
                 tree->root = node;
             } 
             else if(word < searchNode.parent->word){ // Determine which side to place the word on
@@ -182,8 +184,8 @@ namespace AVL{
                 searchNode.numComparisons++;
             }
         }
-        auto end = high_resolution_clock::now(); //Ends clock
-        //Convert the auto-typed variable to double, representing milliseconds
+        auto end = high_resolution_clock::now(); // Ends clock
+        // Convert the auto-typed variable to double, representing milliseconds
         auto duration = end - start;
         chrono::duration<double, milli> duration_ms = duration;
         double time = duration_ms.count();
@@ -197,7 +199,7 @@ namespace AVL{
             result.isNew = true;
         }
 
-        // + 1 comes drom the comparson that determines which side the word goes
+        // +1 comes drom the comparson that determines which side the word goes
         result.numComparisons = searchNode.numComparisons + 1;
         result.executionTime = time;
         if(searchNode.found == 0){
@@ -212,19 +214,19 @@ namespace AVL{
     }
 
     SearchResult search(BinaryTree* tree, const std::string& word){
-        auto start = high_resolution_clock::now(); //Starts clock
+        auto start = high_resolution_clock::now(); // Starts clock
         SearchResult result;
         Node *current = tree->root;
         Node *parent = nullptr;
         int numComparisons = 1;
 
-        if(current == nullptr){//Root is a nullptr
+        if(current == nullptr){// Root is a nullptr
             result.parent = nullptr;
             result.found = 0;
             result.numComparisons = numComparisons;
-            auto end = high_resolution_clock::now(); //Ends clock
+            auto end = high_resolution_clock::now(); // Ends clock
 
-            //Convert the auto-typed variable to double, representing milliseconds
+            // Convert the auto-typed variable to double, representing milliseconds
             auto duration = end - start;
             chrono::duration<double, milli> duration_ms = duration;
             double time = duration_ms.count();
@@ -236,16 +238,16 @@ namespace AVL{
         while(current != nullptr && current->word.compare(word) != 0) {
             numComparisons++;
             parent = current;
-            if(current->word.compare(word) > 0) {//Current is "bigger" than word
+            if(current->word.compare(word) > 0) {// Current is "bigger" than word
                 current = current->left;
             }
-            else{ //Current is "smaller" than word
+            else{// Current is "smaller" than word
                 current = current->right;
             }
         }
-        auto end = high_resolution_clock::now(); //Ends clock
+        auto end = high_resolution_clock::now(); // Ends clock
 
-        //Convert the auto-typed to double, representing milliseconds
+        // Convert the auto-typed to double, representing milliseconds
         auto duration = end - start;
         chrono::duration<double, milli> duration_ms = duration;
         double time = duration_ms.count();

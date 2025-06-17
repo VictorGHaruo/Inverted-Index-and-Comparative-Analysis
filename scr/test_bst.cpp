@@ -15,7 +15,7 @@ int main(){
     BST::insert(tree, "swift", 5);
     BST::insert(tree, "rodrigo", 5);
     
-    //Adding a node that already exists, but with a different ID
+    // Adding a node that already exists, but with a different ID
     BST::insert(tree, "swift", 4);
     
     // Adding a node that already exists, but with a equal ID
@@ -34,7 +34,7 @@ int main(){
 
     cout << "========= Search: Different ID's =========" << endl;
 
-    //Must appear 2 documents ID
+    // Must appear 2 documents ID
     SearchResult result_one = BST::search(tree, "swift");
     cout << "Execution Time: " << result_one.executionTime << endl;
     cout << "Found...? " << result_one.found << endl;

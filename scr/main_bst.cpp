@@ -19,7 +19,7 @@ bool isPosInt(string strNum){
     for(int i = inter; i < size; i++){
         if(!isdigit(strNum[i])) return false;
     }
-    //if not found other char means that is all numbers but all 0's, thus not positive even if the fist char is '+'
+    // if not found other char means that is all numbers but all 0's, thus not positive even if the fist char is '+'
     if (strNum.find_first_not_of('0', inter) == string::npos) return false; 
     
     return true;
@@ -47,13 +47,13 @@ bool validate(int argc, char* argv[], string* command, vector<vector<string>>* t
         cerr << "Error: <n_docs> must be a positive integer." << endl;;
         return false;
     }
-    //matrix of texts' words
+    // matrix of texts' words
     *texts = data::readData(argv[3], numMax);
     if ((*texts).empty()){
         cerr << "Usage: " << argv[0] << " <command> <n_docs> <directory_path>" << endl;
         cerr << "Error: Directory path is invalid." << endl;
         return false;
-    } else if((*texts).size() < numMax){ //opcional
+    } else if((*texts).size() < numMax){ // opcional
         cerr << "Warning: n_docs is greater than the number of txt's in the directory." << endl;
     }
     
@@ -69,7 +69,7 @@ void searchLooping(BinaryTree* bst){
         string word;
         cin >> word; // take the fist word
         getline(cin, line);
-        //if the rest of input is just ' ' it's okay, if not it's 2+ words
+        //  if the rest of input is just ' ' it's okay, if not it's 2+ words
         if(line.length() > 1 && line.find_first_not_of(' ') != string::npos){
             cout << endl << "- Wait, just one word. Try again." << endl << endl;
             continue;
@@ -129,7 +129,7 @@ void save(vector<InsertResult> insertResults, vector<SearchResult> searchResults
 }
 
 void stats(vector<InsertResult> insertResults, BinaryTree* bst){
-    //stats of insert
+    //  stats of insert
     int sizeInsRes = insertResults.size();
     double totTimeInsert = 0;
     int totCompInsert = 0;
@@ -143,7 +143,7 @@ void stats(vector<InsertResult> insertResults, BinaryTree* bst){
     }
     double aveTimeInsert = totTimeInsert / sizeInsRes;
 
-    //stats of search
+    //  stats of search
     int sizeUniqWords = uniqWords.size();
     double totTimeSearch = 0;
     int totCompSearch = 0;
@@ -159,7 +159,7 @@ void stats(vector<InsertResult> insertResults, BinaryTree* bst){
     }
     double aveTimeSearch = totTimeSearch / sizeUniqWords;
 
-    //height
+    //  height
     int maxHeightTree = getMinOrMaxPath(bst->root, "max");
     int minHeightTree = getMinOrMaxPath(bst->root, "min");
 
@@ -217,7 +217,7 @@ void stats(vector<InsertResult> insertResults, BinaryTree* bst){
                 string filename;
                 cin >> filename;
                 getline(cin, line);
-                //if the rest of input is just ' ' it's okay, if not it's 2+ words
+                //  if the rest of input is just ' ' it's okay, if not it's 2+ words
                 if(line.length() > 1 && line.find_first_not_of(' ') != string::npos){
                     cout << endl << "- Wait, just one word. Try again." << endl << endl;
                     continue;
@@ -241,7 +241,7 @@ void stats(vector<InsertResult> insertResults, BinaryTree* bst){
                 string filename;
                 cin >> filename;
                 getline(cin, line);
-                //if the rest of input is just ' ' it's okay, if not it's 2+ words
+                // if the rest of input is just ' ' it's okay, if not it's 2+ words
                 if(line.length() > 1 && line.find_first_not_of(' ') != string::npos){
                     cout << endl << "- Wait, just one word. Try again." << endl << endl;
                     continue;
@@ -249,7 +249,7 @@ void stats(vector<InsertResult> insertResults, BinaryTree* bst){
                 filename += ".txt";
                 ofstream txt(filename);
                 if(txt.is_open()){
-                    //Make the cout write in the txt
+                    // Make the cout write in the txt
                     streambuf* coutOriginal = cout.rdbuf();
                     cout.rdbuf(txt.rdbuf());
                     printIndex(bst);
@@ -280,7 +280,7 @@ int main(int argc, char** argv) {
     // Populate the tree 
     BinaryTree* bst = BST::create();
 
-    int sizeTexts = texts.size(); //botar no data.cpp
+    int sizeTexts = texts.size(); // botar no data.cpp
     vector<InsertResult> insertResults;
     for(int i = 0; i < sizeTexts; i++){
         int sizeT = texts[i].size();
