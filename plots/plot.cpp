@@ -1,5 +1,9 @@
 #include <QApplication>
 #include <QMainWindow>
+#include <QFile>
+#include <QTextStream>
+#include <QStringList>
+#include <QDebug>
 #include "qcustomplot.h"
 #include "../scr/tree_utils.h"
 #include "../scr/data.h"
@@ -12,26 +16,25 @@ struct PlotConfig {
     // Cores
     QColor background_color = QColor(255, 255, 255);
     QColor text_color = QColor(0, 0, 0);
-    QColor grid_color = QColor(0, 0, 0);
+    QColor grid_color = QColor(100, 100, 100);
 
     QColor BST_color = QColor(255, 0, 0);
     QColor AVL_color = QColor(0, 255, 0);
     QColor RBT_color = QColor(0, 0, 255);
 
-    QColor legend_brush = QColor(50, 50, 50, 200);
+    QColor legend_brush = QColor(255, 255, 255, 255);
     QColor legend_border_pen = QColor(30, 30, 30);
+
+    QPen GridStyle = QPen(grid_color, 1, Qt::DashLine);
 
     // Fontes
     QFont title_font = QFont("Sans", 12, QFont::Bold);
     QFont legend_font = QFont("Helvetica", 9);
 
     // Estilos de pontos
-    QCPScatterStyle AVL_style = QCPScatterStyle(QCPScatterStyle::ssCircle, 5);
-    QCPScatterStyle BST_style = QCPScatterStyle(QCPScatterStyle::ssSquare, 5);
-    QCPScatterStyle RBT_style = QCPScatterStyle(QCPScatterStyle::ssTriangle, 5);
-
-    // Dados
-    vector<vector<string>> texts;
+    QPen AvlStyle = QPen(AVL_color, 3, Qt::DashLine);
+    QPen BstStyle = QPen(BST_color, 3, Qt::DashLine);
+    QPen RbtStyle = QPen(RBT_color, 3, Qt::DashLine);
 };
 
 int height(Node* root) {
@@ -67,6 +70,8 @@ void configurePlot(QCustomPlot &customPlot, const PlotConfig &config, const char
         axis->setSubTickPen(QPen(config.text_color, 1));
         axis->setTickLabelColor(config.text_color);
         axis->setLabelColor(config.text_color);
+        customPlot.xAxis->grid()->setPen(config.GridStyle);
+        customPlot.yAxis->grid()->setPen(config.GridStyle);
     }
 
     // Legenda
@@ -96,20 +101,17 @@ void add_graph(QCustomPlot &customPlot, QVector<double> x, QVector<double> bst, 
 
     customPlot.addGraph();
     customPlot.graph(0)->setData(x, bst);
-    customPlot.graph(0)->setPen(QPen(config.BST_color));
-    customPlot.graph(0)->setScatterStyle(config.BST_style);
+    customPlot.graph(0)->setPen(config.BstStyle);
     customPlot.graph(0)->setName("BST");
 
     customPlot.addGraph();
     customPlot.graph(1)->setData(x, avl);
-    customPlot.graph(1)->setPen(QPen(config.AVL_color));
-    customPlot.graph(1)->setScatterStyle(config.AVL_style);
+    customPlot.graph(1)->setPen(config.AvlStyle);
     customPlot.graph(1)->setName("AVL");
 
     customPlot.addGraph();
     customPlot.graph(2)->setData(x, rbt);
-    customPlot.graph(2)->setPen(QPen(config.RBT_color));
-    customPlot.graph(2)->setScatterStyle(config.RBT_style);
+    customPlot.graph(2)->setPen(config.RbtStyle);
     customPlot.graph(2)->setName("RBT");
 }
 
@@ -133,177 +135,175 @@ void setLogScale(QCustomPlot &plot, bool logX = true, bool logY = true) {
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
-    PlotConfig config;
-    config.texts = data::readData("../data2/", 10001); 
+    PlotConfig config; 
 
     QCustomPlot first_plot;
     QCustomPlot second_plot;
     QCustomPlot third_plot;
     QCustomPlot fourth_plot;
-    QCustomPlot fifth_plot;
-    QCustomPlot sixth_plot;
-    QCustomPlot seventh_plot;
 
-    QVector<double>  x(config.texts.size());
-    QVector<double>  AVL_1(config.texts.size());
-    QVector<double>  BST_1(config.texts.size());
-    QVector<double>  RBT_1(config.texts.size());
-    QVector<double>  AVL_2(config.texts.size());
-    QVector<double>  BST_2(config.texts.size());
-    QVector<double>  RBT_2(config.texts.size());
-    QVector<double>  AVL_3(config.texts.size());
-    QVector<double>  BST_3(config.texts.size());
-    QVector<double>  RBT_3(config.texts.size());
-    QVector<double>  AVL_4(config.texts.size());
-    QVector<double>  BST_4(config.texts.size());
-    QVector<double>  RBT_4(config.texts.size());
-    QVector<double>  AVL_7(config.texts.size());
-    QVector<double>  BST_7(config.texts.size());
-    QVector<double>  RBT_7(config.texts.size());
+    QVector<double>  x;
+    QVector<double>  AVL_1;
+    QVector<double>  BST_1;
+    QVector<double>  RBT_1;
+    QVector<double>  AVL_2;
+    QVector<double>  BST_2;
+    QVector<double>  RBT_2;
+    QVector<double>  AVL_3;
+    QVector<double>  BST_3;
+    QVector<double>  RBT_3;
 
-    BinaryTree *AVLtree = AVL::create();
-    BinaryTree *BSTtree = BST::create();
-    BinaryTree *RBTtree = RBT::create();
 
-    double totalComparisonsAVL = 0;
-    double totalComparisonsBST = 0;
-    double totalComparisonsRBT = 0;
-    double timeAVL = 0;
-    double timeBST = 0;
-    double timeRBT = 0;
-    vector<string> words;
-    vector<int> comparisons_bst;
-    vector<int> comparisons_avl;
-    vector<int> comparisons_rbt;
-    int sizeTexts = config.texts.size();
+    // Lendo os dados da Inserção
 
-    for(int i = 0; i < sizeTexts; i++){
-        int sizeT = config.texts[i].size();
-        double meanAVL = 0;
-        double meanBST = 0;
-        double meanRBT = 0;
-
-        for(int j = 0; j < sizeT; j++){
-
-            InsertResult avlResult = AVL::insert(AVLtree, config.texts[i][j], i);
-            meanAVL += avlResult.numComparisons;
-            timeAVL += avlResult.executionTime;
-            InsertResult bstResult = BST::insert(BSTtree, config.texts[i][j], i);
-            meanBST += bstResult.numComparisons;
-            timeBST += bstResult.executionTime;
-            InsertResult rbtResult = RBT::insert(RBTtree, config.texts[i][j], i);
-            meanRBT += rbtResult.numComparisons;
-            timeRBT += rbtResult.executionTime;
-
-            if(avlResult.isNew){
-                comparisons_bst.push_back(bstResult.numComparisons);
-                comparisons_avl.push_back(avlResult.numComparisons);
-                comparisons_rbt.push_back(rbtResult.numComparisons);
-                words.push_back(avlResult.word);
-            }
-        }
-        totalComparisonsBST += meanBST;
-        totalComparisonsAVL += meanAVL;
-        totalComparisonsRBT += meanRBT;
-        x[i] = i + 1;
-        AVL_1[i] = totalComparisonsAVL;
-        BST_1[i] = totalComparisonsBST;
-        RBT_1[i] = totalComparisonsRBT;
-        AVL_2[i] = TreeUtils::getHeight(AVLtree->root);
-        BST_2[i] = height(BSTtree->root);
-        RBT_2[i] = height(RBTtree->root);
-        AVL_3[i] = meanAVL/sizeT;
-        BST_3[i] = meanBST/sizeT;
-        RBT_3[i] = meanRBT/sizeT;
-        AVL_4[i] = timeAVL;
-        BST_4[i] = timeBST;
-        RBT_4[i] = timeRBT;
-        AVL_7[i] = getHeightTree(AVLtree->root, "min");
-        BST_7[i] = getHeightTree(BSTtree->root, "min");
-        RBT_7[i] = getHeightTree(RBTtree->root, "min");
+    QFile InsertBST("../stats/insertResultsBST.csv");
+    if (!InsertBST.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "Erro ao abrir:" << "../stats/insertResultsBST.csv";
+        return 1;
     }
-    int h = height(BSTtree->root );
-    int size = words.size();
+    QTextStream in_InsertBST(&InsertBST);
 
-    QVector<double> AVL_6(size);
-    QVector<double> BST_6(size);
-    QVector<double> RBT_6(size);
-    QVector<double> x3(size);
-
-    QVector<double> x2(h,0);
-    for (int i = 0; i < h; ++i) x2[i] = i + 1;
-
-    QVector<double> AVL_5(h);
-    QVector<double> BST_5(h);
-    QVector<double> RBT_5(h);
-
-    for (int i = 0; i < size; i++) {
-        SearchResult avlResult = AVL::search(AVLtree, words[i]);
-        SearchResult bstResult = BST::search(BSTtree, words[i]);
-        SearchResult rbtResult = RBT::search(RBTtree, words[i]);
-
-        int idx_avl = avlResult.numComparisons -1;
-        int idx_bst = bstResult.numComparisons -1;
-        int idx_rbt = rbtResult.numComparisons -1;
-
-        if (idx_avl >= 0 && idx_avl < AVL_5.size()) AVL_5[idx_avl]++;
-        if (idx_bst >= 0 && idx_bst < BST_5.size()) BST_5[idx_bst]++;
-        if (idx_rbt >= 0 && idx_rbt < RBT_5.size()) RBT_5[idx_rbt]++;
-
-        if(i>0){ 
-        AVL_6[i] = comparisons_avl[i] + AVL_6[i-1];
-        BST_6[i] = comparisons_bst[i] + BST_6[i-1];
-        RBT_6[i] = comparisons_rbt[i] + RBT_6[i-1];
+    int index = 0;
+    double acumulado = 0;
+    double valor = 0;
+    while (!in_InsertBST.atEnd()) {
+        QStringList campos = in_InsertBST.readLine().split(',');
+        if (campos[1].trimmed() == "1"){ 
+            x.append(index);
+            BST_1.append(campos[4].toDouble());
+            BST_2.append(campos[5].toDouble());  
+            valor = campos[0].toDouble(); 
+            acumulado += valor;
+            BST_3.append(acumulado);
+            
+            index++;
         }
-        else{
-        AVL_6[i] = comparisons_avl[i];
-        BST_6[i] = comparisons_bst[i];
-        RBT_6[i] = comparisons_rbt[i];
+    }
+    InsertBST.close();
+
+    QFile InsertAVL("../stats/insertResultsAVL.csv");
+    if (!InsertAVL.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "Erro ao abrir:" << "../stats/insertResultsAVL.csv";
+        return 1;
+    }
+    QTextStream in_InsertAVL(&InsertAVL);
+    
+    acumulado = 0;
+    while (!in_InsertAVL.atEnd()) {
+        QStringList campos = in_InsertAVL.readLine().split(',');
+        if (campos[1].trimmed() == "1"){ 
+            AVL_1.append(campos[4].toDouble()); 
+            AVL_2.append(campos[5].toDouble()); 
+            valor = campos[0].toDouble(); 
+            acumulado += valor;
+            AVL_3.append(acumulado);
         }
-        x3[i] = i + 1;
-}
+    }
+    InsertAVL.close();
+
+    QFile InsertRBT("../stats/insertResultsRBT.csv");
+    if (!InsertRBT.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "Erro ao abrir:" << "../stats/insertResultsRBT.csv";
+        return 1;
+    }
+    QTextStream in_InsertRBT(&InsertRBT);
+
+    acumulado = 0;
+    while (!in_InsertRBT.atEnd()) {
+        QStringList campos = in_InsertRBT.readLine().split(',');
+        if (campos[1].trimmed() == "1"){ 
+            RBT_1.append(campos[4].toDouble()); 
+            RBT_2.append(campos[5].toDouble()); 
+            valor = campos[0].toDouble(); 
+            acumulado += valor;
+            RBT_3.append(acumulado);
+        }
+    }
+    InsertRBT.close();
+
+    // Lendo os dados da Procura
+
+    int MaxHeight = static_cast<int>(BST_1.last());
+
+    QVector<double> x2(MaxHeight,0);
+    for (int i = 0; i < MaxHeight; ++i) x2[i] = i + 1;
+
+    QVector<double>  AVL_4(MaxHeight);
+    QVector<double>  BST_4(MaxHeight);
+    QVector<double>  RBT_4(MaxHeight);
+
+    QFile SearchBST("../stats/searchResultsBST.csv");
+    if (!SearchBST.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "Erro ao abrir:" << "../stats/searchResultsBST.csv";
+        return 1;
+    }
+    QTextStream in_SearchBST(&SearchBST);
+
+    int CurrentIndex;
+
+    while (!in_SearchBST.atEnd()) {
+        QStringList campos = in_SearchBST.readLine().split(',');
+        CurrentIndex = campos[2].toInt() - 1;
+        if (CurrentIndex >= 0 && CurrentIndex < BST_4.size())
+            BST_4[CurrentIndex]++;
+        }
+    SearchBST.close();
+
+    QFile SearchAVL("../stats/searchResultsAVL.csv");
+    if (!SearchAVL.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "Erro ao abrir:" << "../stats/searchResultsAVL.csv";
+        return 1;
+    }
+    QTextStream in_SearchAVL(&SearchAVL);
+
+    while (!in_SearchAVL.atEnd()) {
+        QStringList campos = in_SearchAVL.readLine().split(',');
+        CurrentIndex = campos[2].toInt() - 1;
+        if (CurrentIndex >= 0 && CurrentIndex < AVL_4.size())
+            AVL_4[CurrentIndex]++;
+        }
+    SearchAVL.close();
+
+    QFile SearchRBT("../stats/searchResultsRBT.csv");
+    if (!SearchRBT.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "Erro ao abrir:" << "../stats/searchResultsRBT.csv";
+        return 1;
+    }
+    QTextStream in_SearchRBT(&SearchRBT);
+
+    while (!in_SearchRBT.atEnd()) {
+        QStringList campos = in_SearchRBT.readLine().split(',');
+        CurrentIndex = campos[2].toInt() - 1;
+        if (CurrentIndex >= 0 && CurrentIndex < RBT_4.size())
+            RBT_4[CurrentIndex]++;
+    }
+    SearchRBT.close();
+
     // Adicionando os dados
     add_graph(first_plot, x, BST_1, AVL_1, RBT_1, config);
+    setLogScale(first_plot,true,false);
     add_graph(second_plot, x, BST_2, AVL_2, RBT_2, config);
+    setLogScale(second_plot,true,false);
     add_graph(third_plot, x, BST_3, AVL_3, RBT_3, config);
-    add_graph(fourth_plot, x, BST_4, AVL_4, RBT_4, config);
-    add_graph(fifth_plot, x2, BST_5, AVL_5, RBT_5, config);
-    add_graph(sixth_plot, x3, BST_6, AVL_6, RBT_6, config);
-    add_graph(seventh_plot,x,BST_7,AVL_7,RBT_7,config);
+    add_graph(fourth_plot, x2, BST_4, AVL_4, RBT_4, config);
 
     // Aplicar configuração de estilo
-    configurePlot(first_plot, config,"Soma do número de comparações em cada árvore","Número de documentos lidos","Número de comparações" );
-    configurePlot(second_plot, config,"Altura das árvores em função dos documentos lidos","Número de documentos lidos","Altura das árvores" );
-    configurePlot(third_plot, config, "Média do número de comparações por documento lido","Número de documentos lidos","Média do número de comparações");
-    configurePlot(fourth_plot, config, "Soma dos tempos de execução","Número de documentos lidos","Tempo médio");
-    configurePlot(fifth_plot, config,  "Número de palavras por número de comparações","Número de comparações","Número de palavras");
-    configurePlot(sixth_plot, config, "Soma do número de comparações na inserção","Número de novas palavras","Soma do número de comparações");
-    configurePlot(seventh_plot,config, "Menor caminho de uma folha até a raiz","Menor caminho","Número de documentos lidos");
+    configurePlot(first_plot, config,"Altura das árvores durante a inserção","Número de palavras únicas adicionadas","Altura" );
+    configurePlot(second_plot, config,"Profundidade da folha mais rasa durante a inserção","Número de palavras únicas adicionadas","Profundidade" );
+    configurePlot(third_plot, config, "Soma dos tempos de execução durante a inserção","Número de palavras inseridas","Soma dos tempos de execução");
+    configurePlot(fourth_plot, config, "Distribuição do número de comparações por número de palavras","Número de comparações","Número de palavras");
 
     // Ajustar escalas
     first_plot.rescaleAxes();
     second_plot.rescaleAxes();
-    setLogScale(second_plot, true, false);
     third_plot.rescaleAxes();
     fourth_plot.rescaleAxes();
-    fifth_plot.rescaleAxes();
-    sixth_plot.rescaleAxes();
-    setLogScale(seventh_plot, true, false);
-    seventh_plot.rescaleAxes();
 
     // Salvar em PNG
-    first_plot.savePng("Graph_1.png", 1000, 600);
-    second_plot.savePng("Graph_2.png", 1000, 600);
-    third_plot.savePng("Graph_3.png", 1000, 600);
-    fourth_plot.savePng("Graph_4.png", 1000, 600);
-    fifth_plot.savePng("Graph_5.png", 1000, 600);
-    sixth_plot.savePng("Graph_6.png", 1000, 600);
-    seventh_plot.savePng("Graph_7.png", 1000, 600);
-
-    //Destruindo as árvores
-    BST::destroy(BSTtree);
-    AVL::destroy(AVLtree);
-    RBT::destroy(RBTtree);
+    first_plot.savePng("Graph_1_10103.png", 1000, 600);
+    second_plot.savePng("Graph_2_10103.png", 1000, 600);
+    third_plot.savePng("Graph_3_10103.png", 1000, 600);
+    fourth_plot.savePng("Graph_4_10103.png", 1000, 600);
 
     return 0;
 }
