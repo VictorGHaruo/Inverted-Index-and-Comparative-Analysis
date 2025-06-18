@@ -129,9 +129,11 @@ void save(vector<InsertResult> insertResults, vector<SearchResult> searchResults
 }
 
 void stats(vector<InsertResult> insertResults, BinaryTree* rbt){
-    // stats of insert
+    //  stats of insert
     int sizeInsRes = insertResults.size();
     double totTimeInsert = 0;
+    double maxTimeInsert = 0;
+    double minTimeInsert = insertResults[0].executionTime; 
     int totCompInsert = 0;
     vector<string> uniqWords;
     for(int i = 0; i < sizeInsRes; i++){
@@ -140,10 +142,12 @@ void stats(vector<InsertResult> insertResults, BinaryTree* rbt){
         if(insertResults[i].isNew){
             uniqWords.push_back(insertResults[i].word);
         }
+        if(insertResults[i].executionTime > maxTimeInsert) maxTimeInsert = insertResults[i].executionTime;
+        if(insertResults[i].executionTime < minTimeInsert) minTimeInsert = insertResults[i].executionTime;
     }
     double aveTimeInsert = totTimeInsert / sizeInsRes;
-
-    // stats of search
+    
+    //  stats of search
     int sizeUniqWords = uniqWords.size();
     double totTimeSearch = 0;
     int totCompSearch = 0;
@@ -154,12 +158,13 @@ void stats(vector<InsertResult> insertResults, BinaryTree* rbt){
         searchResults.push_back(RBT::search(rbt, uniqWords[i]));
         totTimeSearch += searchResults[i].executionTime;
         totCompSearch += searchResults[i].numComparisons;
+        if(i == 0) minTimeSearch = searchResults[i].executionTime;
         if(searchResults[i].executionTime > maxTimeSearch) maxTimeSearch = searchResults[i].executionTime;
         if(searchResults[i].executionTime < minTimeSearch) minTimeSearch = searchResults[i].executionTime;
     }
     double aveTimeSearch = totTimeSearch / sizeUniqWords;
 
-    // height
+    //  height
     int maxHeightTree = getMinOrMaxPath(rbt->root, true);
     int minHeightTree = getMinOrMaxPath(rbt->root, false);
 
@@ -171,10 +176,14 @@ void stats(vector<InsertResult> insertResults, BinaryTree* rbt){
     cout << "Insertion: " << endl;
     cout << "- Total time : " << totTimeInsert << "ms = " << totTimeInsert/1000 << "s" << endl;
     cout << "- Average time : " << aveTimeInsert << "ms = " << aveTimeInsert/1000 << "s" << endl;
+    cout << "- Max time : " << maxTimeInsert << "ms = " << maxTimeInsert/1000 << "s" << endl;
+    cout << "- Min time : " << minTimeInsert << "ms = " << minTimeInsert/1000 << "s" << endl;
     cout << "- Total number of comparisons : " << totCompInsert << endl << endl;
     cout << "Search: " << endl;
     cout << "- Total time to search for all the words : " << totTimeSearch << "ms = " << totTimeSearch/1000 << "s" << endl;
     cout << "- Average time : " << aveTimeSearch << "ms = " << aveTimeSearch/1000 << "s" << endl;
+    cout << "- Max time : " << maxTimeSearch << "ms = " << maxTimeSearch/1000 << "s" << endl;
+    cout << "- Min time : " << minTimeSearch << "ms = " << minTimeSearch/1000 << "s" << endl;
     cout << "- Total number of comparisons : " << totCompSearch << endl;
 
     while (true) {
