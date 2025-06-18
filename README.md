@@ -36,17 +36,19 @@ The project uses a flexible Makefile that allows configuring different parameter
 
 **Basic Execution**:
 ```bash
-#To run with default settings:
-(cd scr/ ; make)
+#Running Manually
+#Compile all the files to run the trees (*substitute tree_name with a tree name):
+(cd scr/ ; ./main_tree_name <command> <n_docs> <directory_path>)
 
-#To specify the number of documents (uses default BST tree):
-(cd scr/ ; make num=n)
-    
-#To run with fully custom parameters:
+#Running with Makefile
 (cd scr/ ; make tree=tree path="../data_folder/" num=num cmd=stats)
 
 #Delete object files and executables: 
 (cd scr/ ; make clean)
+
+#Delete all object(data, i.e .CSV .txt) files and executables created by the code.
+(cd scr/ ; make cleanall)
+
 ```
 
 
@@ -63,14 +65,15 @@ The project uses a flexible Makefile that allows configuring different parameter
 
 AVL with stats on 1000 documents using the second data:
 ```bash
-make tree=avl path="../data2/" num=1000 cmd=stats
+(cd scr/ ; make tree=avl path="../data2/" num=1000 cmd=stats)
 ```
 
-BST with search over 300 documents:
+BST with search on 10 documents from data2:
 ```bash
-make num=300
+(cd scr/ ; ./main_bst stats 10 ../data2/)
 ```
 
+**For more informations about the how to run the code, read the .pdf file in docs/ folder.**
 
 
 ## 👥 Developers
