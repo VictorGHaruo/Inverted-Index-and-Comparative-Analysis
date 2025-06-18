@@ -1,12 +1,12 @@
 ifndef path
-path = ..$(S)data$(S)
+path = ../data/
 endif
 
 ifndef num
-	ifeq ($(path), ..$(S)data$(S))
+	ifeq ($(path), ../data/)
 	num = 10103
 	endif
-	ifeq ($(path), ..$(S)data2$(S))
+	ifeq ($(path), ../data2/)
 	num = 9999
 	endif
 endif
