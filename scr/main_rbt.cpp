@@ -214,7 +214,7 @@ void stats(vector<InsertResult> insertResults, BinaryTree* rbt){
 
         else if(option == 3){
             while(true){
-                cout << "- Chose the file name: ";
+                cout << "- Choose the file name: ";
                 string filename;
                 cin >> filename;
                 getline(cin, line_ignored);
@@ -238,7 +238,7 @@ void stats(vector<InsertResult> insertResults, BinaryTree* rbt){
 
         else if(option == 5){
             while(true){
-                cout << "- Chose the file name: ";
+                cout << "- Choose the file name: ";
                 string filename;
                 cin >> filename;
                 getline(cin, line_ignored);

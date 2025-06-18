@@ -27,25 +27,19 @@ OBJS = bin/tree_utils.o bin/data.o
 
 # Compile all main
 TARGET: $(ALLMAIN)
-
 main_bst: bin/main_bst.o bin/bst.o $(OBJS)
 	g++ $(FLAGS) bin/main_bst.o bin/bst.o $(OBJS) -o $@
-
 main_avl: bin/main_avl.o bin/avl.o $(OBJS) 
 	g++ $(FLAGS) bin/main_avl.o bin/avl.o $(OBJS) -o $@
-
 main_rbt: bin/main_rbt.o bin/rbt.o $(OBJS)
 	g++ $(FLAGS) bin/main_rbt.o bin/rbt.o $(OBJS) -o $@
 
 # Compile all test
 test: $(ALLTEST)
-
 test_bst: bin/test_bst.o bin/bst.o $(OBJS)
 	g++ $(FLAGS) bin/test_bst.o bin/bst.o $(OBJS) -o $@
-
 test_avl: bin/test_avl.o bin/avl.o $(OBJS) 
 	g++ $(FLAGS) bin/test_avl.o bin/avl.o $(OBJS) -o $@
-
 test_rbt: bin/test_rbt.o bin/rbt.o $(OBJS)
 	g++ $(FLAGS) bin/test_rbt.o bin/rbt.o $(OBJS) -o $@
 
@@ -73,16 +67,17 @@ endif
 bin/%.o: %.cpp
 	g++ $(FLAGS) -c $< -o $@
 
+## Clean in Windows
 ifeq ($(OS), Windows_NT)
 clean:
 	cmd /C "del /Q" bin\\*.o main_bst.exe main_avl.exe main_rbt.exe test_bst.exe test_avl.exe test_rbt.exe
 
-cleancsv:
-	cmd /C "del /Q" ..\\stats\\*.csv
+cleanall:
+	cmd /C "del /Q" bin\\*.o main_bst.exe main_avl.exe main_rbt.exe test_bst.exe test_avl.exe test_rbt.exe ..\\stats\\*.csv ..\\stats\\*.txt
 else
 clean:
 	rm bin/*.o $(ALLMAIN) $(ALLTEST)
 
-cleancsv:
-	rm ../stats/*.csv
+cleanall:
+	rm bin/*.o $(ALLMAIN) $(ALLTEST) ../stats/*.csv ../stats/*.txt
 endif
