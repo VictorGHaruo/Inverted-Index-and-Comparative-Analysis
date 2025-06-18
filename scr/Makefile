@@ -73,15 +73,16 @@ endif
 bin/%.o: %.cpp
 	g++ $(FLAGS) -c $< -o $@
 
+ifeq ($(OS), Windows_NT)
 clean:
 	rm bin/*.o $(ALLMAIN) $(ALLTEST)
 
 cleancsv:
 	rm ../stats/*.csv
-
-# Using Windonws
-cleanw:
+else
+clean:
 	cmd /C "del /Q" bin\\*.o main_bst.exe main_avl.exe main_rbt.exe test_bst.exe test_avl.exe test_rbt.exe
 
-cleancsvw:
+cleancsv:
 	cmd /C "del /Q" ..\\stats\\*.csv
+endif
