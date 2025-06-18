@@ -75,14 +75,14 @@ bin/%.o: %.cpp
 
 ifeq ($(OS), Windows_NT)
 clean:
-	rm bin/*.o $(ALLMAIN) $(ALLTEST)
-
-cleancsv:
-	rm ../stats/*.csv
-else
-clean:
 	cmd /C "del /Q" bin\\*.o main_bst.exe main_avl.exe main_rbt.exe test_bst.exe test_avl.exe test_rbt.exe
 
 cleancsv:
 	cmd /C "del /Q" ..\\stats\\*.csv
+else
+clean:
+	rm bin/*.o $(ALLMAIN) $(ALLTEST)
+
+cleancsv:
+	rm ../stats/*.csv
 endif
