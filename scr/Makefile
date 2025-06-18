@@ -60,3 +60,6 @@ bin/%.o: %.cpp
 
 clean:
 	$(RM) bin/*.o main_bst$(EXT) main_avl$(EXT) main_rbt$(EXT)
+
+cleancsv:
+	$(RM) ../stats/*.csv
