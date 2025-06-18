@@ -4,7 +4,6 @@
 #include <QTextStream>
 #include <QStringList>
 #include <QDebug>
-#include <algorithm>
 #include <cmath>
 #include "qcustomplot.h"
 #include "../scr/tree_utils.h"
@@ -162,7 +161,7 @@ int main(int argc, char *argv[]) {
 
     QFile InsertBST("../stats/insertResultsBST.csv");
     if (!InsertBST.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "Erro ao abrir:" << "../stats/insertResultsBST.csv";
+        qWarning() << "Error opening:" << "../stats/insertResultsBST.csv";
         return 1;
     }
     QTextStream in_InsertBST(&InsertBST);
@@ -204,7 +203,7 @@ int main(int argc, char *argv[]) {
 
     QFile InsertAVL("../stats/insertResultsAVL.csv");
     if (!InsertAVL.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "Erro ao abrir:" << "../stats/insertResultsAVL.csv";
+        qWarning() << "Error opening :" << "../stats/insertResultsAVL.csv";
         return 1;
     }
     QTextStream in_InsertAVL(&InsertAVL);
@@ -232,7 +231,7 @@ int main(int argc, char *argv[]) {
 
     QFile InsertRBT("../stats/insertResultsRBT.csv");
     if (!InsertRBT.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "Erro ao abrir:" << "../stats/insertResultsRBT.csv";
+        qWarning() << "Error opening:" << "../stats/insertResultsRBT.csv";
         return 1;
     }
     QTextStream in_InsertRBT(&InsertRBT);
@@ -258,7 +257,7 @@ int main(int argc, char *argv[]) {
     }
     InsertRBT.close();
 
-    int Size = 50;
+    int Size = 100;
     QVector<double> x3(Size);
     QVector<double> AVL_5(Size);
     QVector<double> BST_5(Size);
@@ -368,12 +367,12 @@ int main(int argc, char *argv[]) {
     sixthPlot.rescaleAxes();
 
     // Save as PNG
-    firstPlot.savePng("Graph_1_10103.png", 1000, 600);
-    secondPlot.savePng("Graph_2_10103.png", 1000, 600);
-    thirdPlot.savePng("Graph_3_10103.png", 1000, 600);
-    fourthPlot.savePng("Graph_4_10103.png", 1000, 600);
-    fifthPlot.savePng("Graph_5_10103.png", 1000, 600);
-    sixthPlot.savePng("Graph_6_10103.png", 1000, 600);
+    firstPlot.savePng("../docs/img/Graph_1_10103.png", 1000, 600);
+    secondPlot.savePng("../docs/img/Graph_2_10103.png", 1000, 600);
+    thirdPlot.savePng("../docs/img/Graph_3_10103.png", 1000, 600);
+    fourthPlot.savePng("../docs/img/Graph_4_10103.png", 1000, 600);
+    fifthPlot.savePng("../docs/img/Graph_5_10103.png", 1000, 600);
+    sixthPlot.savePng("../docs/img/Graph_6_10103.png", 1000, 600);
 
     return 0;
 }
