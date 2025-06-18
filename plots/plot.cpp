@@ -14,7 +14,7 @@
 using namespace std;
 
 struct PlotConfig {
-    // Cores
+    // Colors
     QColor backgroundColor = QColor(255, 255, 255);
     QColor textColor = QColor(0, 0, 0);
     QColor gridColor = QColor(100, 100, 100);
@@ -26,18 +26,18 @@ struct PlotConfig {
     QColor legendBrush = QColor(255, 255, 255, 230);
     QColor legendBorderPen = QColor(30, 30, 30);
 
-    QPen GridStyle = QPen(gridColor, 1, Qt::DashLine);
+    // Margins
     QMargins margins = QMargins(10, 10, 10, 10);
 
-    // Fontes
+    // Fonts
     QFont titleFont = QFont("Latin Modern Roman", 14, QFont::Bold);
     QFont labelFont = QFont("Latin Modern Roman", 12);
 
-    // Estilos de pontos
-    QPen AvlStyle = QPen(AVLColor, 3, Qt::DashLine);
+    // Styles
     QPen BstStyle = QPen(BSTColor, 3, Qt::DashLine);
-    QPen RbtStyle = QPen(RBTColor, 3, Qt::DashLine);
-    QPen gridStyle = QPen(Qt::gray, 0, Qt::DotLine);
+    QPen AvlStyle = QPen(AVLColor, 3, Qt::DashDotLine);
+    QPen RbtStyle = QPen(RBTColor, 3, Qt::DotLine);
+    QPen GridStyle = QPen(gridColor, 1, Qt::DashLine);
 };
 
 void configurePlot(QCustomPlot &customPlot, const PlotConfig &config, const char* title, const char* xLabel, const char* yLabel) {
@@ -59,8 +59,8 @@ void configurePlot(QCustomPlot &customPlot, const PlotConfig &config, const char
     }
     // Grid
 
-    customPlot.xAxis->grid()->setPen(config.gridStyle);
-    customPlot.yAxis->grid()->setPen(config.gridStyle);
+    customPlot.xAxis->grid()->setPen(config.GridStyle);
+    customPlot.yAxis->grid()->setPen(config.GridStyle);
 
     // Legend
     customPlot.legend->setVisible(true);
@@ -363,16 +363,23 @@ int main(int argc, char *argv[]) {
     thirdPlot.rescaleAxes();
     fourthPlot.rescaleAxes();
     fifthPlot.rescaleAxes();
-    fifthPlot.xAxis->setRange(min, 0.01);
+    fifthPlot.xAxis->setRange(min, 0.01); // Cutting out the outliers
     sixthPlot.rescaleAxes();
 
-    // Save as PNG
-    firstPlot.savePng("../docs/img/Graph_1_10103.png", 1000, 600);
-    secondPlot.savePng("../docs/img/Graph_2_10103.png", 1000, 600);
-    thirdPlot.savePng("../docs/img/Graph_3_10103.png", 1000, 600);
-    fourthPlot.savePng("../docs/img/Graph_4_10103.png", 1000, 600);
-    fifthPlot.savePng("../docs/img/Graph_5_10103.png", 1000, 600);
-    sixthPlot.savePng("../docs/img/Graph_6_10103.png", 1000, 600);
+    // Save as PDF
+
+    QString title1 = "graphs/Graph_1_" + QString::number(index) + ".pdf";
+    QString title2 = "graphs/Graph_2_" + QString::number(index) + ".pdf";
+    QString title3 = "graphs/Graph_3_" + QString::number(index) + ".pdf";
+    QString title4 = "graphs/Graph_4_" + QString::number(index) + ".pdf";
+    QString title5 = "graphs/Graph_5_" + QString::number(index) + ".pdf";
+    QString title6 = "graphs/Graph_6_" + QString::number(index) + ".pdf";
+    firstPlot.savePdf(title1,1000, 600);
+    secondPlot.savePdf(title2, 1000, 600);
+    thirdPlot.savePdf(title3, 1000, 600);
+    fourthPlot.savePdf(title4, 1000, 600);
+    fifthPlot.savePdf(title5, 1000, 600);
+    sixthPlot.savePdf(title6, 1000, 600);
 
     return 0;
 }

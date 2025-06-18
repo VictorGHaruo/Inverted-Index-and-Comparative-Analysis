@@ -17,19 +17,19 @@ int main(){
 
     cout << "========= Teste Left Rotation =========" << endl;
     AVL::insert(tree, "dratini", 4);
-    AVL::insert(tree, "elekid", 5); // Left Rotation ao inserir "elekid"
+    AVL::insert(tree, "elekid", 5); // Left Rotation 
     printTree(tree);
     cout << endl ;
 
     cout << "========= Teste Right-Left Rotation =========" << endl;
     AVL::insert(tree, "ivysaur", 8);
-    AVL::insert(tree, "flareon", 6); // Left-Right Rotation ao inserir "flareon"
+    AVL::insert(tree, "flareon", 6); // Left-Right Rotation
     printTree(tree);
     cout << endl ;
 
     cout << "========= Teste Left-Right Rotation =========" << endl;
     AVL::insert(tree, "gallade", 9);
-    AVL::insert(tree, "hypno", 8); // Right-Left Rotation ao inserir "hypno"
+    AVL::insert(tree, "hypno", 8); // Right-Left Rotation 
     printTree(tree);
 
     cout << endl ;
@@ -67,6 +67,8 @@ int main(){
         if (i == 150)
             insert_last = AVL::insert(tree, pokemons[i], i + 1);
     }
+    float height = getHeight(tree->root);
+    float minHeight = getMinOrMaxPath(tree->root, false);
 
     cout << "========= Insert: Root =========" << endl;
     cout << "Execution Time: " << insert_root.executionTime << endl;
@@ -76,8 +78,11 @@ int main(){
     cout << "========= Insert: Last =========" << endl;
     cout << "Execution Time: " << insert_last.executionTime << endl;
     cout << "Number of Comparisons:" << insert_last.numComparisons << endl;
-    cout << "Tree height :" << getHeight(tree->root) << endl;
+
     cout << "========= Balance test: =========" << endl;
+    cout << "Tree height :" << height<< endl;
+    cout << "Min height :" << minHeight << endl;
+    cout << "Ratio :" << height/minHeight << endl;
 
     cout << "========= Delete Tree =========" << endl;
     AVL::destroy(tree);
