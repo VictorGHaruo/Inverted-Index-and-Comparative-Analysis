@@ -73,7 +73,7 @@ compensates for this initial cost, particularly in datasets with many repeated w
 Table \ref{tab:busca_completa} displays results for search operations for different numbers
 of documents ($n$), with \textbf{Time (ms)}
 representing the average duration per operation, \textbf{Comparisons} showing the average number of comparisons per search,
-and \textbf{Relative Efficiency} indicating the comparative gain in relation to the BST.
+and \textbf{Relative Efficiency} indicates the gain in the number of comparisons relative to the BST.
 
 \begin{table}[H]
     \centering
@@ -108,7 +108,8 @@ and \textbf{Relative Efficiency} indicating the comparative gain in relation to 
 
 The balanced trees demonstrate expressive gains in search operations, consistently reducing
 comparisons by 26-28\% relative to the BST across all scales. This optimization is directly reflected in the time:
-the AVL and RBT maintain a temporal advantage in all cases.
+the AVL and RBT maintain a temporal advantage in all cases. It is important to note that the analysis of search time for small
+$n$ is imprecise; however, for large $n$, the analysis closely approximates the analysis of the number of comparisons.
 
 Figure \ref{fig:comparacoes} presents the distribution of the number of comparisons made
 during searches, as a function of the number of words, for the three analyzed structures:
@@ -198,8 +199,8 @@ Note that in figure \ref{fig:menorgalho}, there was a moment when the size of th
 we might think this is incorrect. But in fact, this is not a problem,
 as it can really occur, see the example:
 
-In figure \ref{fig:bef650} we have an AVL tree such that the size of the smallest branch is 4, and in figure
-\ref{fig:af650} it is the same tree after inserting node $650$. After this insertion,
+In figure \ref{fig:bef645} we have an AVL tree such that the size of the smallest branch is 4, and in figure
+\ref{fig:af645} it is the same tree after inserting node $645$. After this insertion,
 this node becomes the root and the size of the smallest branch will be 3.
 
 \begin{figure}[H]
@@ -207,15 +208,15 @@ this node becomes the root and the size of the smallest branch will be 3.
     \begin{minipage}{0.46\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/avl_before.jpeg}
-        \caption{Before inserting node 650}
-        \label{fig:bef650}
+        \caption{Before inserting node 645}
+        \label{fig:bef645}
     \end{minipage}
     \hfill
     \begin{minipage}{0.48\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/avl_after.jpeg}
-        \caption{After inserting node 650}
-        \label{fig:af650}
+        \caption{After inserting node 645}
+        \label{fig:af645}
     \end{minipage}
 \end{figure}
 
