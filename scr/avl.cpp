@@ -203,7 +203,7 @@ namespace AVL{
         result.numComparisons = searchNode.numComparisons + 1;
         result.executionTime = time;
         if(searchNode.found == 0){
-            result.maxHeight = getMinOrMaxPath(tree->root, true);
+            result.maxHeight = getHeight(tree->root); // Already campute this
             result.minHeight = getMinOrMaxPath(tree->root, false);
         } else{
             result.maxHeight = 0;

@@ -95,9 +95,9 @@ void searchLooping(BinaryTree* avl){
     }
 }
 
-void save(vector<InsertResult> insertResults, vector<SearchResult> searchResults, string filename){
-    ofstream insertFileOut("../stats/insertResultsAVL_" + filename);
-    ofstream searchFileOut("../stats/searchResultsAVL_" + filename);
+void save(vector<InsertResult> insertResults, vector<SearchResult> searchResults){
+    ofstream insertFileOut("../stats/insertResultsAVL.csv");
+    ofstream searchFileOut("../stats/searchResultsAVL.csv");
     if(insertFileOut.is_open()){
         insertFileOut << "Execution Time, Is new, Num Comparasion, Word, Max Height, Min Height \n";
         int sizeInsert = insertResults.size();
@@ -160,8 +160,8 @@ void stats(vector<InsertResult> insertResults, BinaryTree* avl){
     double aveTimeSearch = totTimeSearch / sizeUniqWords;
 
     //  height
-    int maxHeightTree = getMinOrMaxPath(avl->root, "max");
-    int minHeightTree = getMinOrMaxPath(avl->root, "min");
+    int maxHeightTree = getHeight(avl->root);
+    int minHeightTree = getMinOrMaxPath(avl->root, false);
 
     cout << endl <<  "Welcome to the CLI - Stats!" << endl;
     cout << "The stats were: " << endl;
@@ -202,20 +202,7 @@ void stats(vector<InsertResult> insertResults, BinaryTree* avl){
         }
 
         if(option == 1){
-            string filename;
-            while(true){
-                cout << "- Chose the file name: ";
-                cin >> filename;
-                getline(cin, line_ignored);
-                //if the rest of input is just ' ' it's okay, if not it's 2+ words
-                if(line_ignored.length() > 1 && line_ignored.find_first_not_of(' ') != string::npos){
-                    cout << endl << "- Wait, just one word. Try again." << endl << endl;
-                    continue;
-                }
-                filename += ".csv";
-                break;
-            }
-            save(insertResults, searchResults, filename);
+            save(insertResults, searchResults);
             cout << endl << "- Saved!" << endl;
             return;
         }
