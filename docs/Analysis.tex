@@ -55,8 +55,8 @@ will be discussed shortly, which hindered the generation of results for all scen
 
  \begin{figure}[H]
      \centering
-     \includegraphics[width=0.8\linewidth]{img/Graph_5_10103.pdf}
-     \caption{Number of comparisons by number of words}
+     \includegraphics[width=0.8\linewidth]{img/Graph_5_20273.pdf}
+     \caption{Time distribution by number of words}
      \label{fig:timedist}
  \end{figure}
 
@@ -66,8 +66,8 @@ will be discussed shortly, which hindered the generation of results for all scen
 
  \begin{figure}[H]
      \centering
-     \includegraphics[width=0.8\linewidth]{img/Graph_4_10103.pdf}
-     \caption{Number of comparisons by number of words}
+     \includegraphics[width=0.8\linewidth]{img/Graph_4_20273.pdf}
+     \caption{Time distribution by number of words read}
      \label{fig:cumulativedist}
  \end{figure}
 Figure \ref{fig:mean-log} shows the average number of comparisons for every 100 new words inserted into the trees, indicating that the insertion complexity in each tree is proportional to $log_2(n)$. It can be observed that the differences between the trees become noticeable only after a significant number of words have been inserted—when balancing begins to affect the number of comparisons more evidently.
@@ -79,7 +79,7 @@ Despite being the most balanced tree, the AVL has the highest average number of 
 \begin{figure}[H]
      \centering
      \includegraphics[width=0.8\linewidth]{img/Graph_3_20273.pdf}
-     \caption{Number of comparisons by number of words}
+     \caption{Average number of comparisons by number of words}
      \label{fig:mean-log}
 \end{figure}
 
@@ -138,7 +138,7 @@ analys
 
  \begin{figure}[H]
      \centering
-     \includegraphics[width=0.8\linewidth]{img/Graph_6_10103.pdf}
+     \includegraphics[width=0.8\linewidth]{img/Graph_6_20273.pdf}
      \caption{Number of comparisons by number of words}
      \label{fig:comparacoes}
  \end{figure}
@@ -195,14 +195,14 @@ analys
 
  \begin{figure}[H]
      \centering
-     \includegraphics[width=0.75\linewidth]{img/Graph_1_10103.pdf}
+     \includegraphics[width=0.75\linewidth]{img/Graph_1_20273.pdf}
      \caption{Tree height per insertion}
      \label{fig:maiorgalho}
  \end{figure}
 
  \begin{figure}[H]
      \centering
-     \includegraphics[width=0.75\linewidth]{img/Graph_2_10103.pdf}
+     \includegraphics[width=0.75\linewidth]{img/Graph_2_20273.pdf}
      \caption{Tree height per insertion}
      \label{fig:menorgalho}
  \end{figure}
@@ -279,17 +279,17 @@ analys
  The RBT demonstrates superiority regarding the number of comparisons. The AVL also stands out for its low execution
  time for $n = 1000$.
 
- Figure \ref{fig:timedist} demonstrates the distribution of insertion time, showing that all trees 
+ Figure \ref{fig:timedist2} demonstrates the distribution of insertion time, showing that all trees 
  have very similar variability, differing only in their respective means.
 
  \begin{figure}[H]
      \centering
      \includegraphics[width=0.8\linewidth]{img/Graph_5_77770.pdf}
      \caption{Number of comparisons by number of words}
-     \label{fig:timedist}
+     \label{fig:timedist2}
  \end{figure}
 
- Figure \ref{fig:cumulativedist} reveals that, although insertions in AVL and RBT
+ Figure \ref{fig:cumulativedist2} reveals that, although insertions in AVL and RBT
  involve additional balancing operations, the superior efficiency in search operations
  compensates for this initial cost, particularly in datasets with many repeated words.
 
@@ -297,7 +297,7 @@ analys
      \centering
      \includegraphics[width=0.8\linewidth]{img/Graph_4_77770.pdf}
      \caption{Number of comparisons by number of words}
-     \label{fig:cumulativedist}
+     \label{fig:cumulativedist2}
  \end{figure}
 Figure \ref{fig:mean-log2} shows the average number of comparisons for every 100 new words 
 inserted into the trees, similar to the analysis of the first dataset.
@@ -355,7 +355,7 @@ Figure \ref{fig:comparacoes2} presents the distribution of the number of compari
  \begin{figure}[H]
      \centering
      \includegraphics[width=0.8\linewidth]{img/Graph_6_77770.pdf}
-     \caption{Number of comparisons by number of words}
+     \caption{Number of comparisons by words}
      \label{fig:comparacoes2}
  \end{figure}
 
@@ -404,19 +404,11 @@ Figure \ref{fig:comparacoes2} presents the distribution of the number of compari
  \begin{figure}[H]
      \centering
      \includegraphics[width=0.75\linewidth]{img/Graph_2_77770.pdf}
-     \caption{Tree height per insertion}
+     \caption{Shallowest Leaft Depth During Insertion}
      \label{fig:menorgalho2}
  \end{figure}
 
  Note that, in general, as evidenced by figures \ref{fig:maiorgalho2}-\ref{fig:menorgalho2}, in AVL and RBT trees—being balanced—it is necessary to insert a larger quantity. The analysis is similar to the one 
  for the first dataset.
 
- \subsection{Conclusion}
-
- Furthermore, it is observed that the patterns are consistent with those observed in both datasets.
- However, due to the larger number of nodes in this second dataset, the time differences between the approaches
- are more significant, confirming the importance of balanced structures in large-scale applications.
-
- Comparing the three structures, the BST stands out for its simplicity, but can have poor performance when data is inserted in an orderly fashion—becoming practically a list.
- The AVL tree keeps the tree always very well balanced, which guarantees fast searches, but requires more rotations, making it better for cases with many queries and few insertions.
- The RBT, on the other hand, finds a middle ground: it performs fewer rotations than AVL and still maintains good overall performance, making it a good choice when there are many insertions and modifications to the tree.
+ 
