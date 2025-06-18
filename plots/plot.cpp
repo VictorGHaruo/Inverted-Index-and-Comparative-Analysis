@@ -4,6 +4,8 @@
 #include <QTextStream>
 #include <QStringList>
 #include <QDebug>
+#include <algorithm>
+#include <cmath>
 #include "qcustomplot.h"
 #include "../scr/tree_utils.h"
 #include "../scr/data.h"
@@ -14,87 +16,78 @@ using namespace std;
 
 struct PlotConfig {
     // Cores
-    QColor background_color = QColor(255, 255, 255);
-    QColor text_color = QColor(0, 0, 0);
-    QColor grid_color = QColor(100, 100, 100);
+    QColor backgroundColor = QColor(255, 255, 255);
+    QColor textColor = QColor(0, 0, 0);
+    QColor gridColor = QColor(100, 100, 100);
 
-    QColor BST_color = QColor(255, 0, 0);
-    QColor AVL_color = QColor(0, 255, 0);
-    QColor RBT_color = QColor(0, 0, 255);
+    QColor BSTColor = QColor(255, 0, 0);
+    QColor AVLColor = QColor(255, 165, 0);
+    QColor RBTColor = QColor(0, 0, 255);
 
-    QColor legend_brush = QColor(255, 255, 255, 255);
-    QColor legend_border_pen = QColor(30, 30, 30);
+    QColor legendBrush = QColor(255, 255, 255, 230);
+    QColor legendBorderPen = QColor(30, 30, 30);
 
-    QPen GridStyle = QPen(grid_color, 1, Qt::DashLine);
+    QPen GridStyle = QPen(gridColor, 1, Qt::DashLine);
+    QMargins margins = QMargins(10, 10, 10, 10);
 
     // Fontes
-    QFont title_font = QFont("Sans", 12, QFont::Bold);
-    QFont legend_font = QFont("Helvetica", 9);
+    QFont titleFont = QFont("Latin Modern Roman", 14, QFont::Bold);
+    QFont labelFont = QFont("Latin Modern Roman", 12);
 
     // Estilos de pontos
-    QPen AvlStyle = QPen(AVL_color, 3, Qt::DashLine);
-    QPen BstStyle = QPen(BST_color, 3, Qt::DashLine);
-    QPen RbtStyle = QPen(RBT_color, 3, Qt::DashLine);
+    QPen AvlStyle = QPen(AVLColor, 3, Qt::DashLine);
+    QPen BstStyle = QPen(BSTColor, 3, Qt::DashLine);
+    QPen RbtStyle = QPen(RBTColor, 3, Qt::DashLine);
+    QPen gridStyle = QPen(Qt::gray, 0, Qt::DotLine);
 };
 
-int height(Node* root) {
-    if (root == nullptr) {
-        return -1;  
-    }
-    int leftHeight = height(root->left);
-    int rightHeight = height(root->right);
+void configurePlot(QCustomPlot &customPlot, const PlotConfig &config, const char* title, const char* xLabel, const char* yLabel) {
+    // Background color
+    customPlot.setBackground(config.backgroundColor);
+    customPlot.axisRect()->setBackground(config.backgroundColor);
 
-    return 1 + std::max(leftHeight, rightHeight);
-}
-
-int getHeightTree(Node* node, string type){
-    if(node == nullptr) return -1;
-
-    if(type == "max") return 1 + max(getHeightTree(node->left, type), getHeightTree(node->right, type)); 
-    if(type == "min") return 1 + min(getHeightTree(node->left, type), getHeightTree(node->right, type)); 
-
-    return -1;
-}
-
-void configurePlot(QCustomPlot &customPlot, const PlotConfig &config, const char* title, const char* x_label, const char* y_label) {
-    // Cor de fundo
-    customPlot.setBackground(config.background_color);
-    customPlot.axisRect()->setBackground(config.background_color);
-
-    // Configuração dos eixos
+    // Configuration of the axes
     for (auto *axis : {customPlot.xAxis, customPlot.yAxis}) {
         axis->grid()->setVisible(true);
-        axis->grid()->setPen(QPen(config.grid_color));
-        axis->setBasePen(QPen(config.text_color, 1));
-        axis->setTickPen(QPen(config.text_color, 1));
-        axis->setSubTickPen(QPen(config.text_color, 1));
-        axis->setTickLabelColor(config.text_color);
-        axis->setLabelColor(config.text_color);
+        axis->grid()->setPen(QPen(config.gridColor));
+        axis->setBasePen(QPen(config.textColor, 1));
+        axis->setTickPen(QPen(config.textColor, 1));
+        axis->setSubTickPen(QPen(config.textColor, 1));
+        axis->setTickLabelColor(config.textColor);
+        axis->setLabelColor(config.textColor);
         customPlot.xAxis->grid()->setPen(config.GridStyle);
         customPlot.yAxis->grid()->setPen(config.GridStyle);
     }
+    // Grid
 
-    // Legenda
+    customPlot.xAxis->grid()->setPen(config.gridStyle);
+    customPlot.yAxis->grid()->setPen(config.gridStyle);
+
+    // Legend
     customPlot.legend->setVisible(true);
-    customPlot.legend->setFont(config.legend_font);
-    customPlot.legend->setBrush(config.legend_brush);
-    customPlot.legend->setBorderPen(config.legend_border_pen);
-    customPlot.legend->setTextColor(config.text_color);
+    customPlot.legend->setFont(config.labelFont);
+    customPlot.legend->setBrush(config.legendBrush);
+    customPlot.legend->setBorderPen(config.legendBorderPen);
+    customPlot.legend->setTextColor(config.textColor);
     customPlot.axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop | Qt::AlignRight);
+    customPlot.legend->setRowSpacing(3);
 
-    // Título
+    // Title
     customPlot.plotLayout()->insertRow(0);
     QCPTextElement *title_1 = new QCPTextElement(
         &customPlot,
         title,
-        config.title_font
+        config.titleFont
     );
-    title_1->setTextColor(config.text_color);
+    title_1->setTextColor(config.textColor);
     customPlot.plotLayout()->addElement(0, 0, title_1);
 
     // Labels
-    customPlot.xAxis->setLabel(x_label);
-    customPlot.yAxis->setLabel(y_label);
+    customPlot.xAxis->setLabel(xLabel);
+    customPlot.yAxis->setLabel(yLabel);
+    customPlot.xAxis->setLabelFont(config.labelFont);
+    customPlot.yAxis->setLabelFont(config.labelFont);
+    customPlot.plotLayout()->setMargins(config.margins);
 }
 
 void add_graph(QCustomPlot &customPlot, QVector<double> x, QVector<double> bst, QVector<double> avl, QVector<double> rbt, const PlotConfig &config ){
@@ -121,12 +114,18 @@ void setLogScale(QCustomPlot &plot, bool logX = true, bool logY = true) {
         plot.xAxis->setScaleType(QCPAxis::stLogarithmic);
         QSharedPointer<QCPAxisTickerLog> logTickerX(new QCPAxisTickerLog);
         plot.xAxis->setTicker(logTickerX);
+        plot.xAxis->setScaleType(QCPAxis::stLogarithmic);
+        plot.xAxis->setNumberFormat("eb"); 
+        plot.xAxis->setNumberPrecision(1);
     }
 
     if (logY) {
         plot.yAxis->setScaleType(QCPAxis::stLogarithmic);
         QSharedPointer<QCPAxisTickerLog> logTickerY(new QCPAxisTickerLog);
         plot.yAxis->setTicker(logTickerY);
+        plot.yAxis->setScaleType(QCPAxis::stLogarithmic);
+        plot.yAxis->setNumberFormat("eb"); 
+        plot.yAxis->setNumberPrecision(1);
     }
 
     plot.replot();
@@ -137,10 +136,12 @@ int main(int argc, char *argv[]) {
 
     PlotConfig config; 
 
-    QCustomPlot first_plot;
-    QCustomPlot second_plot;
-    QCustomPlot third_plot;
-    QCustomPlot fourth_plot;
+    QCustomPlot firstPlot;
+    QCustomPlot secondPlot;
+    QCustomPlot thirdPlot;
+    QCustomPlot fourthPlot;
+    QCustomPlot fifthPlot;
+    QCustomPlot sixthPlot;
 
     QVector<double>  x;
     QVector<double>  AVL_1;
@@ -152,9 +153,12 @@ int main(int argc, char *argv[]) {
     QVector<double>  AVL_3;
     QVector<double>  BST_3;
     QVector<double>  RBT_3;
+    QVector<double>  x2;
+    QVector<double>  AVL_4;
+    QVector<double>  BST_4;
+    QVector<double>  RBT_4;
 
-
-    // Lendo os dados da Inserção
+    // Reading the data from the Insertion
 
     QFile InsertBST("../stats/insertResultsBST.csv");
     if (!InsertBST.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -164,20 +168,37 @@ int main(int argc, char *argv[]) {
     QTextStream in_InsertBST(&InsertBST);
 
     int index = 0;
-    double acumulado = 0;
-    double valor = 0;
+    int index2 = 0;
+    double accumulated = 0;
+    double accumulated2 = 0;
+    double CurrentValue = 0;
+    double max= 0;
+    double min = 1;
+    vector <double> TempBST;
+    vector <double> TempAVL;
+    vector <double> TempRBT;
+
     while (!in_InsertBST.atEnd()) {
         QStringList campos = in_InsertBST.readLine().split(',');
+        CurrentValue = campos[0].toDouble(); 
+        accumulated2 += CurrentValue;
+        BST_4.append(accumulated2);
+        x2.append(index2);
         if (campos[1].trimmed() == "1"){ 
             x.append(index);
             BST_1.append(campos[4].toDouble());
             BST_2.append(campos[5].toDouble());  
-            valor = campos[0].toDouble(); 
-            acumulado += valor;
-            BST_3.append(acumulado);
-            
+            accumulated += CurrentValue;
+            BST_3.append(accumulated);
+            TempBST.push_back(CurrentValue);
+            if (max < CurrentValue)
+                max = CurrentValue;
+            if (min > CurrentValue)
+                min = CurrentValue;
+
             index++;
         }
+        index2++;
     }
     InsertBST.close();
 
@@ -188,15 +209,23 @@ int main(int argc, char *argv[]) {
     }
     QTextStream in_InsertAVL(&InsertAVL);
     
-    acumulado = 0;
+    accumulated = 0;
+    accumulated2 = 0;
     while (!in_InsertAVL.atEnd()) {
         QStringList campos = in_InsertAVL.readLine().split(',');
+        CurrentValue = campos[0].toDouble(); 
+        accumulated2 += CurrentValue;
+        AVL_4.append(accumulated2);
         if (campos[1].trimmed() == "1"){ 
             AVL_1.append(campos[4].toDouble()); 
             AVL_2.append(campos[5].toDouble()); 
-            valor = campos[0].toDouble(); 
-            acumulado += valor;
-            AVL_3.append(acumulado);
+            accumulated += CurrentValue;
+            AVL_3.append(accumulated);
+            TempAVL.push_back(CurrentValue);
+            if (max < CurrentValue)
+                max = CurrentValue;
+            if (min > CurrentValue)
+                min = CurrentValue;
         }
     }
     InsertAVL.close();
@@ -208,29 +237,60 @@ int main(int argc, char *argv[]) {
     }
     QTextStream in_InsertRBT(&InsertRBT);
 
-    acumulado = 0;
+    accumulated = 0;
+    accumulated2 = 0;
     while (!in_InsertRBT.atEnd()) {
         QStringList campos = in_InsertRBT.readLine().split(',');
+        CurrentValue = campos[0].toDouble(); 
+        accumulated2 += CurrentValue;
+        RBT_4.append(accumulated2);
         if (campos[1].trimmed() == "1"){ 
             RBT_1.append(campos[4].toDouble()); 
-            RBT_2.append(campos[5].toDouble()); 
-            valor = campos[0].toDouble(); 
-            acumulado += valor;
-            RBT_3.append(acumulado);
+            RBT_2.append(campos[5].toDouble());  
+            accumulated += CurrentValue;
+            RBT_3.append(accumulated);
+            TempRBT.push_back(CurrentValue);
+            if (max < CurrentValue)
+                max = CurrentValue;
+            if (min > CurrentValue)
+                min = CurrentValue;
         }
     }
     InsertRBT.close();
 
-    // Lendo os dados da Procura
+    int Size = 50;
+    QVector<double> x3(Size);
+    QVector<double> AVL_5(Size);
+    QVector<double> BST_5(Size);
+    QVector<double> RBT_5(Size);
+
+    double logMin = std::log10(min);
+    double logMax = std::log10(max);
+    double bin = (logMax - logMin) / Size;
+
+    for (int i = 0; i < Size; ++i)
+        x3[i] = std::pow(10, logMin + bin * (i + 0.5));  
+
+    for (size_t i = 0; i < TempBST.size(); ++i) {
+        int idxBST = std::min(std::max(static_cast<int>((std::log10(TempBST[i]) - logMin) / bin), 0), Size - 1);
+        int idxAVL = std::min(std::max(static_cast<int>((std::log10(TempAVL[i]) - logMin) / bin), 0), Size - 1);
+        int idxRBT = std::min(std::max(static_cast<int>((std::log10(TempRBT[i]) - logMin) / bin), 0), Size - 1);
+
+        BST_5[idxBST]++;
+        AVL_5[idxAVL]++;
+        RBT_5[idxRBT]++;
+    }
+
+    // Reading the search data
 
     int MaxHeight = static_cast<int>(BST_1.last());
 
-    QVector<double> x2(MaxHeight,0);
-    for (int i = 0; i < MaxHeight; ++i) x2[i] = i + 1;
+    QVector<double> x4(MaxHeight,0);
+    for (int i = 0; i < MaxHeight; ++i) x4[i] = i + 1;
 
-    QVector<double>  AVL_4(MaxHeight);
-    QVector<double>  BST_4(MaxHeight);
-    QVector<double>  RBT_4(MaxHeight);
+    QVector<double>  AVL_6(MaxHeight);
+    QVector<double>  BST_6(MaxHeight);
+    QVector<double>  RBT_6(MaxHeight);
 
     QFile SearchBST("../stats/searchResultsBST.csv");
     if (!SearchBST.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -244,8 +304,8 @@ int main(int argc, char *argv[]) {
     while (!in_SearchBST.atEnd()) {
         QStringList campos = in_SearchBST.readLine().split(',');
         CurrentIndex = campos[2].toInt() - 1;
-        if (CurrentIndex >= 0 && CurrentIndex < BST_4.size())
-            BST_4[CurrentIndex]++;
+        if (CurrentIndex >= 0 && CurrentIndex < BST_6.size())
+            BST_6[CurrentIndex]++;
         }
     SearchBST.close();
 
@@ -259,8 +319,8 @@ int main(int argc, char *argv[]) {
     while (!in_SearchAVL.atEnd()) {
         QStringList campos = in_SearchAVL.readLine().split(',');
         CurrentIndex = campos[2].toInt() - 1;
-        if (CurrentIndex >= 0 && CurrentIndex < AVL_4.size())
-            AVL_4[CurrentIndex]++;
+        if (CurrentIndex >= 0 && CurrentIndex < AVL_6.size())
+            AVL_6[CurrentIndex]++;
         }
     SearchAVL.close();
 
@@ -274,36 +334,46 @@ int main(int argc, char *argv[]) {
     while (!in_SearchRBT.atEnd()) {
         QStringList campos = in_SearchRBT.readLine().split(',');
         CurrentIndex = campos[2].toInt() - 1;
-        if (CurrentIndex >= 0 && CurrentIndex < RBT_4.size())
-            RBT_4[CurrentIndex]++;
+        if (CurrentIndex >= 0 && CurrentIndex < RBT_6.size())
+            RBT_6[CurrentIndex]++;
     }
     SearchRBT.close();
 
-    // Adicionando os dados
-    add_graph(first_plot, x, BST_1, AVL_1, RBT_1, config);
-    setLogScale(first_plot,true,false);
-    add_graph(second_plot, x, BST_2, AVL_2, RBT_2, config);
-    setLogScale(second_plot,true,false);
-    add_graph(third_plot, x, BST_3, AVL_3, RBT_3, config);
-    add_graph(fourth_plot, x2, BST_4, AVL_4, RBT_4, config);
+    // Adding the data
+    add_graph(firstPlot, x, BST_1, AVL_1, RBT_1, config);
+    setLogScale(firstPlot,true,false);
+    add_graph(secondPlot, x, BST_2, AVL_2, RBT_2, config);
+    setLogScale(secondPlot,true,false);
+    add_graph(thirdPlot, x, BST_3, AVL_3, RBT_3, config);
+    add_graph(fourthPlot, x2, BST_4, AVL_4, RBT_4, config);
+    setLogScale(fifthPlot,true,false);
+    add_graph(fifthPlot, x3, BST_5, AVL_5, RBT_5, config);
+    add_graph(sixthPlot, x4, BST_6, AVL_6, RBT_6, config);
 
-    // Aplicar configuração de estilo
-    configurePlot(first_plot, config,"Altura das árvores durante a inserção","Número de palavras únicas adicionadas","Altura" );
-    configurePlot(second_plot, config,"Profundidade da folha mais rasa durante a inserção","Número de palavras únicas adicionadas","Profundidade" );
-    configurePlot(third_plot, config, "Soma dos tempos de execução durante a inserção","Número de palavras inseridas","Soma dos tempos de execução");
-    configurePlot(fourth_plot, config, "Distribuição do número de comparações por número de palavras","Número de comparações","Número de palavras");
+    // Apply style configuration
+    configurePlot(firstPlot, config,"Tree Height During Insertions","Number of Unique Words Inserted", "Tree Height");
+    configurePlot(secondPlot, config,"Shallowest Leaf Depth During Insertions","Number of Unique Words Inserted","Minimum Depth" );
+    configurePlot(thirdPlot, config, "Cumulative Insertion Time","Number of Words Inserted","Total Time (ms)");
+    configurePlot(fourthPlot, config, "Total Insertion Time per Word","Number of Words Read","Total Time (ms)");
+    configurePlot(fifthPlot, config, "Execution Time Distribution (Insertions)", "Insertion Time (ms)", "Frequency");
+    configurePlot(sixthPlot, config, "Comparison Count Distribution per Word", "Number of Comparisons", "Frequency");
 
-    // Ajustar escalas
-    first_plot.rescaleAxes();
-    second_plot.rescaleAxes();
-    third_plot.rescaleAxes();
-    fourth_plot.rescaleAxes();
+    // Adjust scales
+    firstPlot.rescaleAxes();
+    secondPlot.rescaleAxes();
+    thirdPlot.rescaleAxes();
+    fourthPlot.rescaleAxes();
+    fifthPlot.rescaleAxes();
+    fifthPlot.xAxis->setRange(min, 0.01);
+    sixthPlot.rescaleAxes();
 
-    // Salvar em PNG
-    first_plot.savePng("Graph_1_10103.png", 1000, 600);
-    second_plot.savePng("Graph_2_10103.png", 1000, 600);
-    third_plot.savePng("Graph_3_10103.png", 1000, 600);
-    fourth_plot.savePng("Graph_4_10103.png", 1000, 600);
+    // Save as PNG
+    firstPlot.savePng("Graph_1_10103.png", 1000, 600);
+    secondPlot.savePng("Graph_2_10103.png", 1000, 600);
+    thirdPlot.savePng("Graph_3_10103.png", 1000, 600);
+    fourthPlot.savePng("Graph_4_10103.png", 1000, 600);
+    fifthPlot.savePng("Graph_5_10103.png", 1000, 600);
+    sixthPlot.savePng("Graph_6_10103.png", 1000, 600);
 
     return 0;
 }
