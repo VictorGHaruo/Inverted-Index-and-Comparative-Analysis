@@ -1,26 +1,18 @@
 ifndef path
-path = ../data/
+path = ..$(S)data$(S)
 endif
 
 ifndef num
-	ifeq ($(path), ../data/)
+	ifeq ($(path), ..$(S)data$(S))
 	num = 10103
 	endif
-	ifeq ($(path), ../data2/)
+	ifeq ($(path), ..$(S)data2$(S))
 	num = 9999
 	endif
 endif
 
 ifndef cmd
 cmd = stats
-endif
-
-ifeq ($(OS),Windows_NT)
-RM = cmd /C "del /Q"
-EXT = .exe
-else
-RM = rm -rf
-EXT =
 endif
 
 FLAGS = -Wall -Wextra
@@ -59,7 +51,13 @@ bin/%.o: %.cpp
 	g++ $(FLAGS) -c $< -o $@
 
 clean:
-	$(RM) bin/*.o main_bst$(EXT) main_avl$(EXT) main_rbt$(EXT)
+	rm bin/*.o main_bst main_avl main_rbt
+
+cleanw:
+	cmd /C "del /Q" bin\\*.o main_bst.exe main_avl.exe main_rbt.exe
 
 cleancsv:
-	$(RM) ../stats/*.csv
+	rm ../stats/*.csv
+
+cleancsvw:
+	rm ..\stats\*.csv

@@ -29,8 +29,8 @@ bool validate(int argc, char* argv[], string* command, vector<vector<string>>* t
     if (argc != 4) {
         cerr << "Usage: " << argv[0] << " <command> <n_docs> <directory_path>" << endl;
         cerr << "<command> : 'search' or 'stats'" << endl;
-        cerr << "<n_dcos> : a positive integer number" << endl;
-        cerr << "<directory_path> : exemple '../data/' " << endl;
+        cerr << "<n_docs> : a positive integer number" << endl;
+        cerr << "<directory_path> : example '../data/' " << endl;
         return false;
     }
     *command = argv[1];
