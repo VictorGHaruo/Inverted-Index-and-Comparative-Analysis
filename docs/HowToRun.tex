@@ -12,6 +12,15 @@ Ensure the following packages are installed on your system:
     \item Qt5 development libraries
 \end{itemize}
 
+\subsection{Libraries}
+\begin{itemize}
+    \item <iostream>
+    \item <vector>
+    \item <fstream>
+    \item <string>
+    \item <chrono>
+\end{itemize}
+
 \subsection{Setup}
 
 \subsubsection{1. Install Dependencies}
@@ -48,9 +57,11 @@ mv data2/data/* data2/
 
 \subsection{Compilation \& Execution}
 
-This project uses a \texttt{Makefile} located in the \texttt{src/} directory to simplify compilation and execution. You can run the program with default settings or provide custom parameters.
+This project includes a \texttt{Makefile} in the \texttt{src/} directory to streamline compilation and execution. The program can be run with default settings or custom parameters, either manually or automatically via the \texttt{Makefile}.
 
-\subsubsection{Using the Makefile}
+\subsection{Running Manually}
+
+\subsubsection{Running Using the Makefile}
 
 The following commands should be run from the project's root directory.
     
