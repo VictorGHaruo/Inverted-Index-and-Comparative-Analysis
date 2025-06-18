@@ -5,12 +5,12 @@
 #include <QStringList>
 #include <QDebug>
 #include <cmath>
+#include <algorithm>
+#include <random>
+#include <QRandomGenerator>
+#include <iostream>
 #include "qcustomplot.h"
-#include "../scr/tree_utils.h"
-#include "../scr/data.h"
-#include "../scr/avl.h"
-#include "../scr/bst.h"
-#include "../scr/rbt.h"
+
 using namespace std;
 
 struct PlotConfig {
@@ -141,6 +141,7 @@ int main(int argc, char *argv[]) {
     QCustomPlot fourthPlot;
     QCustomPlot fifthPlot;
     QCustomPlot sixthPlot;
+    QCustomPlot seventhPlot;
 
     QVector<double>  x;
     QVector<double>  AVL_1;
@@ -149,10 +150,11 @@ int main(int argc, char *argv[]) {
     QVector<double>  AVL_2;
     QVector<double>  BST_2;
     QVector<double>  RBT_2;
+    QVector<double>  x2;
     QVector<double>  AVL_3;
     QVector<double>  BST_3;
     QVector<double>  RBT_3;
-    QVector<double>  x2;
+    QVector<double>  x3;
     QVector<double>  AVL_4;
     QVector<double>  BST_4;
     QVector<double>  RBT_4;
@@ -168,6 +170,8 @@ int main(int argc, char *argv[]) {
 
     int index = 0;
     int index2 = 0;
+    int index3 = 0;
+    int intervaslSize = 100;
     double accumulated = 0;
     double accumulated2 = 0;
     double CurrentValue = 0;
@@ -182,20 +186,24 @@ int main(int argc, char *argv[]) {
         CurrentValue = campos[0].toDouble(); 
         accumulated2 += CurrentValue;
         BST_4.append(accumulated2);
-        x2.append(index2);
+        x3.append(index2);
         if (campos[1].trimmed() == "1"){ 
             x.append(index);
+            index++;
             BST_1.append(campos[4].toDouble());
             BST_2.append(campos[5].toDouble());  
-            accumulated += CurrentValue;
-            BST_3.append(accumulated);
+            accumulated += campos[2].toDouble();
+            if (index % intervaslSize == 0){
+                BST_3.append(accumulated/intervaslSize);
+                x2.append(index3);
+                accumulated = 0;
+                index3++;
+            }
             TempBST.push_back(CurrentValue);
             if (max < CurrentValue)
                 max = CurrentValue;
             if (min > CurrentValue)
                 min = CurrentValue;
-
-            index++;
         }
         index2++;
     }
@@ -210,16 +218,21 @@ int main(int argc, char *argv[]) {
     
     accumulated = 0;
     accumulated2 = 0;
+    index = 0;
     while (!in_InsertAVL.atEnd()) {
         QStringList campos = in_InsertAVL.readLine().split(',');
         CurrentValue = campos[0].toDouble(); 
         accumulated2 += CurrentValue;
         AVL_4.append(accumulated2);
         if (campos[1].trimmed() == "1"){ 
+            index++;
             AVL_1.append(campos[4].toDouble()); 
             AVL_2.append(campos[5].toDouble()); 
-            accumulated += CurrentValue;
-            AVL_3.append(accumulated);
+            accumulated += campos[2].toDouble();
+            if (index % intervaslSize == 0){
+                AVL_3.append(accumulated/intervaslSize);
+                accumulated = 0;
+            }
             TempAVL.push_back(CurrentValue);
             if (max < CurrentValue)
                 max = CurrentValue;
@@ -238,16 +251,21 @@ int main(int argc, char *argv[]) {
 
     accumulated = 0;
     accumulated2 = 0;
+    index = 0;
     while (!in_InsertRBT.atEnd()) {
         QStringList campos = in_InsertRBT.readLine().split(',');
         CurrentValue = campos[0].toDouble(); 
         accumulated2 += CurrentValue;
         RBT_4.append(accumulated2);
         if (campos[1].trimmed() == "1"){ 
+            index++;
             RBT_1.append(campos[4].toDouble()); 
             RBT_2.append(campos[5].toDouble());  
-            accumulated += CurrentValue;
-            RBT_3.append(accumulated);
+            accumulated += campos[2].toDouble();
+            if (index % intervaslSize == 0){
+                RBT_3.append(accumulated/intervaslSize);
+                accumulated = 0;
+            }
             TempRBT.push_back(CurrentValue);
             if (max < CurrentValue)
                 max = CurrentValue;
@@ -258,22 +276,22 @@ int main(int argc, char *argv[]) {
     InsertRBT.close();
 
     int Size = 100;
-    QVector<double> x3(Size);
+    QVector<double> x4(Size);
     QVector<double> AVL_5(Size);
     QVector<double> BST_5(Size);
     QVector<double> RBT_5(Size);
 
-    double logMin = std::log10(min);
-    double logMax = std::log10(max);
+    double logMin = log10(min);
+    double logMax = log10(max);
     double bin = (logMax - logMin) / Size;
 
     for (int i = 0; i < Size; ++i)
-        x3[i] = std::pow(10, logMin + bin * (i + 0.5));  
+        x4[i] = std::pow(10, logMin + bin * (i + 0.5));  
 
     for (size_t i = 0; i < TempBST.size(); ++i) {
-        int idxBST = std::min(std::max(static_cast<int>((std::log10(TempBST[i]) - logMin) / bin), 0), Size - 1);
-        int idxAVL = std::min(std::max(static_cast<int>((std::log10(TempAVL[i]) - logMin) / bin), 0), Size - 1);
-        int idxRBT = std::min(std::max(static_cast<int>((std::log10(TempRBT[i]) - logMin) / bin), 0), Size - 1);
+        int idxBST = std::min(std::max(static_cast<int>((log10(TempBST[i]) - logMin) / bin), 0), Size - 1);
+        int idxAVL = std::min(std::max(static_cast<int>((log10(TempAVL[i]) - logMin) / bin), 0), Size - 1);
+        int idxRBT = std::min(std::max(static_cast<int>((log10(TempRBT[i]) - logMin) / bin), 0), Size - 1);
 
         BST_5[idxBST]++;
         AVL_5[idxAVL]++;
@@ -284,12 +302,19 @@ int main(int argc, char *argv[]) {
 
     int MaxHeight = static_cast<int>(BST_1.last());
 
-    QVector<double> x4(MaxHeight,0);
-    for (int i = 0; i < MaxHeight; ++i) x4[i] = i + 1;
+    QVector<double> x5(MaxHeight,0);
+    for (int i = 0; i < MaxHeight; ++i) x5[i] = i + 1;
 
     QVector<double>  AVL_6(MaxHeight);
     QVector<double>  BST_6(MaxHeight);
     QVector<double>  RBT_6(MaxHeight);
+    QVector<double> x6;
+    QVector<double>  AVL_7;
+    QVector<double>  BST_7;
+    QVector<double>  RBT_7;
+    QVector<double>  AVL_8;
+    QVector<double>  BST_8;
+    QVector<double>  RBT_8;
 
     QFile SearchBST("../stats/searchResultsBST.csv");
     if (!SearchBST.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -299,13 +324,33 @@ int main(int argc, char *argv[]) {
     QTextStream in_SearchBST(&SearchBST);
 
     int CurrentIndex;
+    accumulated = 0;
 
+    index3 = 0;
+    index = 0;
     while (!in_SearchBST.atEnd()) {
         QStringList campos = in_SearchBST.readLine().split(',');
         CurrentIndex = campos[2].toInt() - 1;
+        BST_7.append(CurrentIndex);
         if (CurrentIndex >= 0 && CurrentIndex < BST_6.size())
             BST_6[CurrentIndex]++;
         }
+    auto rng = QRandomGenerator::global();
+    shuffle(BST_7.begin(), BST_7.end(), *rng);
+
+    for (int i = 0; i < BST_7.size(); i++){
+        CurrentIndex = BST_7[index];
+        accumulated += CurrentIndex;
+        index++;
+        if (index % intervaslSize == 0){ 
+            BST_8.append(accumulated/intervaslSize);
+            x6.append(index3);
+            accumulated = 0 ;
+            index3++;
+        }
+    }
+
+    
     SearchBST.close();
 
     QFile SearchAVL("../stats/searchResultsAVL.csv");
@@ -315,12 +360,28 @@ int main(int argc, char *argv[]) {
     }
     QTextStream in_SearchAVL(&SearchAVL);
 
+    index = 0;
+    accumulated= 0;
+
     while (!in_SearchAVL.atEnd()) {
         QStringList campos = in_SearchAVL.readLine().split(',');
         CurrentIndex = campos[2].toInt() - 1;
+        AVL_7.append(CurrentIndex);
         if (CurrentIndex >= 0 && CurrentIndex < AVL_6.size())
             AVL_6[CurrentIndex]++;
         }
+
+    shuffle(AVL_7.begin(), AVL_7.end(), *rng);
+
+    for (int i = 0; i < AVL_7.size(); i++){
+        CurrentIndex = AVL_7[index];
+        accumulated += CurrentIndex;
+        index++;
+        if (index % intervaslSize == 0){ 
+            AVL_8.append(accumulated/intervaslSize);
+            accumulated = 0 ;
+        }
+    }
     SearchAVL.close();
 
     QFile SearchRBT("../stats/searchResultsRBT.csv");
@@ -330,11 +391,27 @@ int main(int argc, char *argv[]) {
     }
     QTextStream in_SearchRBT(&SearchRBT);
 
+    index = 0;
+    accumulated = 0;
+
     while (!in_SearchRBT.atEnd()) {
         QStringList campos = in_SearchRBT.readLine().split(',');
         CurrentIndex = campos[2].toInt() - 1;
+        RBT_7.append(CurrentIndex);
         if (CurrentIndex >= 0 && CurrentIndex < RBT_6.size())
             RBT_6[CurrentIndex]++;
+    }
+
+    shuffle(RBT_7.begin(), RBT_7.end(), *rng);
+
+    for (int i = 0; i < RBT_7.size(); i++){
+        CurrentIndex = RBT_7[index];
+        accumulated += CurrentIndex;
+        index++;
+        if (index % intervaslSize == 0){ 
+            RBT_8.append(accumulated/intervaslSize);
+            accumulated = 0 ;
+        }
     }
     SearchRBT.close();
 
@@ -343,19 +420,22 @@ int main(int argc, char *argv[]) {
     setLogScale(firstPlot,true,false);
     add_graph(secondPlot, x, BST_2, AVL_2, RBT_2, config);
     setLogScale(secondPlot,true,false);
-    add_graph(thirdPlot, x, BST_3, AVL_3, RBT_3, config);
-    add_graph(fourthPlot, x2, BST_4, AVL_4, RBT_4, config);
+    add_graph(thirdPlot, x2, BST_3, AVL_3, RBT_3, config);
+    add_graph(fourthPlot, x3, BST_4, AVL_4, RBT_4, config);
     setLogScale(fifthPlot,true,false);
-    add_graph(fifthPlot, x3, BST_5, AVL_5, RBT_5, config);
-    add_graph(sixthPlot, x4, BST_6, AVL_6, RBT_6, config);
+    add_graph(fifthPlot, x4, BST_5, AVL_5, RBT_5, config);
+    add_graph(sixthPlot, x5, BST_6, AVL_6, RBT_6, config);
+    add_graph(seventhPlot, x6, BST_8, AVL_8, RBT_8, config);
+
 
     // Apply style configuration
     configurePlot(firstPlot, config,"Tree Height During Insertions","Number of Unique Words Inserted", "Tree Height");
     configurePlot(secondPlot, config,"Shallowest Leaf Depth During Insertions","Number of Unique Words Inserted","Minimum Depth" );
-    configurePlot(thirdPlot, config, "Cumulative Insertion Time","Number of Words Inserted","Total Time (ms)");
+    configurePlot(thirdPlot, config, "Average number of comparisons (for every 100 insertions)", "Number of Unique Words Inserted(x100)", "Average");
     configurePlot(fourthPlot, config, "Total Insertion Time per Word","Number of Words Read","Total Time (ms)");
     configurePlot(fifthPlot, config, "Execution Time Distribution (Insertions)", "Insertion Time (ms)", "Frequency");
     configurePlot(sixthPlot, config, "Comparison Count Distribution per Word", "Number of Comparisons", "Frequency");
+    configurePlot(seventhPlot, config, "Average number of comparisons (for every 100 searchs)", "Number of Words(x100)", "Number of Comparisons");
 
     // Adjust scales
     firstPlot.rescaleAxes();
@@ -365,6 +445,7 @@ int main(int argc, char *argv[]) {
     fifthPlot.rescaleAxes();
     fifthPlot.xAxis->setRange(min, 0.01); // Cutting out the outliers
     sixthPlot.rescaleAxes();
+    seventhPlot.rescaleAxes();
 
     // Save as PDF
 
@@ -374,12 +455,14 @@ int main(int argc, char *argv[]) {
     QString title4 = "graphs/Graph_4_" + QString::number(index) + ".pdf";
     QString title5 = "graphs/Graph_5_" + QString::number(index) + ".pdf";
     QString title6 = "graphs/Graph_6_" + QString::number(index) + ".pdf";
+    QString title7 = "graphs/Graph_7_" + QString::number(index) + ".pdf";
     firstPlot.savePdf(title1,1000, 600);
     secondPlot.savePdf(title2, 1000, 600);
     thirdPlot.savePdf(title3, 1000, 600);
     fourthPlot.savePdf(title4, 1000, 600);
     fifthPlot.savePdf(title5, 1000, 600);
     sixthPlot.savePdf(title6, 1000, 600);
+    seventhPlot.savePdf(title7, 1000, 600);
 
     return 0;
 }
