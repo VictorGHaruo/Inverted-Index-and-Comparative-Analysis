@@ -52,12 +52,12 @@ The project uses a flexible Makefile that allows configuring different parameter
 
 ### Configurable Parameters
 
-| Parameter | Description | Default | Arguments | Example |
-| :---: | :--- | :---: | :--- | :---: |
-| `tree` | Data structure to use | `bst` | bst, avl, rbt | `tree=avl` |
-| `num` | Number of documents to process | `10103` | 1, 2, 3, ... | `num=1000` |
-| `cmd` | Command to execute | `search` | search, stats | `cmd=stats` |
-| `path` | Path to the documents folder | `../data/` | `../data/`, `../data2/` | `path=../data2/` |
+| Parameter | Description | Arguments | Example |
+| :---: | :--- | :--- | :---: |
+| `tree` | Data structure to use | bst, avl, rbt | `tree=avl` |
+| `num` | Number of documents to process | 1, 2, 3, ... | `num=1000` |
+| `cmd` | Command to execute | search, stats | `cmd=stats` |
+| `path` | Path to the documents folder | `../data/`, `../data2/` | `path=../data2/` |
 
 ### Usage Examples
 
