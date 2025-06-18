@@ -34,7 +34,6 @@ void printRBTAux(Node* root, const std::string &prefix, bool isLast){
 void printRBT(BinaryTree* tree){
 
     Node* n = tree->root;
-    int counter = 0;
     
     if (n != nullptr) {
         printRBTAux(n, "", true);
@@ -96,7 +95,7 @@ int main(){
          ? "None (this node is the root)" 
          : result_one.parent->word) << endl;
     cout << "Documents IDs: ";
-    for (int i = 0; i < result_one.documentIds.size(); i++){
+    for (int i = 0; i < static_cast<int>(result_one.documentIds.size()); i++){
         cout << result_one.documentIds[i]<< " ";
     }
     cout << endl << endl;
@@ -113,7 +112,7 @@ int main(){
          ? "None (this node is the root)" 
          : result_two.parent->word) << endl;
     cout << "Documents IDs: ";
-    for (int i = 0; i < result_two.documentIds.size(); i++){
+    for (int i = 0; i < static_cast<int>(result_two.documentIds.size()); i++){
         cout << result_two.documentIds[i]<< " ";
     }
     cout << endl << endl;
