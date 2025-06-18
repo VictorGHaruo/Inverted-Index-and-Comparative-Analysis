@@ -192,8 +192,8 @@ namespace RBT {
         result.numComparisons = searchNode.numComparisons + 1 + comp; 
         result.executionTime = time;
         if(searchNode.found == 0){
-            result.maxHeight = getMinOrMaxPath(tree->root, "max");
-            result.minHeight = getMinOrMaxPath(tree->root, "min");
+            result.maxHeight = getMinOrMaxPath(tree->root, true);
+            result.minHeight = getMinOrMaxPath(tree->root, false);
         } else{
             result.maxHeight = 0;
             result.minHeight = 0;            
