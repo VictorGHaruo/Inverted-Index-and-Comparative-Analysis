@@ -28,6 +28,11 @@ Since BST, AVL, and Red-Black trees are all binary trees, they naturally share s
 
 \end{itemize}
 
+\textbf{\textit{Note:}} The functions also count the number of comparisons. For the search operation, one comparison is added each time the algorithm decides which side to traverse. For the insert operation, this varies by tree type:
 
+\begin{itemize}
+    \item In a BST, it's the number of comparisons made during the search, plus one final comparison to decide where to insert the node.
+    \item In AVL and RBT, it's the same as in BST, with an additional comparison each time the algorithm backtracks to an ancestor node.
+\end{itemize}
 
 

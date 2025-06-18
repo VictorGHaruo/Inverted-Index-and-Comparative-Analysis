@@ -41,7 +41,7 @@ int main(){
     cout << "Number of Comparisons:" << result_one.numComparisons << endl;
     cout << "Parent: " << result_one.parent->word << endl;
     cout << "Documents IDs: ";
-    for (int i = 0; i < result_one.documentIds.size(); i++){
+    for (int i = 0; i < static_cast<int>(result_one.documentIds.size()); i++){
         cout << result_one.documentIds[i]<< " ";
     }
     cout << endl << endl;
@@ -54,7 +54,7 @@ int main(){
     cout << "Number of Comparisons:" << result_two.numComparisons << endl;
     cout << "Parent: " << result_two.parent->word << endl;
     cout << "Documents IDs: ";
-    for (int i = 0; i < result_two.documentIds.size(); i++){
+    for (int i = 0; i < static_cast<int>(result_two.documentIds.size()); i++){
         cout << result_two.documentIds[i]<< " ";
     }
     cout << endl << endl;

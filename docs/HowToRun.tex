@@ -23,13 +23,14 @@ Ensure the following packages are installed on your system:
 
 \subsection{Setup}
 
-\subsubsection{1. Install Dependencies}
+\subsubsection{Install Dependencies}
 
 On Debian-based systems like Ubuntu, run the following commands to update your package lists and install the required dependencies:
 
 \begin{minted}[frame=single, bgcolor=lightgray!50]{bash}
 # Update package lists
 sudo apt update
+sudo apt upgrade
 
 # Install make and unzip
 sudo apt install make unzip
@@ -38,7 +39,7 @@ sudo apt install make unzip
 sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools -y 
 \end{minted}
 
-\subsubsection{2. Prepare the Datasets}
+\subsubsection{Prepare the Datasets}
 
 The project datasets are provided as compressed \texttt{.zip} files. Due to how they are archived, unzipping them creates a nested directory structure (e.g., \texttt{data/data/}). The commands below will unzip the archives and move the files into their correct locations.
 
@@ -57,50 +58,77 @@ mv data2/data/* data2/
 
 \subsection{Compilation \& Execution}
 
-This project includes a \texttt{Makefile} in the \texttt{src/} directory to streamline compilation and execution. The program can be run with default settings or custom parameters, either manually or automatically via the \texttt{Makefile}.
+This project includes a \texttt{Makefile} in the \texttt{src/} directory to streamline compilation and execution. The program can be run with custom parameters, either manually or automatically via the \texttt{Makefile}.
 
-\subsection{Running Manually}
+
+\begin{minted}[frame=single, bgcolor=lightgray!50]{bash}
+#Compile all the files to run the trees:
+(cd scr/ ; make)
+\end{minted}
+
+\subsubsection{Running Manually}
+The following commands should be run from the project’s root directory.
+\begin{minted}[frame=single, bgcolor=lightgray!50]{bash}
+#Compile all the files to run the trees (*substitute tree_name with a tree name):
+(cd scr/ ; ./main_tree_name <command> <n_docs> <directory_path>)
+
+#Example
+(cd scr/ ; ./main_bst stats 10 ../data2/)
+
+\end{minted}
 
 \subsubsection{Running Using the Makefile}
 
 The following commands should be run from the project's root directory.
     
     \begin{minted}[frame=single, bgcolor=lightgray!50]{bash}
-#To run with default settings:
-(cd scr/ ; make)
-
-#To specify the number of documents (uses default BST tree):
-(cd scr/ ; make num=n)
     
-#To run with fully custom parameters:
+#To run with Makefile:
 (cd scr/ ; make tree=tree path="../data_folder/" num=num cmd=stats)
+
+#Example:
+(cd scr/ ; make tree=bst path="../data2/" num=100 cmd=stats)
+
 
 #Delete object files and executables: 
 (cd scr/ ; make clean)
+
+#Delete all object(data, i.e .CSV .txt) files and executables created by the code.
+(cd scr/ ; make cleanall)
     \end{minted}
 
+\textbf{Additionally:} When you run the code, with stats command there a few option to run:
+
+\begin{enumerate}
+    \item Quit and Save the Stats in a csv.
+    \item Print the Tree
+    \item Save the Print in a ".txt"
+    \item Print Index 
+    \item Save the Printed Index
+\end{enumerate}
 
 
-The following parameters can be passed to the \texttt{make} command to customize execution.
+\subsection{Parameters}
+The following parameters can be passed to the \texttt{make} command and the manual way to customize execution.
 
 \begin{table}[H]
 \centering
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{|c|>{\centering\arraybackslash}p{6cm}|c|c|c|} 
 \hline
-\textbf{Parameter} & \textbf{Description} & \textbf{Default} & \textbf{Arguments} & \textbf{Example} \\
+\textbf{Parameter} & \textbf{Description} & \textbf{Arguments} & \textbf{Example} \\
 \hline
-\texttt{tree} & Data structure to use & \texttt{bst} & bst, avl, rbt & \texttt{tree=avl} \\
-\texttt{num} & Number of documents to process & \texttt{10103} & 1, 2, 3, ... & \texttt{num=1000} \\
-\texttt{cmd} & Command to execute & \texttt{search} & search, stats & \texttt{cmd=stats} \\
-\texttt{path} & Path to the documents folder & \texttt{../data/} & \texttt{../data/}, \texttt{../data2/} & \texttt{path=../data2/} \\
+\texttt{tree} & Data structure to use & bst, avl, rbt & \texttt{tree=avl} \\
+\texttt{num} & Number of documents to process & 1, 2, 3, ... & \texttt{num=1000} \\
+\texttt{cmd} & Command to execute & search, stats & \texttt{cmd=stats} \\
+\texttt{path} & Path to the documents folder & \texttt{../data/}, \texttt{../data2/} & \texttt{path=../data2/} \\
 \hline
 \end{tabular}
 \caption{Makefile Parameters}
 \label{tab:config_params}
 \end{table}
 
-\textbf{Note:} If parameters are not specified, the program will default to using the \textbf{BST} structure with all \textbf{10103} documents from the \texttt{data/} folder and will execute the \texttt{search} command.
+\textbf{Note:} The default command is "stats". If you don't specify the number of files, all files will be used by default. Make sure to provide the correct file path.
 
 \subsection{Plot Graphs}
 
@@ -111,4 +139,30 @@ The graphs will be created on the plots folder.
 #Compiling files to plot graph
 (cd plots && qmake && make && ./plot)
     \end{minted}
+
+\textbf{Note:} To plot the graphs, you must have the .csv file containing the data. You can generate this file by running the tree code in stats mode and selecting the first option.
+
+\subsection{Tests}
+
+\subsubsection{Running Using Makefile}
+\begin{minted}[frame=single, bgcolor=lightgray!50]{bash}
+#Compile all the files to run the all trees tests:
+(cd scr/ ; make test)
+
+#Run the tests for tree_name (*substitute with tree name)
+(cd scr/ ; make test tree=tree_name)
+
+#Example
+(cd scr/ ; make test tree=bst)
+\end{minted}
+
+\subsubsection{Running Manually}
+
+\begin{minted}[frame=single, bgcolor=lightgray!50]{bash}
+#Compile all the files to run the all trees tests:
+(cd scr/ ; ./test_name_tree)
+
+#Example
+(cd scr/ ; ./test_bst)
+\end{minted}
 
