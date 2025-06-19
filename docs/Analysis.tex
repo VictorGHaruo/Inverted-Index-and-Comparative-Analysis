@@ -3,14 +3,43 @@
 The analysis of the first dataset is more comprehensive, with tables and illustrative graphs for different 
 numbers of documents. In contrast, the analysis of the second dataset is more limited due to constraints that 
 will be discussed shortly, which hindered the generation of results for all scenarios.
+
+\subsection{Available statistics for Analysis}
+
+The available statistics for the analyses are as follows:
+
+\begin{minted}[frame=single, bgcolor=lightgray!50]{bash}
+./main_rbt stats 9999 ../data2/
+
+Welcome to the CLI - Stats!
+The stats were: 
+- 199864 different words were added.
+- Height of longest path and Trees height: 21
+- Height of shortest path : 12
+
+Insertion: 
+- Total time : 35395.2ms = 35.3952s
+- Average time : 0.00114395ms = 1.14395e-06s
+- Max time : 0.658207ms = 0.000658207s
+- Min time : 0.000113ms = 1.13e-07s
+- Total number of comparisons : 433630372
+
+Search: 
+- Total time to search for all the words : 99.3621ms = 0.0993621s
+- Average time : 0.000497149ms = 4.97149e-07s
+- Max time : 0.004791ms = 4.791e-06s
+- Min time : 4.9e-05ms = 4.9e-08s
+- Total number of comparisons : 3418731
+
+\end{minted}
+
 \subsection{Analysis for First dataset}
 
  \subsubsection{Insertion Performance}
 
  Table \ref{tab:insercao_completa} presents performance metrics for insertion operations,
  for different quantities of documents ($n$), where \textbf{Time (s)} measures the total duration of the process, \textbf{Comparisons} counts the total number
- of comparison operations between nodes, and \textbf{Relative Efficiency} indicates the comparative gain
- in relation to the BST.
+ of comparison operations between nodes, and \textbf{Relative Efficiency} indicates the gain in the number of comparisons relative to the BST.
 
  \begin{table}[H]
      \centering
@@ -127,7 +156,8 @@ Despite being the most balanced tree, the AVL has the highest average number of 
  comparisons by 26-28\% relative to the BST across all scales. This optimization is directly reflected in the time:
  the AVL and RBT maintain a temporal advantage in all cases. It is important to note that the analysis of search time for small
  $n$ is imprecise; however, for large $n$, the analysis closely approximates the analysis of the number of comparisons.
-analys
+
+
  Figure \ref{fig:comparacoes} presents the distribution of the number of comparisons made
  during searches, as a function of the number of words, for the three analyzed structures:
  BST, AVL, and RBT. It is observed that the balanced trees (AVL and RBT) have distributions
@@ -146,6 +176,18 @@ analys
 
  In particular, this is the level of the tree that has the most nodes. This implies that searches in AVL and RBT are not only faster but also more predictable.
  On the other hand, the BST—by not guaranteeing balancing—can suffer structural degradations in unfavorable scenarios, which leads to an increase in the average number of comparisons.
+
+The figure \ref{fig:averagecomp} below shows the average number of comparisons when searching for a given range of words. 
+By analyzing it, we can reaffirm what was analyzed in figure \ref{fig:comparacoes} the average number of comparisons for the BST (around 18) 
+is higher than the average for the RBT and AVL trees (around 13), which are very close to each other, showing that the 
+RBT is not significantly inferior to the AVL in terms of its balancing.
+
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.8\linewidth]{img/Graph_7_20274.pdf}
+     \caption{Average number of comparisons}
+     \label{fig:averagecomp}
+ \end{figure}
 
  \subsubsection{Maximum and Minimum Branch}
 
@@ -242,9 +284,7 @@ analys
  The analysis of the second dataset presented significant challenges due to the high volume of data.
  Although it is possible to execute the procedures for all document quantities tested in the first dataset,
  it was observed that the processing time becomes substantially longer.
- Thus, the generation of CSV files and graphs was performed with a sample of 1,000 documents,
- as the execution for the complete set proved to be computationally infeasible, due to the saved statistics and the
- high volume of data.
+ But we managed to overcome this challenge, the generation of CSV files and graphs was performed with all documents.
 
  \subsubsection{Insertion Performance}
 
@@ -269,6 +309,10 @@ analys
      & & AVL & 3.433 & 40,481,015 & 1.03 \\
      & & RBT & 4.581 & 39,623,497 & 1.05 \\
      \hline
+     \multirow{3}{*}{9999} & \multirow{3}{*}{199.864} & BST & 34.863 & 443,167,508 & 1.00 \\
+     & & AVL & 39.263 & 434,497,304 & 1.02 \\
+     & & RBT & 35.395 & 433,630,372 & 1.02 \\
+     \hline 
      \end{tabular}
      \caption{Insertion performance on the second dataset with relative efficiency compared to the BST}
      \label{tab:insercao_db2}
@@ -277,14 +321,14 @@ analys
 
  In the second dataset, a consistent behavior of the balanced trees is observed in relation to the BST.
  The RBT demonstrates superiority regarding the number of comparisons. The AVL also stands out for its low execution
- time for $n = 1000$.
+ time for $n = 1000$. However, for $n = 9999$, we observe that AVL had the longest time.
 
  Figure \ref{fig:timedist2} demonstrates the distribution of insertion time, showing that all trees 
  have very similar variability, differing only in their respective means.
 
  \begin{figure}[H]
      \centering
-     \includegraphics[width=0.8\linewidth]{img/Graph_5_77770.pdf}
+     \includegraphics[width=0.8\linewidth]{img/Graph_5_199865.pdf}
      \caption{Number of comparisons by number of words}
      \label{fig:timedist2}
  \end{figure}
@@ -295,7 +339,7 @@ analys
 
  \begin{figure}[H]
      \centering
-     \includegraphics[width=0.8\linewidth]{img/Graph_4_77770.pdf}
+     \includegraphics[width=0.8\linewidth]{img/Graph_4_199865.pdf}
      \caption{Number of comparisons by number of words}
      \label{fig:cumulativedist2}
  \end{figure}
@@ -303,7 +347,7 @@ Figure \ref{fig:mean-log2} shows the average number of comparisons for every 100
 inserted into the trees, similar to the analysis of the first dataset.
 \begin{figure}[H]
      \centering
-     \includegraphics[width=0.8\linewidth]{img/Graph_3_77770.pdf}
+     \includegraphics[width=0.8\linewidth]{img/Graph_3_199865.pdf}
      \caption{Number of comparisons by number of words}
      \label{fig:mean-log2}
 \end{figure}
@@ -333,6 +377,10 @@ As expected, all the graphics is similar to the one from the first dataset.
      & & AVL & 87.532 & 1,213,580 & 1.34 \\
      & & RBT & 80.670 & 1,223,110 & 1.33 \\
      \hline
+     \multirow{3}{*}{9999} & \multirow{3}{*}{199.864} & BST & 121.226 & 4,610,518 & 1.00 \\
+     & & AVL & 101.226 & 3,392,775 & 1.35 \\
+     & & RBT & 99.362 & 3,418,731 & 1.35 \\
+     \hline
      \end{tabular}
      \caption{Search performance on the second dataset with relative efficiency compared to the BST}
      \label{tab:busca_db2}
@@ -347,16 +395,28 @@ Figure \ref{fig:comparacoes2} presents the distribution of the number of compari
  during searches, as a function of the number of words, for the three analyzed structures:
  BST, AVL, and RBT. It is observed that the balanced trees (AVL and RBT) have distributions
  that are significantly more concentrated around a single value, with frequency peaks at
- approximately 13 comparisons—indicating that most words are located after this
+ approximately 18 comparisons—indicating that most words are located after this
  number of steps. In the BST, the distribution is more dispersed, with a peak
- shifted to around 20 comparisons, reflecting greater variability compared to the balanced trees.
+ shifted to around 23 comparisons, reflecting greater variability compared to the balanced trees.
  The style of the graph is basically the same as the one from the first dataset.
 
  \begin{figure}[H]
      \centering
-     \includegraphics[width=0.8\linewidth]{img/Graph_6_77770.pdf}
+     \includegraphics[width=0.8\linewidth]{img/Graph_6_199865.pdf}
      \caption{Number of comparisons by words}
      \label{fig:comparacoes2}
+ \end{figure}
+
+ The figure \ref{fig:averagecomp2} below shows the average number of comparisons when searching for a given range of words. 
+By analyzing it, we can reaffirm what was analyzed in figure \ref{fig:comparacoes2} the average number of comparisons for the BST (around 22) 
+is higher than the average for the RBT and AVL trees (around 16), which are very close to each other, showing that the 
+RBT is not significantly inferior to the AVL in terms of its balancing.
+
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.8\linewidth]{img/Graph_7_199865.pdf}
+     \caption{Average number of comparisons}
+     \label{fig:averagecomp2}
  \end{figure}
 
  \subsubsection{Maximum and Minimum Branch}
@@ -382,28 +442,32 @@ Figure \ref{fig:comparacoes2} presents the distribution of the number of compari
      & & AVL & 18 & 12 & 6 & 1.50 \\
      & & RBT & 19 & 10 & 9 & 1.90 \\
      \hline
+     \multirow{3}{*}{9999} & \multirow{3}{*}{199.864} & BST & 45 & 5 & 40 & 9.00 \\
+     & & AVL & 20 & 13 & 7 & 1.54 \\
+     & & RBT & 21 & 12 & 9 & 1.75 \\
+     \hline
      \end{tabular}
      \caption{Tree height statistics for different data volumes in the second dataset}
      \label{tab:altura_db2}
  \end{table}
 
  The results from the second dataset confirm the patterns observed in the first one even more clearly.
- The BST shows progressive degradation of balancing, with ratios increasing from 6.20 to 8.00.
+ The BST shows progressive degradation of balancing, with ratios increasing from 6.20 to 9.00.
  In contrast, the balanced structures maintain consistently low ratios: the AVL presents the best ratio for $n=1000$ (1.50),
- while the RBT remains at 1.90. It is noted that the AVL manages to maintain smaller height differences (6 levels for $n=1000$)
+ while the RBT has 1.67 as its best index. It is noted that the AVL manages to maintain smaller height differences (6 levels for $n=1000$)
  compared to the RBT (9 levels), highlighting its more rigorous balancing. The following graphs
  are on a logarithmic scale for better visualization.
 
  \begin{figure}[H]
      \centering
-     \includegraphics[width=0.75\linewidth]{img/Graph_1_77770.pdf}
+     \includegraphics[width=0.75\linewidth]{img/Graph_1_199865.pdf}
      \caption{Tree height per insertion}
      \label{fig:maiorgalho2}
  \end{figure}
 
  \begin{figure}[H]
      \centering
-     \includegraphics[width=0.75\linewidth]{img/Graph_2_77770.pdf}
+     \includegraphics[width=0.75\linewidth]{img/Graph_2_199865.pdf}
      \caption{Shallowest Leaft Depth During Insertion}
      \label{fig:menorgalho2}
  \end{figure}
